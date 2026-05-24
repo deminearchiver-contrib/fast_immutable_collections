@@ -102,7 +102,7 @@ void main() {
     );
 
     expect(
-      students.expand((Student student) => [student, student]).toISet(),
+      students.expand((Student student) => [student, student]).toImmutableSet(),
       allOf(isA<Iterable<Student>>(), <Student>{james, sara, lucy}.lock),
     );
 

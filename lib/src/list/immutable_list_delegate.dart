@@ -361,9 +361,9 @@ class ImmutableListFlatDelegate<T extends Object?>
 
   bool deepListEquals(ImmutableListFlatDelegate? other) =>
       (other != null) &&
-      const ListEquality<dynamic>().equals(_list, other._list);
+      const ListEquality<Object?>().equals(_list, other._list);
 
-  int deepListHashcode() => const ListEquality<dynamic>().hash(_list);
+  int deepListHashcode() => const ListEquality<Object?>().hash(_list);
 
   static ImmutableListDelegate<T> empty<T>() =>
       ImmutableListFlatDelegate.unsafe(<T>[]);

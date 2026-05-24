@@ -71,7 +71,7 @@ final class ImmutableListEmpty<T extends Object?> extends ImmutableList<T> {
   @override
   int? get _hashCode {
     return isDeepEquals
-        ? Object.hash(const ListEquality<dynamic>().hash([]), config.hashCode)
+        ? Object.hash(const ListEquality<Object?>().hash([]), config.hashCode)
         : Object.hash(identityHashCode(_delegate), config.hashCode);
   }
 
@@ -137,7 +137,7 @@ final class ImmutableListLiteral<T extends Object?> extends ImmutableList<T> {
   int? get _hashCode {
     return isDeepEquals
         ? Object.hash(
-            const ListEquality<dynamic>().hash(_list),
+            const ListEquality<Object?>().hash(_list),
             config.hashCode,
           )
         : Object.hash(identityHashCode(_delegate), config.hashCode);

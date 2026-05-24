@@ -67,7 +67,7 @@ class ImmutableSetEmpty<T extends Object?> extends ImmutableSet<T> {
   @override
   int? get _hashCode {
     return isDeepEquals
-        ? Object.hash(const SetEquality<dynamic>().hash({}), config.hashCode)
+        ? Object.hash(const SetEquality<Object?>().hash({}), config.hashCode)
         : Object.hash(identityHashCode(_delegate), config.hashCode);
   }
 
@@ -141,7 +141,7 @@ class ImmutableSetLiteral<T extends Object?> extends ImmutableSet<T> {
   @override
   int? get _hashCode {
     return isDeepEquals
-        ? Object.hash(const SetEquality<dynamic>().hash(_set), config.hashCode)
+        ? Object.hash(const SetEquality<Object?>().hash(_set), config.hashCode)
         : Object.hash(identityHashCode(_delegate), config.hashCode);
   }
 

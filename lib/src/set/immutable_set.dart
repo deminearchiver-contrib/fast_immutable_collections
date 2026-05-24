@@ -452,7 +452,7 @@ abstract class ImmutableSet<T extends Object?>
     if (identical(this, other) || (other is ImmutableSet<T> && same(other))) {
       return true;
     }
-    return const UnorderedIterableEquality<dynamic>().equals(_delegate, other);
+    return const UnorderedIterableEquality<Object?>().equals(_delegate, other);
   }
 
   /// Will return `true` only if the set items are equal and the set configurations are equal.

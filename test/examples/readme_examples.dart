@@ -21,7 +21,7 @@ void main() {
   testAndPrint("Creating IList", () {
     ImmutableList<int> ilist1 = ImmutableList([1, 2]);
     ImmutableList<int> ilist2 = [1, 2].lock;
-    ImmutableList<int>? ilist3 = {1, 2}.toIList();
+    ImmutableList<int>? ilist3 = {1, 2}.toImmutableList();
 
     var list1 = List.of(ilist1);
     var list2 = ilist1.unlock;
@@ -59,7 +59,7 @@ void main() {
         .sort() // Alice, Bob, Carl, Dominic
         .map(((name) => name.length)) // 5, 3, 4, 7
         .take(3) // 5, 3, 4
-        .toIList()
+        .toImmutableList()
         .sort() // 3, 4, 5
         .toggle(4) // 3, 5,
         .toggle(2); // 3, 5, 2;
@@ -445,7 +445,7 @@ class StudentsPerCourse {
       imap.valuesAsSet.toIList(compare: (s1, s2) => s1.name.compareTo(s2.name));
 
   ImmutableList<String>? studentNamesInAlphabeticOrder() =>
-      imap.valuesAsSet.map((s) => s.name).toIList();
+      imap.valuesAsSet.map((s) => s.name).toImmutableList();
 
   StudentsPerCourse addStudentToCourse(Student student, Course course) =>
       StudentsPerCourse._(imap.add(course, student));

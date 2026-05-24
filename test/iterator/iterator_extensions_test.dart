@@ -37,15 +37,15 @@ void main() {
   });
 
   test("toIList", () {
-    expect([1, 2, 3].iterator.toIList(), isA<ImmutableList<int>>());
-    expect([1, 2, 3].iterator.toIList(), [1, 2, 3]);
+    expect([1, 2, 3].iterator.toImmutableList(), isA<ImmutableList<int>>());
+    expect([1, 2, 3].iterator.toImmutableList(), [1, 2, 3]);
   });
 
   test("toSet/toISet", () {
     expect([1, 2, 3, 3].iterator.toSet(), isA<Set<int>>());
     expect([1, 2, 3, 3].iterator.toSet(), {1, 2, 3});
 
-    expect({1, 2, 3}.iterator.toISet(), isA<ImmutableSet<int>>());
-    expect({1, 2, 3}.iterator.toISet(), {1, 2, 3});
+    expect({1, 2, 3}.iterator.toImmutableSet(), isA<ImmutableSet<int>>());
+    expect({1, 2, 3}.iterator.toImmutableSet(), {1, 2, 3});
   });
 }

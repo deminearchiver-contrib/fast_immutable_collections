@@ -128,7 +128,7 @@ mixin FromISetMixin<T, I extends FromISetMixin<T, I>> implements CanBeEmpty {
 
   /// If we have ISet<Never>, we cast it to ISet<T>.
   ImmutableSet<T> get _castIter =>
-      (iter is ImmutableSet<Never>) ? iter.cast<T>().toISet() : iter;
+      (iter is ImmutableSet<Never>) ? iter.cast<T>().toImmutableSet() : iter;
 
   I add(T item) => newInstance(_castIter.add(item));
 

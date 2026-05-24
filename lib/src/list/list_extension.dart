@@ -76,10 +76,11 @@ extension FicListExtension<T> on List<T> {
   /// Sorts this list in reverse order in relation to the default [sort] method.
   ///
   void sortReversed([int Function(T a, T b)? compare]) {
-    if (compare != null)
+    if (compare != null) {
       sort((T a, T b) => compare(b, a));
-    else
+    } else {
       sort((T a, T b) => compareObject(b, a));
+    }
   }
 
   /// Moves the first occurrence of the [item] to the start of the list.
@@ -134,20 +135,21 @@ extension FicListExtension<T> on List<T> {
   /// If it already exists, remove the first instance of it and return `false`.
   bool toggle(T item) {
     final result = contains(item);
-    if (result)
+    if (result) {
       remove(item);
-    else
+    } else {
       add(item);
+    }
     return !result;
   }
 
   /// Return `true` if the lists contain the same items (in any order).
   /// Ignores repeated items.
-  bool compareAsSets(List other) {
+  bool compareAsSets(List<Object?> other) {
     if (identical(this, other)) return true;
-    return const SetEquality<dynamic>(
-      MapEntryEquality<dynamic>(),
-    ).equals(Set<dynamic>.of(this), Set<dynamic>.of(other));
+    return const SetEquality<Object?>(
+      MapEntryEquality<Object?>(),
+    ).equals(Set<Object?>.of(this), Set<Object?>.of(other));
   }
 
   /// Split a list, according to a predicate,
@@ -294,9 +296,9 @@ extension FicListExtension<T> on List<T> {
 
     firstMatch ??= 0;
 
-    if (indexes.isEmpty)
+    if (indexes.isEmpty) {
       return {};
-    else {
+    } else {
       for (int i = 0; i < indexes.length; i++) {
         final ini = i == 0 ? firstMatch : indexes[i];
         final fim = i == indexes.length - 1 ? length - 1 : indexes[i + 1] - 1;
@@ -324,10 +326,9 @@ extension FicListExtension<T> on List<T> {
   /// ```
   ///
   List<T> addBetween(T separator) {
-    if (length <= 1)
+    if (length <= 1) {
       return toList();
-    //
-    else {
+    } else {
       final List<T> newItems = <T>[];
       for (int i = 0; i < length - 1; i++) {
         newItems.add(this[i]);
@@ -415,7 +416,7 @@ extension FicListExtension<T> on List<T> {
   ///
   /// See also: [removeDuplicates] to mutate the current list.
   ///
-  List<T> distinct({dynamic Function(T item)? by}) => by != null
+  List<T> distinct({Object? Function(T item)? by}) => by != null
       ? whereNoDuplicates(by: by).toList()
       : [
           ...{...this},
@@ -432,14 +433,14 @@ extension FicListExtension<T> on List<T> {
   /// See also: [whereNoDuplicates] in [FicIterableExtension] for a lazy version.
   ///
   void removeDuplicates({
-    dynamic Function(T item)? by,
+    Object? Function(T item)? by,
     bool removeNulls = false,
   }) {
     if (by != null) {
-      final Set<dynamic> ids = <dynamic>{};
+      final ids = <Object?>{};
       removeWhere((item) {
         if (removeNulls && item == null) return true;
-        final dynamic id = by(item);
+        final id = by(item);
         return !ids.add(id);
       });
     } else {

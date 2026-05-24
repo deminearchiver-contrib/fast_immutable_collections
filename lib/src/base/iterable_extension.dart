@@ -62,11 +62,11 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   //
 
   /// Creates an *immutable* set ([ImmutableSet]) from the iterable.
-  ImmutableSet<T> toISet([ImmutableSetConfig? config]) =>
+  ImmutableSet<T> toImmutableSet([ImmutableSetConfig? config]) =>
       .withConfig(this, config ?? ImmutableSet.defaultConfig);
 
   /// Creates an *immutable* list ([ImmutableList]) from the iterable.
-  ImmutableList<T> toIList({ImmutableListConfig? config}) =>
+  ImmutableList<T> toImmutableList({ImmutableListConfig? config}) =>
       .withConfig(this, config ?? ImmutableList.defaultConfig);
 
   /// Returns a [List] containing the elements of this iterable.
@@ -97,7 +97,7 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// using [operator ==]. Return true if they are all the same,
   /// in the same order.
   ///
-  bool deepEquals(Iterable<dynamic>? other, {bool ignoreOrder = false}) {
+  bool deepEquals(Iterable<Object?>? other, {bool ignoreOrder = false}) {
     if (identical(this, other)) return true;
     if (other == null) return false;
 
@@ -112,11 +112,11 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
     }
 
     return ignoreOrder
-        ? const UnorderedIterableEquality<dynamic>(
-            DefaultEquality<dynamic>(),
+        ? const UnorderedIterableEquality<Object?>(
+            DefaultEquality<Object?>(),
           ).equals(this, other)
-        : const IterableEquality<dynamic>(
-            DefaultEquality<dynamic>(),
+        : const IterableEquality<Object?>(
+            DefaultEquality<Object?>(),
           ).equals(this, other);
   }
 
@@ -125,7 +125,7 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// using [identical]. Return true if they are all the same,
   /// in the same order.
   bool deepEqualsByIdentity(
-    Iterable<dynamic>? other, {
+    Iterable<Object?>? other, {
     bool ignoreOrder = false,
   }) {
     if (identical(this, other)) return true;
@@ -142,11 +142,11 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
     }
 
     return ignoreOrder
-        ? const UnorderedIterableEquality<dynamic>(
-            IdentityEquality<dynamic>(),
+        ? const UnorderedIterableEquality<Object?>(
+            IdentityEquality<Object?>(),
           ).equals(this, other)
-        : const IterableEquality<dynamic>(
-            IdentityEquality<dynamic>(),
+        : const IterableEquality<Object?>(
+            IdentityEquality<Object?>(),
           ).equals(this, other);
   }
 
@@ -256,14 +256,14 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// See also: `distinct` and `removeDuplicates` in [FicListExtension].
   ///
   Iterable<T> whereNoDuplicates({
-    dynamic Function(T item)? by,
+    Object? Function(T item)? by,
     bool removeNulls = false,
   }) sync* {
     if (by != null) {
-      final Set<dynamic> ids = <dynamic>{};
-      for (final T item in this) {
+      final ids = <Object?>{};
+      for (final item in this) {
         if (removeNulls && item == null) continue;
-        final dynamic id = by(item);
+        final id = by(item);
         if (!ids.contains(id)) yield item;
         ids.add(id);
       }
@@ -291,12 +291,12 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// Items which don't appear in [ordering] will be included in the end, in their original order.
   /// Items of [ordering] which are not found in the original list are ignored.
   ///
-  List<T> sortedLike(Iterable ordering) {
+  List<T> sortedLike(Iterable<Object?> ordering) {
     final Set<T> thisSet = Set.of(this);
-    final Set<dynamic> otherSet = Set<dynamic>.of(ordering);
+    final otherSet = Set.of(ordering);
 
-    final DiffAndIntersectResult<T, dynamic> result = thisSet
-        .diffAndIntersect<dynamic>(
+    final DiffAndIntersectResult<T, Object?> result = thisSet
+        .diffAndIntersect<Object?>(
           otherSet,
           diffThisMinusOther: true,
           diffOtherMinusThis: false,
@@ -321,10 +321,10 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// one item with the same [id], the last one will be used, and the
   /// previous discarded.
   ///
-  List<T> updateById(Iterable<T> newItems, dynamic Function(T item) id) {
+  List<T> updateById(Iterable<T> newItems, Object? Function(T item) id) {
     final List<T> newList = [];
 
-    final Map<dynamic, T> idsPerNewItem = <dynamic, T>{
+    final idsPerNewItem = <Object?, T>{
       for (final T item in newItems) id(item): item,
     };
 

@@ -68,7 +68,7 @@ final class ImmutableMapEmpty<K extends Object?, V extends Object?>
   int? get _hashCode {
     return isDeepEquals
         ? Object.hash(
-            const MapEquality<dynamic, dynamic>().hash({}),
+            const MapEquality<Object?, Object?>().hash({}),
             config.hashCode,
           )
         : Object.hash(identityHashCode(_delegate), config.hashCode);
@@ -139,7 +139,7 @@ final class ImmutableMapLiteral<K extends Object?, V extends Object?>
   int? get _hashCode {
     return isDeepEquals
         ? Object.hash(
-            const MapEquality<dynamic, dynamic>().hash(_map),
+            const MapEquality<Object?, Object?>().hash(_map),
             config.hashCode,
           )
         : Object.hash(identityHashCode(_delegate), config.hashCode);

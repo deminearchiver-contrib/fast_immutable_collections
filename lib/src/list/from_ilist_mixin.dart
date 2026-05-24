@@ -166,7 +166,7 @@ mixin FromImmutableListMixin<
 
   /// If we have IList&lt;Never&gt;, we cast it to IList&lt;T&gt;.
   ImmutableList<T> get _castIter =>
-      (iter is ImmutableList<Never>) ? iter.cast<T>().toIList() : iter;
+      (iter is ImmutableList<Never>) ? iter.cast<T>().toImmutableList() : iter;
 
   I add(T item) {
     return newInstance(_castIter.add(item));

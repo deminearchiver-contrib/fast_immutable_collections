@@ -410,10 +410,10 @@ class ImmutableSetFlatDelegate<T extends Object?>
 
   bool deepSetEquals(ImmutableSetFlatDelegate<Object?>? other) =>
       (other != null) &&
-      const SetEquality<dynamic>(
-        MapEntryEquality<dynamic>(),
+      const SetEquality<Object?>(
+        MapEntryEquality<Object?>(),
       ).equals(_set, other._set);
 
   int deepSetHashcode() =>
-      const SetEquality<dynamic>(MapEntryEquality<dynamic>()).hash(_set);
+      const SetEquality<Object?>(MapEntryEquality<Object?>()).hash(_set);
 }

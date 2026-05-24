@@ -6,15 +6,16 @@
 /// when current value is called before calling [moveNext].
 ///
 class IteratorFlat<T extends Object?> implements Iterator<T> {
+  IteratorFlat(this.iterator) : _pre = true, _hasCurrent = true;
+
   Iterator<T> iterator;
   bool _pre, _hasCurrent;
 
-  IteratorFlat(this.iterator) : _pre = true, _hasCurrent = true;
-
   @override
   T get current {
-    if (_pre)
+    if (_pre) {
       throw StateError("No current value available. Call moveNext() first.");
+    }
     if (!_hasCurrent) throw StateError("No move values available.");
     return iterator.current;
   }

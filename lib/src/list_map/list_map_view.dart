@@ -24,9 +24,10 @@ class ListMapView<K, V> implements ListMap<K, V> {
   @override
   V getOrThrow(K key) {
     if (containsKey(key)) {
-      return (_map[key] as V);
-    } else
+      return _map[key] as V;
+    } else {
       throw StateError("Key does not exist: '$key'");
+    }
   }
 
   @override
@@ -155,9 +156,9 @@ class ListMapView<K, V> implements ListMap<K, V> {
   int indexOfKey(K key, [int start = 0]) {
     final Map<K, V> map = _map;
 
-    if (map is ListMap<K, V>)
+    if (map is ListMap<K, V>) {
       return map.indexOfKey(key, start);
-    else {
+    } else {
       int count = 0;
       for (final K _key in _map.keys) {
         if (count >= start && key == _key) return count;

@@ -579,7 +579,7 @@ abstract class ImmutableList<T extends Object?>
     }
 
     if (other is List<T>) {
-      return const ListEquality<dynamic>().equals(
+      return const ListEquality<Object?>().equals(
         UnmodifiableFromImmutableList<T>(this),
         other,
       );
@@ -589,7 +589,7 @@ abstract class ImmutableList<T extends Object?>
       throw StateError("Can't compare to HashSet (which is unordered).");
     }
 
-    return const IterableEquality<dynamic>().equals(_delegate, other);
+    return const IterableEquality<Object?>().equals(_delegate, other);
   }
 
   /// Will return `true` only if the [ImmutableList] and the iterable items have the same number of elements,
@@ -601,7 +601,7 @@ abstract class ImmutableList<T extends Object?>
     if (identical(this, other) || (other is ImmutableList<T> && same(other))) {
       return true;
     }
-    return const UnorderedIterableEquality<dynamic>().equals(_delegate, other);
+    return const UnorderedIterableEquality<Object?>().equals(_delegate, other);
   }
 
   /// Will return `true` only if the list items are equal and in the same order,
@@ -712,7 +712,7 @@ abstract class ImmutableList<T extends Object?>
   @useResult
   ImmutableList<T> updateById(
     Iterable<T> newItems,
-    dynamic Function(T item) id,
+    Object? Function(T item) id,
   ) => ImmutableList._unsafeFromList(
     _delegate.updateById(newItems, id),
     config: config,
@@ -1025,13 +1025,13 @@ abstract class ImmutableList<T extends Object?>
   Iterable<Iterable<T>> tails() => ImmutableList.iterateWhile(
     this,
     (l) => l.isNotEmpty,
-    (l) => l.toIList().tail,
+    (l) => l.toImmutableList().tail,
   );
 
   Iterable<Iterable<T>> inits() => ImmutableList.iterateWhile(
     this,
     (l) => l.isNotEmpty,
-    (l) => l.toIList().init,
+    (l) => l.toImmutableList().init,
   );
 
   /// Returns an [Iterable] that is the original iterable without the last element
@@ -1334,7 +1334,7 @@ abstract class ImmutableList<T extends Object?>
   @useResult
   ImmutableList<T> replaceAll({required T from, required T to}) => map(
     (element) => (element == from) ? to : element,
-  ).toIList(config: config);
+  ).toImmutableList(config: config);
 
   /// Finds the first item that satisfies the provided [test],
   /// and replace it with the result of [replacement].
@@ -1362,8 +1362,9 @@ abstract class ImmutableList<T extends Object?>
   /// Finds all items that satisfy the provided [test],
   /// and replace it with [to].
   @useResult
-  ImmutableList<T> replaceAllWhere(bool Function(T element) test, T to) =>
-      map((element) => test(element) ? to : element).toIList(config: config);
+  ImmutableList<T> replaceAllWhere(bool Function(T element) test, T to) => map(
+    (element) => test(element) ? to : element,
+  ).toImmutableList(config: config);
 
   /// Allows for complex processing of a list.
   ///
@@ -1868,7 +1869,7 @@ abstract class ImmutableList<T extends Object?>
   Iterable<(int, T)> zipWithIndex() => Iterable.generate(
     length,
     (index) => (index, _delegate[index]),
-  ).toIList(config: config);
+  ).toImmutableList(config: config);
 
   /// Aggregate two sources trimming by the shortest source
   Iterable<(T, U)> zip<U>(Iterable<U> otherIterable) {
@@ -1877,7 +1878,7 @@ abstract class ImmutableList<T extends Object?>
     return Iterable.generate(
       minLength,
       (index) => (_delegate[index], other[index]),
-    ).toIList(config: config);
+    ).toImmutableList(config: config);
   }
 
   /// Aggregate two sources based on the longest source.
@@ -1904,7 +1905,7 @@ abstract class ImmutableList<T extends Object?>
         getOrFill(current, index, currentFill) as T?,
         getOrFill(other, index, otherFill) as U?,
       ),
-    ).toIList(config: config);
+    ).toImmutableList(config: config);
   }
 }
 

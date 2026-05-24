@@ -3,20 +3,21 @@
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
 class IteratorAdd<T extends Object?> implements Iterator<T> {
-  Iterator<T> iterator;
-  T item;
-  late T _current;
-  bool extraMove, _pre, _hasCurrent;
-
   IteratorAdd(this.iterator, this.item)
     : _pre = true,
       _hasCurrent = true,
       extraMove = false;
 
+  Iterator<T> iterator;
+  T item;
+  late T _current;
+  bool extraMove, _pre, _hasCurrent;
+
   @override
   T get current {
-    if (_pre)
+    if (_pre) {
       throw StateError("No current value available. Call moveNext() first.");
+    }
     if (!_hasCurrent) throw StateError("No move values available.");
     return _current;
   }
@@ -28,9 +29,9 @@ class IteratorAdd<T extends Object?> implements Iterator<T> {
       _current = iterator.current;
       return true;
     } else {
-      if (extraMove)
+      if (extraMove) {
         return _hasCurrent = false;
-      else {
+      } else {
         extraMove = true;
         _current = item;
         return true;

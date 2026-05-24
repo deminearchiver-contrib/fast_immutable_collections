@@ -6,7 +6,6 @@ import 'package:fic/src/fic.dart';
 
 /// See also: [FicIterableExtension]
 extension FicIteratorExtension<T> on Iterator<T> {
-  //
   /// Convert this iterator into an [Iterable].
   Iterable<T> toIterable() sync* {
     while (moveNext()) {
@@ -22,8 +21,8 @@ extension FicIteratorExtension<T> on Iterator<T> {
   Set<T> toSet() => .of(toIterable());
 
   /// Convert this iterator into an [ImmutableList].
-  ImmutableList<T> toIList() => .new(toIterable());
+  ImmutableList<T> toImmutableList() => .new(toIterable());
 
   /// Convert this iterator into an [ImmutableSet].
-  ImmutableSet<T> toISet() => .new(toIterable());
+  ImmutableSet<T> toImmutableSet() => .new(toIterable());
 }

@@ -2077,7 +2077,7 @@ void main() {
     final IMapOfSets<num, num> mappedIMapOfSets = iMapOfSets.map<num, num>(
       (String key, ImmutableSet<int> set) => MapEntry<num, ImmutableSet<num>>(
         num.parse(key + key),
-        set.cast<num>().toISet(),
+        set.cast<num>().toImmutableSet(),
       ),
     );
 

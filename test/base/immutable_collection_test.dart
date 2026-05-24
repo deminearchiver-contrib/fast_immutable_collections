@@ -172,8 +172,8 @@ void main() {
 
   test("List.toIList() / List.toISet()", () {
     const List<int> list = [1, 2, 3, 3];
-    final ImmutableList<int> ilist = list.toIList();
-    final ImmutableSet<int> iset = list.toISet();
+    final ImmutableList<int> ilist = list.toImmutableList();
+    final ImmutableSet<int> iset = list.toImmutableSet();
 
     expect(ilist, [1, 2, 3, 3]);
     expect(iset, {1, 2, 3});
@@ -181,8 +181,8 @@ void main() {
 
   test("Set.toIList() / Set.toISet()", () {
     const Set<int> set = {1, 2, 3};
-    final ImmutableList<int> ilist = set.toIList();
-    final ImmutableSet<int> iset = set.toISet();
+    final ImmutableList<int> ilist = set.toImmutableList();
+    final ImmutableSet<int> iset = set.toImmutableSet();
 
     expect(ilist, [1, 2, 3]);
     expect(iset, [1, 2, 3]);

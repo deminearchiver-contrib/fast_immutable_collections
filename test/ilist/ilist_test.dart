@@ -2010,8 +2010,8 @@ void main() {
     final ilist = [0, 2, 4, 6, 7, 8, 9, 2].lock;
 
     final evenSpan = ilist.span((e) => e % 2 == 0);
-    expect(evenSpan.$1.toIList(), [0, 2, 4, 6]);
-    expect(evenSpan.$2.toIList(), [7, 8, 9, 2]);
+    expect(evenSpan.$1.toImmutableList(), [0, 2, 4, 6]);
+    expect(evenSpan.$2.toImmutableList(), [7, 8, 9, 2]);
   });
 
   test("Zip with Index", () {
@@ -2045,7 +2045,7 @@ void main() {
       // Ignore Brazil Japan
       final Iterable<(String, String)> subIn = countries
           .take(2)
-          .toIList()
+          .toImmutableList()
           .zip(capitals);
       expect(
         subIn,
@@ -2108,7 +2108,7 @@ void main() {
       expect(
         countries
             .take(2)
-            .toIList()
+            .toImmutableList()
             .zipAll(capitals, currentFill: (idx) => 'Country $idx'),
         ImmutableList([
           ('France', 'Paris'),
@@ -2129,8 +2129,8 @@ void main() {
       );
 
       final unzipped = countries.zipAll(capitals).unzip();
-      expect(unzipped.$1.toIList(), countries);
-      expect(unzipped.$2.toIList(), capitals);
+      expect(unzipped.$1.toImmutableList(), countries);
+      expect(unzipped.$2.toImmutableList(), capitals);
     },
   );
 
@@ -2152,8 +2152,8 @@ void main() {
     final base = [1, 2, 3, 4, 5, 6, 7, 8, 9].lock;
     final split = base.splitAt(4);
 
-    expect(split.$1.toIList(), base.sublist(0, 4));
-    expect(split.$2.toIList(), base.sublist(4));
+    expect(split.$1.toImmutableList(), base.sublist(0, 4));
+    expect(split.$2.toImmutableList(), base.sublist(4));
   });
 
   test("Count on predicates", () {
