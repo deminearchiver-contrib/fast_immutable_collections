@@ -1,6 +1,6 @@
 name: fic
 description: Immutable lists, sets, maps, and multimaps, which are as fast as their native mutable counterparts. Extension methods and comparators for native Dart collections.
-version: 1.0.0-dev.2
+version: 1.0.0-dev.3
 homepage: https://github.com/deminearchiver-contrib/fast_immutable_collections
 repository: https://github.com/deminearchiver-contrib/fast_immutable_collections/tree/1p-features
 issue_tracker: https://github.com/deminearchiver-contrib/fast_immutable_collections/issues
