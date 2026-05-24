@@ -18,7 +18,7 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, Student("James")]);
 
-    expect(students.iter, {james, sara, lucy});
+    expect(students.iterable, {james, sara, lucy});
   });
 
   test("any", () {
@@ -500,7 +500,7 @@ void main() {
 
     final Students studentsResult = students.clear();
 
-    expect(studentsResult.iter.unlock, <Student>{});
+    expect(studentsResult.iterable.unlock, <Student>{});
   });
 
   test("equalItems", () {
@@ -530,7 +530,7 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, Student("James")]);
 
-    expect(students.remove(const Student("James")).iter, {sara, lucy});
+    expect(students.remove(const Student("James")).iterable, {sara, lucy});
   });
 
   test("removeWhere", () {
@@ -540,7 +540,9 @@ void main() {
     final Students students = Students([james, sara, lucy, Student("James")]);
 
     expect(
-      students.removeWhere((Student student) => student.name.length == 4).iter,
+      students
+          .removeWhere((Student student) => student.name.length == 4)
+          .iterable,
       [james],
     );
   });
@@ -552,7 +554,9 @@ void main() {
     final Students students = Students([james, sara, lucy, Student("James")]);
 
     expect(
-      students.retainWhere((Student student) => student.name.length == 4).iter,
+      students
+          .retainWhere((Student student) => student.name.length == 4)
+          .iterable,
       {sara, lucy},
     );
   });
@@ -563,8 +567,8 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, Student("James")]);
 
-    expect(students.toggle(const Student("Sara")).iter, {james, lucy});
-    expect(students.toggle(const Student("Bob")).iter, {
+    expect(students.toggle(const Student("Sara")).iterable, {james, lucy});
+    expect(students.toggle(const Student("Bob")).iterable, {
       james,
       sara,
       lucy,
@@ -706,7 +710,7 @@ class Ints with FromISetMixin<int, Ints> {
   Ints newInstance(ImmutableSet<int> iset) => Ints(iset);
 
   @override
-  ImmutableSet<int> get iter => _ints;
+  ImmutableSet<int> get iterable => _ints;
 }
 
 @immutable
@@ -719,7 +723,7 @@ class Students with FromISetMixin<Student, Students> {
   Students newInstance(ImmutableSet<Student> iset) => Students(iset);
 
   @override
-  ImmutableSet<Student> get iter => _students;
+  ImmutableSet<Student> get iterable => _students;
 }
 
 @immutable

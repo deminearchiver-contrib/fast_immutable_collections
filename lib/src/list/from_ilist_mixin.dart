@@ -11,12 +11,12 @@ import 'package:fic/src/fic.dart';
 /// `operator []`, but it does **NOT** implement [Iterable] nor [ImmutableList].
 ///
 /// It is meant to help you wrap an [ImmutableList] into another class (composition).
-/// You must override the [iter] getter to return the inner [ImmutableList].
-/// All other methods are efficiently implemented in terms of the [iter].
+/// You must override the [iterable] getter to return the inner [ImmutableList].
+/// All other methods are efficiently implemented in terms of the [iterable].
 ///
 /// To use this mixin, your class must:
 ///
-/// 1. Override the [iter] getter to return the inner [ImmutableList].
+/// 1. Override the [iterable] getter to return the inner [ImmutableList].
 /// 1. Override the [newInstance] method to return a new instance of the class.
 ///
 /// Example:
@@ -49,7 +49,7 @@ import 'package:fic/src/fic.dart';
 /// [expect] method, it will just compare its items, completely ignoring its
 /// `operator ==`.
 ///
-/// If you need to iterate over this class, you can use the [iter] getter:
+/// If you need to iterate over this class, you can use the [iterable] getter:
 ///
 /// ```dart
 /// class MyClass with FromIListMixin<T, I> { ... }
@@ -80,93 +80,97 @@ mixin FromImmutableListMixin<
     implements CanBeEmpty {
   //
   /// Classes `with` [FromImmutableListMixin] must override this.
-  ImmutableList<T> get iter;
+  ImmutableList<T> get iterable;
 
   /// Classes `with` [FromImmutableListMixin] must override this.
   I newInstance(ImmutableList<T> ilist);
 
-  Iterator<T> get iterator => iter.iterator;
+  Iterator<T> get iterator => iterable.iterator;
 
-  bool any(bool Function(T element) test) => iter.any(test);
+  bool any(bool Function(T element) test) => iterable.any(test);
 
-  Iterable<R> cast<R>() => iter.cast<R>();
+  Iterable<R> cast<R>() => iterable.cast<R>();
 
-  bool contains(covariant T? element) => iter.contains(element);
+  bool contains(covariant T? element) => iterable.contains(element);
 
-  T operator [](int index) => iter[index];
+  T operator [](int index) => iterable[index];
 
-  T elementAt(int index) => iter[index];
+  T elementAt(int index) => iterable[index];
 
-  bool every(bool Function(T element) test) => iter.every(test);
+  bool every(bool Function(T element) test) => iterable.every(test);
 
-  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iter.expand(f);
+  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iterable.expand(f);
 
-  int get length => iter.length;
+  int get length => iterable.length;
 
-  T get first => iter.first;
+  T get first => iterable.first;
 
-  T get last => iter.last;
+  T get last => iterable.last;
 
-  T get single => iter.single;
+  T get single => iterable.single;
 
-  T? get firstOrNull => iter.firstOrNull;
+  T? get firstOrNull => iterable.firstOrNull;
 
-  T? get lastOrNull => iter.lastOrNull;
+  T? get lastOrNull => iterable.lastOrNull;
 
-  T? get singleOrNull => iter.singleOrNull;
+  T? get singleOrNull => iterable.singleOrNull;
 
   T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.firstWhere(test, orElse: orElse);
+      iterable.firstWhere(test, orElse: orElse);
 
   T? firstWhereOrNull(bool Function(T element) test) =>
-      iter.firstWhereOrNull(test);
+      iterable.firstWhereOrNull(test);
 
   E fold<E>(E initialValue, E Function(E previousValue, T element) combine) =>
-      iter.fold(initialValue, combine);
+      iterable.fold(initialValue, combine);
 
-  Iterable<T> followedBy(Iterable<T> other) => iter.followedBy(other);
+  Iterable<T> followedBy(Iterable<T> other) => iterable.followedBy(other);
 
-  void forEach(void Function(T element) f) => iter.forEach(f);
+  void forEach(void Function(T element) f) => iterable.forEach(f);
 
-  String join([String separator = ""]) => iter.join(separator);
+  String join([String separator = ""]) => iterable.join(separator);
 
   T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.lastWhere(test, orElse: orElse);
+      iterable.lastWhere(test, orElse: orElse);
 
-  Iterable<E> map<E>(E Function(T element) f) => iter.map(f);
+  Iterable<E> map<E>(E Function(T element) f) => iterable.map(f);
 
-  T reduce(T Function(T value, T element) combine) => iter.reduce(combine);
+  T reduce(T Function(T value, T element) combine) => iterable.reduce(combine);
 
   T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.singleWhere(test, orElse: orElse);
+      iterable.singleWhere(test, orElse: orElse);
 
-  Iterable<T> skip(int count) => iter.skip(count);
+  Iterable<T> skip(int count) => iterable.skip(count);
 
-  Iterable<T> skipWhile(bool Function(T value) test) => iter.skipWhile(test);
+  Iterable<T> skipWhile(bool Function(T value) test) =>
+      iterable.skipWhile(test);
 
-  Iterable<T> take(int count) => iter.take(count);
+  Iterable<T> take(int count) => iterable.take(count);
 
-  Iterable<T> takeWhile(bool Function(T value) test) => iter.takeWhile(test);
+  Iterable<T> takeWhile(bool Function(T value) test) =>
+      iterable.takeWhile(test);
 
-  Iterable<T> where(bool Function(T element) test) => iter.where(test);
+  Iterable<T> where(bool Function(T element) test) => iterable.where(test);
 
-  Iterable<E> whereType<E>() => iter.whereType<E>();
+  Iterable<E> whereType<E>() => iterable.whereType<E>();
 
   @override
-  bool get isEmpty => iter.isEmpty;
+  bool get isEmpty => iterable.isEmpty;
 
   @override
-  bool get isNotEmpty => iter.isNotEmpty;
+  bool get isNotEmpty => iterable.isNotEmpty;
 
-  List<T> toList({bool growable = true}) => List.of(iter, growable: growable);
+  List<T> toList({bool growable = true}) =>
+      List.of(iterable, growable: growable);
 
-  Set<T> toSet() => Set.of(iter);
+  Set<T> toSet() => Set.of(iterable);
 
-  I operator +(Iterable<T> other) => newInstance(iter + other);
+  I operator +(Iterable<T> other) => newInstance(iterable + other);
 
   /// If we have IList&lt;Never&gt;, we cast it to IList&lt;T&gt;.
-  ImmutableList<T> get _castIter =>
-      (iter is ImmutableList<Never>) ? iter.cast<T>().toImmutableList() : iter;
+  ImmutableList<T> get _castIter => (iterable is ImmutableList<Never>)
+      ? iterable.cast<T>().toImmutableList()
+      : iterable;
 
   I add(T item) {
     return newInstance(_castIter.add(item));
@@ -174,112 +178,115 @@ mixin FromImmutableListMixin<
 
   I addAll(Iterable<T> items) => newInstance(_castIter.addAll(items));
 
-  ImmutableMap<int, T> asMap() => iter.asMap();
+  ImmutableMap<int, T> asMap() => iterable.asMap();
 
-  I clear() => newInstance(iter.clear());
+  I clear() => newInstance(iterable.clear());
 
-  bool equalItems(covariant Iterable<T> other) => iter.equalItems(other);
+  bool equalItems(covariant Iterable<T> other) => iterable.equalItems(other);
 
   bool unorderedEqualItems(covariant Iterable<T> other) =>
-      iter.unorderedEqualItems(other);
+      iterable.unorderedEqualItems(other);
 
-  bool same(I other) => iter.same(other.iter);
+  bool same(I other) => iterable.same(other.iterable);
 
   I fillRange(int start, int end, [T? fillValue]) =>
-      newInstance(iter.fillRange(start, end, fillValue));
+      newInstance(iterable.fillRange(start, end, fillValue));
 
-  T? firstOr(T orElse) => iter.firstOr(orElse);
+  T? firstOr(T orElse) => iterable.firstOr(orElse);
 
-  Iterable<T> getRange(int start, int end) => iter.getRange(start, end);
+  Iterable<T> getRange(int start, int end) => iterable.getRange(start, end);
 
-  int indexOf(T element, [int start = 0]) => iter.indexOf(element, start);
+  int indexOf(T element, [int start = 0]) => iterable.indexOf(element, start);
 
   int indexWhere(bool Function(T element) test, [int start = 0]) =>
-      iter.indexWhere(test, start);
+      iterable.indexWhere(test, start);
 
-  I insert(int index, T element) => newInstance(iter.insert(index, element));
+  I insert(int index, T element) =>
+      newInstance(iterable.insert(index, element));
 
   I insertAll(int index, Iterable<T> iterable) =>
-      newInstance(iter.insertAll(index, iterable));
+      newInstance(this.iterable.insertAll(index, iterable));
 
-  int lastIndexOf(T element, [int? start]) => iter.lastIndexOf(element, start);
+  int lastIndexOf(T element, [int? start]) =>
+      iterable.lastIndexOf(element, start);
 
   int lastIndexWhere(bool Function(T element) test, [int? start]) =>
-      iter.lastIndexWhere(test, start);
+      iterable.lastIndexWhere(test, start);
 
-  T lastOr(T orElse) => iter.lastOr(orElse);
+  T lastOr(T orElse) => iterable.lastOr(orElse);
 
   I maxLength(int maxLength, {int Function(T a, T b)? priority}) =>
-      newInstance(iter.maxLength(maxLength, priority: priority));
+      newInstance(iterable.maxLength(maxLength, priority: priority));
 
   I process({
     bool Function(ImmutableList<T> list, int index, T item)? test,
     required Iterable<T> Function(ImmutableList<T> list, int index, T item)
     apply,
-  }) => newInstance(iter.process(test: test, convert: apply));
+  }) => newInstance(iterable.process(test: test, convert: apply));
 
-  I put(int index, T value) => newInstance(iter.put(index, value));
+  I put(int index, T value) => newInstance(iterable.put(index, value));
 
-  I remove(T item) => newInstance(iter.remove(item));
+  I remove(T item) => newInstance(iterable.remove(item));
 
   (I, T) removeAt(int index) {
-    final result = iter.removeAt(index);
+    final result = iterable.removeAt(index);
     return (newInstance(result.$1), result.$2);
   }
 
   (I, T) removeLast() {
-    final result = iter.removeLast();
+    final result = iterable.removeLast();
     return (newInstance(result.$1), result.$2);
   }
 
   I removeRange(int start, int end) =>
-      newInstance(iter.removeRange(start, end));
+      newInstance(iterable.removeRange(start, end));
 
   I removeWhere(bool Function(T element) test) =>
-      newInstance(iter.removeWhere(test));
+      newInstance(iterable.removeWhere(test));
 
   I replaceAll({required T from, required T to}) =>
-      newInstance(iter.replaceAll(from: from, to: to));
+      newInstance(iterable.replaceAll(from: from, to: to));
 
   I replaceAllWhere(bool Function(T element) test, T to) =>
-      newInstance(iter.replaceAllWhere(test, to));
+      newInstance(iterable.replaceAllWhere(test, to));
 
   I replaceFirst({required T from, required T to}) =>
-      newInstance(iter.replaceFirst(from: from, to: to));
+      newInstance(iterable.replaceFirst(from: from, to: to));
 
   I replaceFirstWhere(
     bool Function(T item) test,
     T Function(T? item) replacement,
-  ) => newInstance(iter.replaceFirstWhere(test, replacement));
+  ) => newInstance(iterable.replaceFirstWhere(test, replacement));
 
   I replaceRange(int start, int end, Iterable<T> replacement) =>
-      newInstance(iter.replaceRange(start, end, replacement));
+      newInstance(iterable.replaceRange(start, end, replacement));
 
   I retainWhere(bool Function(T element) test) =>
-      newInstance(iter.retainWhere(test));
+      newInstance(iterable.retainWhere(test));
 
-  I get reversed => newInstance(iter.reversed);
+  I get reversed => newInstance(iterable.reversed);
 
   I setAll(int index, Iterable<T> iterable) =>
-      newInstance(iter.setAll(index, iterable));
+      newInstance(this.iterable.setAll(index, iterable));
 
   I setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) =>
-      newInstance(iter.setRange(start, end, iterable, skipCount));
+      newInstance(this.iterable.setRange(start, end, iterable, skipCount));
 
-  I shuffle([Random? random]) => newInstance(iter.shuffle(random));
+  I shuffle([Random? random]) => newInstance(iterable.shuffle(random));
 
-  T singleOr(T orElse) => iter.singleOr(orElse);
+  T singleOr(T orElse) => iterable.singleOr(orElse);
 
-  I sort([int Function(T a, T b)? compare]) => newInstance(iter.sort(compare));
+  I sort([int Function(T a, T b)? compare]) =>
+      newInstance(iterable.sort(compare));
 
-  I sublist(int start, [int? end]) => newInstance(iter.sublist(start, end));
+  I sublist(int start, [int? end]) => newInstance(iterable.sublist(start, end));
 
-  I toggle(T element) => newInstance(iter.toggle(element));
+  I toggle(T element) => newInstance(iterable.toggle(element));
 
-  List<T> unlock() => iter.unlock();
+  List<T> unlock() => iterable.unlock();
 
-  List<T> unlockView() => iter.unlockView();
+  List<T> unlockView() => iterable.unlockView();
 
   @override
-  String toString() => "$runtimeType$iter";
+  String toString() => "$runtimeType$iterable";
 }

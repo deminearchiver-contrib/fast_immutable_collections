@@ -423,5 +423,5 @@ class MyList<A extends num>
   MyList<A> newInstance(ImmutableList<A> ilist) => MyList<A>(ilist);
 
   @override
-  ImmutableList<A> get iter => numbs;
+  ImmutableList<A> get iterable => numbs;
 }

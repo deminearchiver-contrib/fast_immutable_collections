@@ -8,8 +8,8 @@ import 'package:fic/src/fic.dart';
 /// but it does **NOT** implement [Iterable] nor [ImmutableSet].
 ///
 /// It is meant to help you wrap an [ImmutableSet] into another class (composition).
-/// You must override the [iter] getter to return the inner [ImmutableSet].
-/// All other methods are efficiently implemented in terms of the [iter].
+/// You must override the [iterable] getter to return the inner [ImmutableSet].
+/// All other methods are efficiently implemented in terms of the [iterable].
 ///
 /// Note: This class does NOT implement [Iterable]. Unfortunately, the [expect]
 /// method in tests compares [Iterable]s by comparing its items. So if you
@@ -17,7 +17,7 @@ import 'package:fic/src/fic.dart';
 /// [expect] method, it will just compare its items, completing ignoring its
 /// `operator ==`.
 ///
-/// If you need to iterate over this class, you can use the [iter] getter:
+/// If you need to iterate over this class, you can use the [iterable] getter:
 ///
 /// ```dart
 /// class MyClass with IterableLikeISetMixin<T> { ... }
@@ -41,75 +41,78 @@ import 'package:fic/src/fic.dart';
 /// See also: [FromISetMixin].
 mixin FromIterableISetMixin<T extends Object?> implements CanBeEmpty {
   /// Classes `with` [FromIterableISetMixin] must override this.
-  ImmutableSet<T> get iter;
+  ImmutableSet<T> get iterable;
 
-  bool any(bool Function(T element) test) => iter.any(test);
+  bool any(bool Function(T element) test) => iterable.any(test);
 
   Iterable<R> cast<R>() => throw UnsupportedError("cast");
 
-  bool contains(covariant T? element) => iter.contains(element);
+  bool contains(covariant T? element) => iterable.contains(element);
 
   T elementAt(int index) =>
       throw UnsupportedError("elementAt in ISet is not allowed");
 
-  bool every(bool Function(T element) test) => iter.every(test);
+  bool every(bool Function(T element) test) => iterable.every(test);
 
-  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iter.expand(f);
+  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iterable.expand(f);
 
-  int get length => iter.length;
+  int get length => iterable.length;
 
-  T get first => iter.first;
+  T get first => iterable.first;
 
-  T get last => iter.last;
+  T get last => iterable.last;
 
-  T get single => iter.single;
+  T get single => iterable.single;
 
   T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.firstWhere(test, orElse: orElse);
+      iterable.firstWhere(test, orElse: orElse);
 
   E fold<E>(E initialValue, E Function(E previousValue, T element) combine) =>
-      iter.fold(initialValue, combine);
+      iterable.fold(initialValue, combine);
 
-  Iterable<T> followedBy(Iterable<T> other) => iter.followedBy(other);
+  Iterable<T> followedBy(Iterable<T> other) => iterable.followedBy(other);
 
-  void forEach(void Function(T element) f) => iter.forEach(f);
+  void forEach(void Function(T element) f) => iterable.forEach(f);
 
-  String join([String separator = ""]) => iter.join(separator);
+  String join([String separator = ""]) => iterable.join(separator);
 
   T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.lastWhere(test, orElse: orElse);
+      iterable.lastWhere(test, orElse: orElse);
 
-  Iterable<E> map<E>(E Function(T element) f) => iter.map(f);
+  Iterable<E> map<E>(E Function(T element) f) => iterable.map(f);
 
-  T reduce(T Function(T value, T element) combine) => iter.reduce(combine);
+  T reduce(T Function(T value, T element) combine) => iterable.reduce(combine);
 
   T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.singleWhere(test, orElse: orElse);
+      iterable.singleWhere(test, orElse: orElse);
 
-  Iterable<T> skip(int count) => iter.skip(count);
+  Iterable<T> skip(int count) => iterable.skip(count);
 
-  Iterable<T> skipWhile(bool Function(T value) test) => iter.skipWhile(test);
+  Iterable<T> skipWhile(bool Function(T value) test) =>
+      iterable.skipWhile(test);
 
-  Iterable<T> take(int count) => iter.take(count);
+  Iterable<T> take(int count) => iterable.take(count);
 
-  Iterable<T> takeWhile(bool Function(T value) test) => iter.takeWhile(test);
+  Iterable<T> takeWhile(bool Function(T value) test) =>
+      iterable.takeWhile(test);
 
-  Iterable<T> where(bool Function(T element) test) => iter.where(test);
+  Iterable<T> where(bool Function(T element) test) => iterable.where(test);
 
-  Iterable<E> whereType<E>() => iter.whereType<E>();
-
-  @override
-  bool get isEmpty => iter.isEmpty;
-
-  @override
-  bool get isNotEmpty => iter.isNotEmpty;
-
-  Iterator<T> get iterator => iter.iterator;
-
-  List<T> toList({bool growable = true}) => List.of(iter, growable: growable);
-
-  Set<T> toSet() => Set.of(iter);
+  Iterable<E> whereType<E>() => iterable.whereType<E>();
 
   @override
-  String toString() => "$runtimeType$iter";
+  bool get isEmpty => iterable.isEmpty;
+
+  @override
+  bool get isNotEmpty => iterable.isNotEmpty;
+
+  Iterator<T> get iterator => iterable.iterator;
+
+  List<T> toList({bool growable = true}) =>
+      List.of(iterable, growable: growable);
+
+  Set<T> toSet() => Set.of(iterable);
+
+  @override
+  String toString() => "$runtimeType$iterable";
 }

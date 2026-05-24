@@ -287,7 +287,7 @@ class LExample<T> extends ImmutableListDelegate<T> {
   T operator [](int index) => _ilist[index];
 
   @override
-  Iterable<T> get iter => _ilist;
+  Iterable<T> get iterable => _ilist;
 
   @override
   T get first => _ilist.first;

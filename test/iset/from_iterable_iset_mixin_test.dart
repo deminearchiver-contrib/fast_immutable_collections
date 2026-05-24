@@ -18,7 +18,7 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, Student("James")]);
 
-    expect(students.iter, {james, sara, lucy});
+    expect(students.iterable, {james, sara, lucy});
   });
 
   test("any", () {
@@ -472,7 +472,7 @@ class Students with FromIterableISetMixin<Student> {
   Students([Iterable<Student>? students]) : _students = ImmutableSet(students);
 
   @override
-  ImmutableSet<Student> get iter => _students;
+  ImmutableSet<Student> get iterable => _students;
 }
 
 @immutable

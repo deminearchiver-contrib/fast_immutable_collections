@@ -202,7 +202,7 @@ void main() {
 
     Students students = Students().add(james).addAll([sara, lucy]);
 
-    expect(students.iter, [james, sara, lucy]);
+    expect(students.iterable, [james, sara, lucy]);
     expect(students.greetings(), "Hello James, Sara, Lucy.");
   });
 
@@ -404,7 +404,7 @@ class Students with FromImmutableListMixin<Student, Students> {
   Students newInstance(ImmutableList<Student> ilist) => Students(ilist);
 
   @override
-  ImmutableList<Student> get iter => _students;
+  ImmutableList<Student> get iterable => _students;
 
   String greetings() => "Hello ${_students.join(", ")}.";
 }

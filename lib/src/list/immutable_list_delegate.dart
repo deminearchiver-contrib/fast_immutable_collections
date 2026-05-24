@@ -25,12 +25,12 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
   Iterator<T> get iterator;
 
   @override
-  bool get isEmpty => iter.isEmpty;
+  bool get isEmpty => iterable.isEmpty;
 
   @override
   bool get isNotEmpty => !isEmpty;
 
-  Iterable<T> get iter;
+  Iterable<T> get iterable;
 
   ImmutableListDelegate<T> add(T item) {
     return ImmutableListAddDelegate<T>(this, item);
@@ -115,13 +115,13 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
   }
 
   @override
-  bool any(bool Function(T element) test) => iter.any(test);
+  bool any(bool Function(T element) test) => iterable.any(test);
 
   @override
-  Iterable<R> cast<R>() => iter.cast<R>();
+  Iterable<R> cast<R>() => iterable.cast<R>();
 
   @override
-  bool contains(covariant T? element) => iter.contains(element);
+  bool contains(covariant T? element) => iterable.contains(element);
 
   T operator [](int index);
 
@@ -129,10 +129,10 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
   T elementAt(int index) => this[index];
 
   @override
-  bool every(bool Function(T element) test) => iter.every(test);
+  bool every(bool Function(T element) test) => iterable.every(test);
 
   @override
-  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iter.expand(f);
+  Iterable<E> expand<E>(Iterable<E> Function(T) f) => iterable.expand(f);
 
   @override
   int get length;
@@ -148,71 +148,74 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
 
   @override
   T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.firstWhere(test, orElse: orElse);
+      iterable.firstWhere(test, orElse: orElse);
 
   @override
   E fold<E>(E initialValue, E Function(E previousValue, T element) combine) =>
-      iter.fold(initialValue, combine);
+      iterable.fold(initialValue, combine);
 
   @override
-  Iterable<T> followedBy(Iterable<T> other) => iter.followedBy(other);
+  Iterable<T> followedBy(Iterable<T> other) => iterable.followedBy(other);
 
   @override
-  void forEach(void Function(T element) f) => iter.forEach(f);
+  void forEach(void Function(T element) f) => iterable.forEach(f);
 
   @override
-  String join([String separator = ""]) => iter.join(separator);
+  String join([String separator = ""]) => iterable.join(separator);
 
   @override
   T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.lastWhere(test, orElse: orElse);
+      iterable.lastWhere(test, orElse: orElse);
 
   @override
-  Iterable<E> map<E>(E Function(T element) f) => iter.map(f);
+  Iterable<E> map<E>(E Function(T element) f) => iterable.map(f);
 
   @override
-  T reduce(T Function(T value, T element) combine) => iter.reduce(combine);
+  T reduce(T Function(T value, T element) combine) => iterable.reduce(combine);
 
   @override
   T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
-      iter.singleWhere(test, orElse: orElse);
+      iterable.singleWhere(test, orElse: orElse);
 
   @override
-  Iterable<T> skip(int count) => iter.skip(count);
+  Iterable<T> skip(int count) => iterable.skip(count);
 
   @override
-  Iterable<T> skipWhile(bool Function(T value) test) => iter.skipWhile(test);
+  Iterable<T> skipWhile(bool Function(T value) test) =>
+      iterable.skipWhile(test);
 
   @override
-  Iterable<T> take(int count) => iter.take(count);
+  Iterable<T> take(int count) => iterable.take(count);
 
   @override
-  Iterable<T> takeWhile(bool Function(T value) test) => iter.takeWhile(test);
+  Iterable<T> takeWhile(bool Function(T value) test) =>
+      iterable.takeWhile(test);
 
   @override
-  Iterable<T> where(bool Function(T element) test) => iter.where(test);
+  Iterable<T> where(bool Function(T element) test) => iterable.where(test);
 
   @override
-  Iterable<E> whereType<E>() => iter.whereType<E>();
+  Iterable<E> whereType<E>() => iterable.whereType<E>();
 
   @override
-  List<T> toList({bool growable = true}) => List.of(iter, growable: growable);
+  List<T> toList({bool growable = true}) =>
+      List.of(iterable, growable: growable);
 
   /// Ordered set.
   @override
-  Set<T> toSet() => Set.of(iter);
+  Set<T> toSet() => Set.of(iterable);
 
   /// Ordered set. Same as [toSet].
-  LinkedHashSet<T> toLinkedHashSet() => LinkedHashSet.of(iter);
+  LinkedHashSet<T> toLinkedHashSet() => LinkedHashSet.of(iterable);
 
   /// Ordered set which is also a list.
   /// Returns a [ListSet], which has the same performance and needs
   /// less memory than a [LinkedHashSet], but can't change size.
-  ListSet<T> toListSet() => ListSet.of(iter);
+  ListSet<T> toListSet() => ListSet.of(iterable);
 
   /// Unordered set. Returns a [HashSet], which is faster than [LinkedHashSet]
   /// and consumes less memory.
-  HashSet<T> toHashSet() => HashSet.of(iter);
+  HashSet<T> toHashSet() => HashSet.of(iterable);
 }
 
 /// First we have the items in [_l] and then the items in [_listOrL].
@@ -239,7 +242,7 @@ class ImmutableListAddAllDelegate<T extends Object?>
   Iterator<T> get iterator => IteratorAddAll(_l.iterator, _listOrL.iterator);
 
   @override
-  Iterable<T> get iter => _l.followedBy(_listOrL);
+  Iterable<T> get iterable => _l.followedBy(_listOrL);
 
   @override
   bool contains(covariant T? element) =>
@@ -292,7 +295,7 @@ class ImmutableListAddDelegate<T extends Object?>
   Iterator<T> get iterator => IteratorAdd(_l.iterator, _item);
 
   @override
-  Iterable<T> get iter => _l.followedBy([_item]);
+  Iterable<T> get iterable => _l.followedBy([_item]);
 
   @override
   bool contains(covariant T? element) =>
@@ -339,7 +342,7 @@ class ImmutableListFlatDelegate<T extends Object?>
   bool get isEmpty => _list.isEmpty;
 
   @override
-  Iterable<T> get iter => _list;
+  Iterable<T> get iterable => _list;
 
   @override
   bool contains(covariant T? element) => _list.contains(element);

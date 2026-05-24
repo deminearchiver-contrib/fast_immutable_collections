@@ -689,10 +689,7 @@ abstract class ImmutableList<T extends Object?>
       // If the outer list is used, it will be flushed before the source lists.
       // If the source lists are not used directly, they will not flush
       // unnecessarily, and also may be garbage collected.
-      .._counter = max(
-        _counter,
-        ((items is ImmutableList<T>) ? items._counter : 0),
-      )
+      .._counter = max(_counter, items is ImmutableList<T> ? items._counter : 0)
       .._count();
   }
 

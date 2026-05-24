@@ -58,7 +58,7 @@ class SExample<T> extends ImmutableSetDelegate<T> {
   SExample([Iterable<T>? iterable]) : _iset = ImmutableSet(iterable);
 
   @override
-  Iterable<T> get iter => _iset;
+  Iterable<T> get iterable => _iset;
 
   @override
   Iterator<T> get iterator => _iset.iterator;

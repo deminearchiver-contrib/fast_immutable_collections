@@ -82,7 +82,7 @@ void main() {
       ImmutableListFlatDelegate<int>([4, 2, 3]),
       1,
     );
-    expect(lAdd.iter, allOf(isA<Iterable<int>>(), [4, 2, 3, 1]));
+    expect(lAdd.iterable, allOf(isA<Iterable<int>>(), [4, 2, 3, 1]));
   });
 
   test("iterator", () {

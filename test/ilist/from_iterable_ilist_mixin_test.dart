@@ -529,7 +529,7 @@ class Students with FromIterableIListMixin<Student> {
   Students([Iterable<Student>? students]) : _students = ImmutableList(students);
 
   @override
-  ImmutableList<Student> get iter => _students;
+  ImmutableList<Student> get iterable => _students;
 }
 
 @immutable

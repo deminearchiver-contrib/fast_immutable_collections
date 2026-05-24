@@ -96,7 +96,7 @@ void main() {
           4,
           5,
         ]);
-    expect(lAddAll.iter, allOf(isA<Iterable<int>>(), [1, 2, 3, 4, 5]));
+    expect(lAddAll.iterable, allOf(isA<Iterable<int>>(), [1, 2, 3, 4, 5]));
   });
 
   test("iterator", () {

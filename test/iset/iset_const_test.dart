@@ -404,5 +404,5 @@ class MySet<A extends num>
   MySet<A> newInstance(ImmutableSet<A> iSet) => MySet<A>(iSet);
 
   @override
-  ImmutableSet<A> get iter => numbs;
+  ImmutableSet<A> get iterable => numbs;
 }
