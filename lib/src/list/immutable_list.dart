@@ -1960,7 +1960,7 @@ class ImmutableListImplementation<T extends Object?> extends ImmutableList<T> {
   final ImmutableListConfig config;
 
   @override
-  late ImmutableListDelegate<T> _delegate;
+  final ImmutableListDelegate<T> _delegate;
 
   @override
   int _counter = 0;

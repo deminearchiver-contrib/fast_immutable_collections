@@ -1129,7 +1129,7 @@ void main() {
 
   test("toIList", () {
     final ImmutableSet<int> iset = {1, 2, 3}.lock.add(4).addAll({5, 6});
-    expect(iset.toIList(), ImmutableList([1, 2, 3, 4, 5, 6]));
+    expect(iset.toImmutableList(), ImmutableList([1, 2, 3, 4, 5, 6]));
   });
 
   test("toSet", () {
@@ -1414,7 +1414,7 @@ void main() {
     var result1 = iset.join(",");
     var result2 = iset.iterator.toIterable().join(",");
     var result3 = iset.toList().join(",");
-    var result4 = iset.toIList().join(",");
+    var result4 = iset.toImmutableList().join(",");
     var result5 = iset.toSet().join(",");
     expect(iset.config.sort, isTrue);
     expect(result1, "1,2,3,4,9");
@@ -1428,7 +1428,7 @@ void main() {
     result1 = iset.join(",");
     result2 = iset.iterator.toIterable().join(",");
     result3 = iset.toList().join(",");
-    result4 = iset.toIList().join(",");
+    result4 = iset.toImmutableList().join(",");
     result5 = iset.toSet().join(",");
     expect(iset.config.sort, isFalse);
     expect(result1, "2,4,1,9,3");

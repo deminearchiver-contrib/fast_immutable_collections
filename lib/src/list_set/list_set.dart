@@ -21,13 +21,9 @@ import 'package:fic/src/fic.dart';
 /// then sort it, than turn it back into a [Set].
 ///
 class ListSet<T extends Object?> implements Set<T>, List<T> {
-  late Set<T> _set;
-  late List<T> _list;
+  ListSet._(this._set, this._list) : assert(_set.length == _list.length);
 
-  ListSet.empty() {
-    _set = HashSet();
-    _list = List.empty(growable: false);
-  }
+  ListSet.empty() : _set = HashSet(), _list = List.empty(growable: false);
 
   /// Create a [ListSet] from the [items] iterable.
   ///
@@ -45,11 +41,12 @@ class ListSet<T extends Object?> implements Set<T>, List<T> {
     if (sort) _list.sort(compare ?? compareObject);
   }
 
-  ListSet._(this._set, this._list) : assert(_set.length == _list.length);
-
   /// Converts from JSon. Json serialization support for json_serializable with @JsonSerializable.
   factory ListSet.fromJson(dynamic json, T Function(Object?) fromJsonT) =>
       ListSet<T>.of((json as Iterable).map(fromJsonT));
+
+  late final Set<T> _set;
+  late final List<T> _list;
 
   /// Converts to JSon. Json serialization support for json_serializable with @JsonSerializable.
   Object toJson(Object? Function(T) toJsonT) => map(toJsonT).toList();

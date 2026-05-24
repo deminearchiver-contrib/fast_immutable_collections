@@ -214,7 +214,7 @@ void main() {
     var result1 = iset.join(",");
     var result2 = iset.iterator.toIterable().join(",");
     var result3 = iset.toList().join(",");
-    var result4 = iset.toIList().join(",");
+    var result4 = iset.toImmutableList().join(",");
     var result5 = iset.toSet().join(",");
     print(iset.config.sort);
     print(result1);
@@ -233,7 +233,7 @@ void main() {
     result1 = iset.join(",");
     result2 = iset.iterator.toIterable().join(",");
     result3 = iset.toList().join(",");
-    result4 = iset.toIList().join(",");
+    result4 = iset.toImmutableList().join(",");
     result5 = iset.toSet().join(",");
     print(result1);
     print(result2);
@@ -441,8 +441,8 @@ class StudentsPerCourse {
   IMapOfSets<Student?, Course> getCoursesPerStudent() =>
       imap.invertKeysAndValues();
 
-  ImmutableList<Student?> studentsInAlphabeticOrder() =>
-      imap.valuesAsSet.toIList(compare: (s1, s2) => s1.name.compareTo(s2.name));
+  ImmutableList<Student?> studentsInAlphabeticOrder() => imap.valuesAsSet
+      .toImmutableList(compare: (s1, s2) => s1.name.compareTo(s2.name));
 
   ImmutableList<String>? studentNamesInAlphabeticOrder() =>
       imap.valuesAsSet.map((s) => s.name).toImmutableList();

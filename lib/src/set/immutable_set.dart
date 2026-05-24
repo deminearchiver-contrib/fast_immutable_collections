@@ -320,9 +320,9 @@ abstract class ImmutableSet<T extends Object?>
 
   /// **Unsafe**. Note: Does not sort.
   factory ImmutableSet._unsafe(
-    ImmutableSetDelegate<T> _s, {
+    ImmutableSetDelegate<T> delegate, {
     required ImmutableSetConfig config,
-  }) => ImmutableSetImplementation._unsafe(_s, config: config);
+  }) => ImmutableSetImplementation._unsafe(delegate, config: config);
 
   /// **Unsafe**. Note: Does not sort.
   factory ImmutableSet._unsafeFromSet(
@@ -802,7 +802,7 @@ abstract class ImmutableSet<T extends Object?>
   ///
   /// You can also provide a [config] for the [ImmutableList].
   ///
-  ImmutableList<T> toIList({
+  ImmutableList<T> toImmutableList({
     int Function(T a, T b)? compare,
     ImmutableListConfig? config,
   }) => ImmutableList.fromISet(this, compare: compare, config: config);
@@ -1015,7 +1015,7 @@ class ImmutableSetImplementation<T extends Object?> extends ImmutableSet<T> {
   final ImmutableSetConfig config;
 
   @override
-  late ImmutableSetDelegate<T> _delegate;
+  final ImmutableSetDelegate<T> _delegate;
 
   @override
   int _counter = 0;

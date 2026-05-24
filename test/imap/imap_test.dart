@@ -1394,14 +1394,10 @@ void main() {
       "e",
       "f",
     ]);
-    expect(imap.withConfig(ImmutableMapConfig(sort: true)).toKeyIList(), [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e",
-      "f",
-    ]);
+    expect(
+      imap.withConfig(ImmutableMapConfig(sort: true)).keysToImmutableList(),
+      ["a", "b", "c", "d", "e", "f"],
+    );
   });
 
   test("values", () {
@@ -1431,8 +1427,11 @@ void main() {
       "b": 2,
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
-    expect(imap.toEntryIList(), isA<ImmutableList<MapEntry<String, int>>>());
-    imap.toEntryIList().forEach(
+    expect(
+      imap.entriesToImmutableList(),
+      isA<ImmutableList<MapEntry<String, int>>>(),
+    );
+    imap.entriesToImmutableList().forEach(
       (MapEntry<String, int?>? entry) =>
           expect(finalMap[entry!.key], entry.value),
     );
@@ -1453,7 +1452,7 @@ void main() {
     ].lock;
     final orderedEntries = imap2
         .withConfig(ImmutableMapConfig(sort: false))
-        .toEntryIList(
+        .entriesToImmutableList(
           compare: (MapEntry<String, int?>? a, MapEntry<String, int?>? b) =>
               a!.key.compareTo(b!.key),
         );
@@ -1466,7 +1465,7 @@ void main() {
     // 2.2) Sorting with sortKeys
     final orderedEntriesFromConfig = imap2
         .withConfig(ImmutableMapConfig(sort: true))
-        .toEntryIList();
+        .entriesToImmutableList();
 
     for (int i = 0; i < orderedEntries.length; i++) {
       expect(orderedEntriesFromConfig[i].key, correctEntries[i].key);
@@ -1481,24 +1480,22 @@ void main() {
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
     expect(
-      imap.toKeyIList(),
+      imap.keysToImmutableList(),
       allOf(isA<ImmutableList<String>>(), ["a", "c", "b", "d", "f", "e"]),
     );
 
     expect(
       imap
           .withConfig(ImmutableMapConfig(sort: false))
-          .toKeyIList(compare: (String? a, String? b) => a!.compareTo(b!)),
+          .keysToImmutableList(
+            compare: (String? a, String? b) => a!.compareTo(b!),
+          ),
       ["a", "b", "c", "d", "e", "f"],
     );
-    expect(imap.withConfig(ImmutableMapConfig(sort: true)).toKeyIList(), [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e",
-      "f",
-    ]);
+    expect(
+      imap.withConfig(ImmutableMapConfig(sort: true)).keysToImmutableList(),
+      ["a", "b", "c", "d", "e", "f"],
+    );
   });
 
   test("valueList", () {
@@ -1508,12 +1505,12 @@ void main() {
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
     expect(
-      imap.toValueIList(),
+      imap.valuesToImmutableList(),
       allOf(isA<ImmutableList<int>>(), [1, 3, 2, 4, 6, 5]),
     );
 
     expect(
-      () => imap.toValueIList(
+      () => imap.valuesToImmutableList(
         sort: false,
         compare: (int? a, int? b) => a!.compareTo(b!),
       ),
@@ -1521,14 +1518,14 @@ void main() {
     );
 
     expect(
-      imap.toValueIList(
+      imap.valuesToImmutableList(
         sort: true,
         compare: (int? a, int? b) => a!.compareTo(b!),
       ),
       [1, 2, 3, 4, 5, 6],
     );
 
-    expect(imap.toValueIList(sort: true), [1, 2, 3, 4, 5, 6]);
+    expect(imap.valuesToImmutableList(sort: true), [1, 2, 3, 4, 5, 6]);
   });
 
   test("entrySet", () {
@@ -1545,8 +1542,11 @@ void main() {
       "e": 5,
       "f": 6,
     };
-    expect(imap.toEntryISet(), isA<ImmutableSet<MapEntry<String, int>>>());
-    imap.toEntryISet().forEach(
+    expect(
+      imap.entriesToImmutableSet(),
+      isA<ImmutableSet<MapEntry<String, int>>>(),
+    );
+    imap.entriesToImmutableSet().forEach(
       (MapEntry<String, int?>? entry) =>
           expect(finalMap[entry!.key], entry.value),
     );
@@ -1559,8 +1559,8 @@ void main() {
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<String> keys = ["a", "b", "c", "d", "e", "f"];
-    expect(imap.toKeyISet(), isA<ImmutableSet<String>>());
-    imap.toKeyISet().forEach(
+    expect(imap.keysToImmutableSet(), isA<ImmutableSet<String>>());
+    imap.keysToImmutableSet().forEach(
       (String? key) => expect(keys.contains(key), isTrue),
     );
   });
@@ -1573,10 +1573,10 @@ void main() {
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<int> values = [1, 2, 3, 4, 5, 6];
     expect(
-      imap.toValueISet(),
+      imap.valuesToImmutableSet(),
       allOf(isA<ImmutableSet<int>>(), {1, 2, 3, 4, 5, 6}),
     );
-    imap.toValueISet().forEach(
+    imap.valuesToImmutableSet().forEach(
       (int? value) => expect(values.contains(value), isTrue),
     );
   });
@@ -1597,8 +1597,8 @@ void main() {
       "b": 2,
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
-    expect(imap.toEntryList(), isA<List<MapEntry<String, int>>>());
-    imap.toEntryList().forEach(
+    expect(imap.entriesToList(), isA<List<MapEntry<String, int>>>());
+    imap.entriesToList().forEach(
       (MapEntry<String, int?> entry) =>
           expect(finalMap[entry.key], entry.value),
     );
@@ -1619,7 +1619,7 @@ void main() {
     ];
     final orderedEntries = imap2
         .withConfig(ImmutableMapConfig(sort: false))
-        .toEntryList(
+        .entriesToList(
           compare: (MapEntry<String, int?> a, MapEntry<String, int?> b) =>
               a.key.compareTo(b.key),
         );
@@ -1632,7 +1632,7 @@ void main() {
     // 2.2) Sorting with sortKeys
     final orderedEntriesFromConfig = imap2
         .withConfig(ImmutableMapConfig(sort: true))
-        .toEntryList();
+        .entriesToList();
 
     for (int i = 0; i < orderedEntries.length; i++) {
       expect(orderedEntriesFromConfig[i].key, correctEntries[i].key);
@@ -1647,17 +1647,17 @@ void main() {
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
     expect(
-      imap.toKeyList(),
+      imap.keysToList(),
       allOf(isA<List<String>>(), ["a", "c", "b", "d", "f", "e"]),
     );
 
     expect(
       imap
           .withConfig(ImmutableMapConfig(sort: false))
-          .toKeyList(compare: (String a, String b) => a.compareTo(b)),
+          .keysToList(compare: (String a, String b) => a.compareTo(b)),
       ["a", "b", "c", "d", "e", "f"],
     );
-    expect(imap.withConfig(ImmutableMapConfig(sort: true)).toKeyList(), [
+    expect(imap.withConfig(ImmutableMapConfig(sort: true)).keysToList(), [
       "a",
       "b",
       "c",
@@ -1673,10 +1673,10 @@ void main() {
       "c": 3,
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
-    expect(imap.toValueList(), allOf(isA<List<int>>(), [1, 3, 2, 4, 6, 5]));
+    expect(imap.valuesToList(), allOf(isA<List<int>>(), [1, 3, 2, 4, 6, 5]));
 
     expect(
-      () => imap.toValueList(
+      () => imap.valuesToList(
         compare: (int? a, int? b) => a!.compareTo(b!),
         sort: false,
       ),
@@ -1684,14 +1684,14 @@ void main() {
     );
 
     expect(
-      imap.toValueList(
+      imap.valuesToList(
         compare: (int? a, int? b) => a!.compareTo(b!),
         sort: true,
       ),
       [1, 2, 3, 4, 5, 6],
     );
 
-    expect(imap.toValueList(sort: true), [1, 2, 3, 4, 5, 6]);
+    expect(imap.valuesToList(sort: true), [1, 2, 3, 4, 5, 6]);
   });
 
   test("toEntrySet", () {
@@ -1710,16 +1710,16 @@ void main() {
       "b": 2,
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
-    expect(imap.toEntrySet(), isA<Set<MapEntry<String, int>>>());
-    imap.toEntrySet().forEach(
+    expect(imap.entriesToSet(), isA<Set<MapEntry<String, int>>>());
+    imap.entriesToSet().forEach(
       (MapEntry<String, int?> entry) =>
           expect(finalMap[entry.key], entry.value),
     );
 
     // 2) When compare = null
-    expect(imap.toEntrySet(compare: null), isA<Set<MapEntry<String, int>>>());
+    expect(imap.entriesToSet(compare: null), isA<Set<MapEntry<String, int>>>());
     imap
-        .toEntrySet(compare: null)
+        .entriesToSet(compare: null)
         .forEach(
           (MapEntry<String, int?> entry) =>
               expect(imap[entry.key], entry.value),
@@ -1733,11 +1733,11 @@ void main() {
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
     expect(
-      imap.toKeySet(),
+      imap.keysToSet(),
       allOf(isA<Set<String>>(), {"a", "c", "b", "d", "f", "e"}),
     );
     expect(
-      imap.toKeySet(compare: null),
+      imap.keysToSet(compare: null),
       allOf(isA<Set<String>>(), {"a", "c", "b", "d", "f", "e"}),
     );
   });
@@ -1748,9 +1748,9 @@ void main() {
       "c": 3,
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
-    expect(imap.toValueSet(), allOf(isA<Set<int>>(), {1, 3, 2, 4, 6, 5}));
+    expect(imap.valuesToSet(), allOf(isA<Set<int>>(), {1, 3, 2, 4, 6, 5}));
     expect(
-      imap.toValueSet(compare: null),
+      imap.valuesToSet(compare: null),
       allOf(isA<Set<int>>(), {1, 3, 2, 4, 6, 5}),
     );
   });
@@ -2015,8 +2015,8 @@ void main() {
       "e": 5,
       "f": 6,
     };
-    expect(imap.toEntryList(), isA<List<MapEntry<String, int>>>());
-    imap.toEntryList().forEach(
+    expect(imap.entriesToList(), isA<List<MapEntry<String, int>>>());
+    imap.entriesToList().forEach(
       (MapEntry<String, int> entry) => expect(finalMap[entry.key], entry.value),
     );
 
@@ -2028,7 +2028,7 @@ void main() {
       Entry("f", 6),
       Entry("e", 5),
     ];
-    final List<MapEntry<String, int>> mapEntryList = imap.toEntryList();
+    final List<MapEntry<String, int>> mapEntryList = imap.entriesToList();
     for (int i = 0; i < mapEntryList.length; i++)
       expect(mapEntryList[i].asComparableEntry, correctEntryList[i]);
 
@@ -2043,7 +2043,7 @@ void main() {
     ];
     final List<MapEntry<String, int>> mapEntryListSorted = imap
         .withConfig(ImmutableMapConfig(sort: true))
-        .toEntryList();
+        .entriesToList();
     for (int i = 0; i < mapEntryListSorted.length; i++)
       expect(
         mapEntryListSorted[i].asComparableEntry,
@@ -2058,10 +2058,10 @@ void main() {
       "c": 3,
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
-    expect(imap.toKeyList(), ["a", "c", "b", "d", "f", "e"]);
+    expect(imap.keysToList(), ["a", "c", "b", "d", "f", "e"]);
 
     // 2) With sorting
-    expect(imap.withConfig(ImmutableMapConfig(sort: true)).toKeyList(), [
+    expect(imap.withConfig(ImmutableMapConfig(sort: true)).keysToList(), [
       "a",
       "b",
       "c",
@@ -2078,10 +2078,10 @@ void main() {
       "c": 3,
       "b": 2,
     }.lock.add("d", 4).addAll(ImmutableMap({"f": 6, "e": 5}));
-    expect(imap.toValueList(), [1, 3, 2, 4, 6, 5]);
+    expect(imap.valuesToList(), [1, 3, 2, 4, 6, 5]);
 
     // 2) With sorting
-    expect(imap.toValueList(sort: true), [1, 2, 3, 4, 5, 6]);
+    expect(imap.valuesToList(sort: true), [1, 2, 3, 4, 5, 6]);
   });
 
   test("toISet", () {
@@ -2098,8 +2098,8 @@ void main() {
       "e": 5,
       "f": 6,
     };
-    expect(imap.toEntrySet(), isA<Set<MapEntry<String, int>>>());
-    imap.toEntrySet().forEach(
+    expect(imap.entriesToSet(), isA<Set<MapEntry<String, int>>>());
+    imap.entriesToSet().forEach(
       (MapEntry<String, int?> entry) =>
           expect(finalMap[entry.key], entry.value),
     );
@@ -2112,8 +2112,8 @@ void main() {
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<String> keys = ["a", "b", "c", "d", "e", "f"];
-    expect(imap.toKeySet(), isA<Set<String>>());
-    expect(imap.toKeySet(), keys.toSet());
+    expect(imap.keysToSet(), isA<Set<String>>());
+    expect(imap.keysToSet(), keys.toSet());
   });
 
   test("toValueSet", () {
@@ -2123,8 +2123,8 @@ void main() {
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<int> values = [1, 2, 3, 4, 5, 6];
-    expect(imap.toValueSet(), isA<Set<int>>());
-    expect(imap.toValueSet(), values.toSet());
+    expect(imap.valuesToSet(), isA<Set<int>>());
+    expect(imap.valuesToSet(), values.toSet());
   });
 
   test("toKeyISet", () {
@@ -2134,8 +2134,8 @@ void main() {
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<String> keys = ["a", "b", "c", "d", "e", "f"];
-    expect(imap.toKeyISet(), isA<ImmutableSet<String>>());
-    expect(imap.toKeyISet(), keys.toSet());
+    expect(imap.keysToImmutableSet(), isA<ImmutableSet<String>>());
+    expect(imap.keysToImmutableSet(), keys.toSet());
   });
 
   test("length", () {
@@ -2161,8 +2161,8 @@ void main() {
       "c": 3,
     }.lock.add("d", 4).addAll(ImmutableMap({"e": 5, "f": 6}));
     const List<int> values = [1, 2, 3, 4, 5, 6];
-    expect(imap.toValueISet(), isA<ImmutableSet<int>>());
-    expect(imap.toValueISet(), values.toSet());
+    expect(imap.valuesToImmutableSet(), isA<ImmutableSet<int>>());
+    expect(imap.valuesToImmutableSet(), values.toSet());
   });
 
   test("forEach", () {

@@ -259,8 +259,8 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
     ImmutableMapConfig? config,
   }) {
     config ??= defaultConfig;
-    keyMapper ??= (I i) => i as K;
-    valueMapper ??= (I i) => i as V;
+    keyMapper ??= (i) => i as K;
+    valueMapper ??= (i) => i as V;
 
     final Map<K, V> map = ListMap.fromEntries(
       iterable.map((item) => MapEntry(keyMapper!(item), valueMapper!(item))),
@@ -444,9 +444,9 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
 
   /// **Unsafe**. Note: Does not sort.
   factory ImmutableMap._unsafe(
-    ImmutableMapDelegate<K, V> _m, {
+    ImmutableMapDelegate<K, V> delegate, {
     required ImmutableMapConfig config,
-  }) => ImmutableMapImplementation._unsafe(_m, config: config);
+  }) => ImmutableMapImplementation._unsafe(delegate, config: config);
 
   /// **Unsafe**.
   factory ImmutableMap._unsafeFromMap(
@@ -487,8 +487,8 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
 
   /// Return the [MapEntry] for the given [key].
   /// For key/value pairs that don't exist, it will return null.
-  // ignore: null_check_on_nullable_type_parameter
   MapEntry<K, V>? entryOrNull(K key) =>
+      // ignore: null_check_on_nullable_type_parameter
       _delegate.containsKey(key) ? MapEntry(key, _delegate[key]!) : null;
 
   /// Returns an [Iterable] of the map entries of type [Entry]. Contrary to
@@ -498,15 +498,11 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
       _delegate.entries.map((e) => e.asComparableEntry);
 
   /// Returns an [Iterable] of the map keys.
-  Iterable<K> get keys {
-    return _delegate.keys;
-  }
+  Iterable<K> get keys => _delegate.keys;
 
   /// Returns an [Iterable] of the map values, in the same order as the keys.
-  /// If you need to sort the values, please use [toValueIList].
-  Iterable<V> get values {
-    return _delegate.values;
-  }
+  /// If you need to sort the values, please use [valuesToImmutableList].
+  Iterable<V> get values => _delegate.values;
 
   /// Returns an [ImmutableList] of the map entries.
   ///
@@ -515,7 +511,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The list will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  ImmutableList<MapEntry<K, V>> toEntryIList({
+  ImmutableList<MapEntry<K, V>> entriesToImmutableList({
     int Function(MapEntry<K, V>? a, MapEntry<K, V>? b)? compare,
     ImmutableListConfig? config,
   }) {
@@ -534,7 +530,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The list will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  ImmutableList<K> toKeyIList({
+  ImmutableList<K> keysToImmutableList({
     int Function(K? a, K? b)? compare,
     ImmutableListConfig? config,
   }) {
@@ -554,12 +550,12 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// provided, or with [compareObject] if not provided. If [sort] is
   /// false, [compare] will be ignored.
   ///
-  ImmutableList<V> toValueIList({
+  ImmutableList<V> valuesToImmutableList({
     bool sort = false,
     int Function(V a, V b)? compare,
     ImmutableListConfig? config,
   }) {
-    assert(compare == null || sort == true);
+    assert(compare == null || sort);
 
     var result = ImmutableList.withConfig(
       values,
@@ -571,18 +567,19 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
 
   /// Returns an [ImmutableSet] of the map entries.
   /// Optionally, you may provide a [config] for the set.
-  ImmutableSet<MapEntry<K, V>> toEntryISet({ImmutableSetConfig? config}) =>
-      ImmutableSet.withConfig(entries, config ?? ImmutableSet.defaultConfig);
+  ImmutableSet<MapEntry<K, V>> entriesToImmutableSet({
+    ImmutableSetConfig? config,
+  }) => ImmutableSet.withConfig(entries, config ?? ImmutableSet.defaultConfig);
 
   /// Returns an [ImmutableSet] of the map keys.
   /// Optionally, you may provide a [config] for the set.
-  ImmutableSet<K> toKeyISet({ImmutableSetConfig? config}) {
+  ImmutableSet<K> keysToImmutableSet({ImmutableSetConfig? config}) {
     return ImmutableSet.withConfig(keys, config ?? ImmutableSet.defaultConfig);
   }
 
   /// Returns an [ImmutableSet] of the map values.
   /// Optionally, you may provide a [config] for the set.
-  ImmutableSet<V> toValueISet({ImmutableSetConfig? config}) {
+  ImmutableSet<V> valuesToImmutableSet({ImmutableSetConfig? config}) {
     return ImmutableSet.withConfig(
       values,
       config ?? ImmutableSet.defaultConfig,
@@ -594,7 +591,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The list will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  List<MapEntry<K, V>> toEntryList({
+  List<MapEntry<K, V>> entriesToList({
     int Function(MapEntry<K, V> a, MapEntry<K, V> b)? compare,
   }) {
     final result = List<MapEntry<K, V>>.of(entries);
@@ -607,7 +604,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The list will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  List<K> toKeyList({int Function(K a, K b)? compare}) {
+  List<K> keysToList({int Function(K a, K b)? compare}) {
     final result = List.of(keys);
     if (compare != null || config.sort) result.sort(compare);
     return result;
@@ -619,8 +616,8 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// provided, or with [compareObject] if not provided. If [sort] is
   /// false, [compare] will be ignored.
   ///
-  List<V> toValueList({bool sort = false, int Function(V a, V b)? compare}) {
-    assert(compare == null || sort == true);
+  List<V> valuesToList({bool sort = false, int Function(V a, V b)? compare}) {
+    assert(compare == null || sort);
 
     final result = List.of(values);
     if (sort) result.sort(compare ?? compareObject);
@@ -630,13 +627,13 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// Returns a [Set] of the map entries.
   /// The set will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
-  Set<MapEntry<K, V>> toEntrySet({
+  Set<MapEntry<K, V>> entriesToSet({
     int Function(MapEntry<K, V> a, MapEntry<K, V> b)? compare,
   }) {
     if (compare == null) {
       return Set<MapEntry<K, V>>.of(entries);
     } else {
-      return toEntryList(compare: compare).toSet();
+      return entriesToList(compare: compare).toSet();
     }
   }
 
@@ -644,11 +641,11 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The set will be sorted if the map's [sort] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  Set<K> toKeySet({int Function(K a, K b)? compare}) {
+  Set<K> keysToSet({int Function(K a, K b)? compare}) {
     if (compare == null) {
       return Set<K>.of(keys);
     } else {
-      return toKeyList(compare: compare).toSet();
+      return keysToList(compare: compare).toSet();
     }
   }
 
@@ -656,8 +653,8 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// The set will be sorted if the map's [sortValues] configuration is `true`,
   /// or if you explicitly provide a [compare] method.
   ///
-  Set<V> toValueSet({int Function(V a, V b)? compare}) {
-    return toValueList(compare: compare).toSet();
+  Set<V> valuesToSet({int Function(V a, V b)? compare}) {
+    return valuesToList(compare: compare).toSet();
   }
 
   /// Returns a new `Iterator` that allows iterating the entries of the [ImmutableMap].
@@ -680,7 +677,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// Unlocks the map, returning a regular, *mutable, ordered, sorted*, [Map]
   /// of type [LinkedHashMap]. This map is "safe", in the sense that is
   /// independent from the original [ImmutableMap].
-  Map<K, V> get unlockSorted => <K, V>{}..addEntries(toEntryIList());
+  Map<K, V> get unlockSorted => <K, V>{}..addEntries(entriesToImmutableList());
 
   /// Unlocks the map, returning a safe, unmodifiable (immutable) [Map] view.
   /// The word "view" means the set is backed by the original [ImmutableMap].
@@ -1085,7 +1082,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// of elements created by combining the entries keys and values.
   ///
   Iterable<T> mapTo<T>(T Function(K key, V value) mapper) =>
-      entries.map((MapEntry<K, V> entry) => mapper(entry.key, entry.value));
+      entries.map((entry) => mapper(entry.key, entry.value));
 
   /// Returns a string representation of (some of) the elements of `this`.
   ///
@@ -1258,7 +1255,7 @@ final class ImmutableMapImplementation<K extends Object?, V extends Object?>
   final ImmutableMapConfig config;
 
   @override
-  late ImmutableMapDelegate<K, V> _delegate;
+  final ImmutableMapDelegate<K, V> _delegate;
 
   @override
   int _counter = 0;
