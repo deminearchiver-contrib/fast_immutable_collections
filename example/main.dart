@@ -1,9 +1,9 @@
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:fic/fic.dart';
 
 void main() {
   // Example usage of IList.
   print('IList Example:');
-  IList<int> iList = IList<int>();
+  ImmutableList<int> iList = ImmutableList<int>();
 
   // Add elements to the list.
   iList = iList.add(10).addAll([20, 30, 40]);
@@ -22,14 +22,12 @@ void main() {
   print('Does the list contain 30? $containsThirty');
 
   // Creating a empty IList
-  const emptyIList = IList<String>.empty();
+  const emptyIList = ImmutableList<String>.emptyLiteral();
   print("Empty IList is empty? ${emptyIList.isEmpty}");
-
-
 
   // Example usage of ISet.
   print('\nISet Example:');
-  ISet<String> iSet = ISet<String>();
+  ImmutableSet<String> iSet = ImmutableSet<String>();
 
   // Add elements to the set.
   iSet = iSet.add('apple').addAll(['banana', 'orange', 'grape']);
@@ -50,19 +48,19 @@ void main() {
   }
 
   // Creating a empty ISet
-  const emptyISet = ISet<String>.empty();
+  const emptyISet = ImmutableSet<String>.empty();
   print("Empty ISet is empty? ${emptyISet.isEmpty}");
 
   // Example usage of IMap
   print('\nIMap Example:');
-  IMap<String, String> iMap = IMap<String, String>();
+  ImmutableMap<String, String> iMap = ImmutableMap<String, String>();
 
   // Add elements to the map.
   iMap = iMap.add('apple', 'red');
   iMap = iMap.addEntries([
     const MapEntry('banana', 'yellow'),
     const MapEntry('orange', 'orange'),
-    const MapEntry('grape', 'green')
+    const MapEntry('grape', 'green'),
   ]);
   print('Original Map: $iMap');
 
@@ -81,6 +79,6 @@ void main() {
   }
 
   // Creating a empty IMap
-  const emptyIMap = IMap<String, String>.empty();
+  const emptyIMap = ImmutableMap<String, String>.empty();
   print("Empty IMap is empty? ${emptyIMap.isEmpty}");
 }

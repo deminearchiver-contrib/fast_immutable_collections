@@ -2,8 +2,8 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
@@ -40,7 +40,9 @@ void main() {
     ];
 
     views.forEach((UnmodifiableMapFromIMap<String, int> view) {
-      baseMap.keys.forEach((String key) => expect(view.keys.contains(key), isTrue));
+      baseMap.keys.forEach(
+        (String key) => expect(view.keys.contains(key), isTrue),
+      );
       expect(baseMap.keys.length, view.keys.length);
     });
   });
@@ -55,7 +57,10 @@ void main() {
       unmodifiableMapViewFromMap,
     ];
 
-    views.forEach((UnmodifiableMapFromIMap<String, int> view) => expect(view.lock, baseMap.lock));
+    views.forEach(
+      (UnmodifiableMapFromIMap<String, int> view) =>
+          expect(view.lock, baseMap.lock),
+    );
   });
 
   test("[]=", () {
@@ -68,8 +73,10 @@ void main() {
       unmodifiableMapViewFromMap,
     ];
 
-    views.forEach((UnmodifiableMapFromIMap<String, int> view) =>
-        expect(() => view["a"] = 10, throwsUnsupportedError));
+    views.forEach(
+      (UnmodifiableMapFromIMap<String, int> view) =>
+          expect(() => view["a"] = 10, throwsUnsupportedError),
+    );
   });
 
   test("clear", () {
@@ -82,8 +89,10 @@ void main() {
       unmodifiableMapViewFromMap,
     ];
 
-    views.forEach((UnmodifiableMapFromIMap<String, int> view) =>
-        expect(() => view.clear(), throwsUnsupportedError));
+    views.forEach(
+      (UnmodifiableMapFromIMap<String, int> view) =>
+          expect(() => view.clear(), throwsUnsupportedError),
+    );
   });
 
   test("remove", () {
@@ -96,7 +105,9 @@ void main() {
       unmodifiableMapViewFromMap,
     ];
 
-    views.forEach((UnmodifiableMapFromIMap<String, int> view) =>
-        expect(() => view.remove("a"), throwsUnsupportedError));
+    views.forEach(
+      (UnmodifiableMapFromIMap<String, int> view) =>
+          expect(() => view.remove("a"), throwsUnsupportedError),
+    );
   });
 }

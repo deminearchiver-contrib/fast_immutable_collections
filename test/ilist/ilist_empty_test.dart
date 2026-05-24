@@ -1,7 +1,7 @@
 // Developed by Marcelo Glasberg (2021) https://glasberg.dev and https://github.com/marcglasberg
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:fic/src/fic.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -11,34 +11,43 @@ void main() {
   });
 
   test("Runtime Type", () {
-    expect(const IList.empty(), isA<IListEmpty>());
-    expect(const IList.empty(), isA<IListEmpty>());
-    expect(const IList<String>.empty(), isA<IListEmpty<String>>());
-    expect(const IList<int>.empty(), isA<IListEmpty<int>>());
+    expect(const ImmutableList.emptyLiteral(), isA<ImmutableListEmpty>());
+    expect(const ImmutableList.emptyLiteral(), isA<ImmutableListEmpty>());
+    expect(
+      const ImmutableList<String>.emptyLiteral(),
+      isA<ImmutableListEmpty<String>>(),
+    );
+    expect(
+      const ImmutableList<int>.emptyLiteral(),
+      isA<ImmutableListEmpty<int>>(),
+    );
 
-    expect(const IList.empty(), isA<IList>());
-    expect(const IList.empty(), isA<IList>());
-    expect(const IList<String>.empty(), isA<IList<String>>());
-    expect(const IList<int>.empty(), isA<IList<int>>());
+    expect(const ImmutableList.emptyLiteral(), isA<ImmutableList>());
+    expect(const ImmutableList.emptyLiteral(), isA<ImmutableList>());
+    expect(
+      const ImmutableList<String>.emptyLiteral(),
+      isA<ImmutableList<String>>(),
+    );
+    expect(const ImmutableList<int>.emptyLiteral(), isA<ImmutableList<int>>());
   });
 
   test("Make sure the IListEmpty can be modified and later iterated", () {
     // LAddAll
-    IList<String> list = const IList.empty();
+    ImmutableList<String> list = const ImmutableList.emptyLiteral();
     list = list.addAll(["a", "b", "c"]);
     list.forEach((_) {});
 
     // LAdd
-    list = const IList.empty();
+    list = const ImmutableList.emptyLiteral();
     list = list.add("d");
     list.forEach((_) {});
   });
 
   test("Make sure the internal list is List<int>, and not List<Never>", () {
-    const l1 = IList<int>.empty();
+    const l1 = ImmutableList<int>.emptyLiteral();
     expect(l1.runtimeType.toString(), 'IListEmpty<int>');
 
-    const l2 = IListConst<int>([1, 2, 3]);
+    const l2 = ImmutableListLiteral<int>._([1, 2, 3]);
     expect(l2.runtimeType.toString(), 'IListConst<int>');
 
     final l3 = l1.addAll(l2);
@@ -49,60 +58,136 @@ void main() {
   });
 
   test(".same() is working properly", () {
-    expect(const IList.empty().same(const IList.empty()), isTrue);
-    expect(const IList.empty().same(const IList.empty()), isTrue);
-    expect(const IList.empty().same(const IListConst([])), isTrue);
-    expect(const IListConst([]).same(const IList.empty()), isTrue);
-    expect(const IListConst([]).hashCode, const IList.empty().hashCode);
+    expect(
+      const ImmutableList.emptyLiteral().same(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().same(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().same(const ImmutableListLiteral._([])),
+      isTrue,
+    );
+    expect(
+      const ImmutableListLiteral._([]).same(const ImmutableList.emptyLiteral()),
+      isTrue,
+    );
+    expect(
+      const ImmutableListLiteral._([]).hashCode,
+      const ImmutableList.emptyLiteral().hashCode,
+    );
   });
 
   test("equality", () {
     // equalItems
-    expect(IList(["a", "b"]).equalItems(const IList.empty()), isFalse);
-    expect(const IListConst(["a", "b"]).equalItems(const IList.empty()), isFalse);
+    expect(
+      ImmutableList(["a", "b"]).equalItems(const ImmutableList.emptyLiteral()),
+      isFalse,
+    );
+    expect(
+      const ImmutableListLiteral._([
+        "a",
+        "b",
+      ]).equalItems(const ImmutableList.emptyLiteral()),
+      isFalse,
+    );
 
-    expect(IList().equalItems(const IList.empty()), isTrue);
-    expect(const IListConst([]).equalItems(const IList.empty()), isTrue);
-    expect(const IList.empty().equalItems(const IList.empty()), isTrue);
-    expect(const IList.empty().equalItems(const IList.empty()), isTrue);
+    expect(
+      ImmutableList().equalItems(const ImmutableList.emptyLiteral()),
+      isTrue,
+    );
+    expect(
+      const ImmutableListLiteral._(
+        [],
+      ).equalItems(const ImmutableList.emptyLiteral()),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().equalItems(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().equalItems(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
 
     // equalItemsAndConfig
-    expect(IList(["a", "b"]).equalItemsAndConfig(const IList.empty()), isFalse);
-    expect(const IListConst(["a", "b"]).equalItemsAndConfig(const IList.empty()), isFalse);
+    expect(
+      ImmutableList([
+        "a",
+        "b",
+      ]).equalItemsAndConfig(const ImmutableList.emptyLiteral()),
+      isFalse,
+    );
+    expect(
+      const ImmutableListLiteral._([
+        "a",
+        "b",
+      ]).equalItemsAndConfig(const ImmutableList.emptyLiteral()),
+      isFalse,
+    );
 
-    expect(IList().equalItemsAndConfig(const IList.empty()), isTrue);
-    expect(const IListConst([]).equalItemsAndConfig(const IList.empty()), isTrue);
-    expect(const IList.empty().equalItemsAndConfig(const IList.empty()), isTrue);
-    expect(const IList.empty().equalItemsAndConfig(const IList.empty()), isTrue);
+    expect(
+      ImmutableList().equalItemsAndConfig(const ImmutableList.emptyLiteral()),
+      isTrue,
+    );
+    expect(
+      const ImmutableListLiteral._(
+        [],
+      ).equalItemsAndConfig(const ImmutableList.emptyLiteral()),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().equalItemsAndConfig(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
+    expect(
+      const ImmutableList.emptyLiteral().equalItemsAndConfig(
+        const ImmutableList.emptyLiteral(),
+      ),
+      isTrue,
+    );
   });
 
   test("isEmpty | isNotEmpty", () {
-    expect(const IList.empty().isEmpty, isTrue);
-    expect(const IList.empty().isNotEmpty, isFalse);
+    expect(const ImmutableList.emptyLiteral().isEmpty, isTrue);
+    expect(const ImmutableList.emptyLiteral().isNotEmpty, isFalse);
   });
 
   test("contains", () {
-    expect(const IList.empty().contains(Object()), isFalse);
-    expect(const IList.empty().contains(null), isFalse);
+    expect(const ImmutableList.emptyLiteral().contains(Object()), isFalse);
+    expect(const ImmutableList.emptyLiteral().contains(null), isFalse);
   });
 
   test("length", () {
-    expect(const IList.empty().length, 0);
+    expect(const ImmutableList.emptyLiteral().length, 0);
   });
 
   test("fist | last | single", () {
-    expect(() => const IList.empty().first, throwsStateError);
-    expect(() => const IList.empty().last, throwsStateError);
-    expect(() => const IList.empty().single, throwsStateError);
+    expect(() => const ImmutableList.emptyLiteral().first, throwsStateError);
+    expect(() => const ImmutableList.emptyLiteral().last, throwsStateError);
+    expect(() => const ImmutableList.emptyLiteral().single, throwsStateError);
   });
 
   test("reversed", () {
-    const list = IList.empty();
+    const list = ImmutableList.emptyLiteral();
     expect(identical(list, list.reversed), isTrue);
   });
 
   test("clear()", () {
-    const list = IList.empty();
+    const list = ImmutableList.emptyLiteral();
     expect(identical(list, list.clear()), isTrue);
   });
 }

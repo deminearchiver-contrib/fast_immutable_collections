@@ -3,10 +3,10 @@
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
 // ignore_for_file: unnecessary_type_check
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
@@ -240,9 +240,14 @@ void main() {
 
   test("reversedView.expand", () {
     final List<int> reversed = [1, 2, 3, 4, 5, 6].reversedView;
-    expect(reversed.expand((int v) => [v, v]),
-        allOf(isA<Iterable<int>>(), [6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]));
-    expect(reversed.expand((int v) => <int>[]), allOf(isA<Iterable<int>>(), <int>[]));
+    expect(
+      reversed.expand((int v) => [v, v]),
+      allOf(isA<Iterable<int>>(), [6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]),
+    );
+    expect(
+      reversed.expand((int v) => <int>[]),
+      allOf(isA<Iterable<int>>(), <int>[]),
+    );
   });
 
   test("reversedView.fillRange", () {
@@ -260,13 +265,26 @@ void main() {
   });
 
   test("reversedView.fold", () {
-    expect([1, 2, 3, 4, 5, 6].reversedView.fold(100, (int p, int e) => p * (1 + e)), 504000);
+    expect(
+      [1, 2, 3, 4, 5, 6].reversedView.fold(100, (int p, int e) => p * (1 + e)),
+      504000,
+    );
   });
 
   test("reversedView.followedBy", () {
     final List<int> reversed = [1, 2, 3, 4, 5, 6].reversedView;
     expect(reversed.followedBy([7, 8]), [6, 5, 4, 3, 2, 1, 7, 8]);
-    expect(reversed.followedBy(<int>[].lock.add(7).addAll([8, 9])), [6, 5, 4, 3, 2, 1, 7, 8, 9]);
+    expect(reversed.followedBy(<int>[].lock.add(7).addAll([8, 9])), [
+      6,
+      5,
+      4,
+      3,
+      2,
+      1,
+      7,
+      8,
+      9,
+    ]);
   });
 
   test("reversedView.forEach", () {
@@ -276,7 +294,13 @@ void main() {
   });
 
   test("reversedView.getRange", () {
-    final List<String> colors = ["red", "green", "blue", "orange", "pink"].reversedView;
+    final List<String> colors = [
+      "red",
+      "green",
+      "blue",
+      "orange",
+      "pink",
+    ].reversedView;
     expect(colors, ["pink", "orange", "blue", "green", "red"]);
     expect(colors.getRange(1, 4), ["orange", "blue", "green"]);
 
@@ -392,16 +416,31 @@ void main() {
 
   test("reversedView.map", () {
     expect([1, 2, 3].reversedView.map((int v) => v + 1), [4, 3, 2]);
-    expect([1, 2, 3, 4, 5, 6].reversedView.map((int v) => v + 1), [7, 6, 5, 4, 3, 2]);
+    expect([1, 2, 3, 4, 5, 6].reversedView.map((int v) => v + 1), [
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+    ]);
   });
 
   test("reversedView.reduce", () {
     // 1) Regular usage
-    expect([1, 2, 3, 4, 5, 6].reversedView.reduce((int p, int e) => p * (1 + e)), 4320);
+    expect(
+      [1, 2, 3, 4, 5, 6].reversedView.reduce((int p, int e) => p * (1 + e)),
+      4320,
+    );
     expect([5].reversedView.reduce((int p, int e) => p * (1 + e)), 5);
 
     // 2) State Exception
-    expect(() => IList().reduce((dynamic p, dynamic e) => p * (1 + (e as num))), throwsStateError);
+    expect(
+      () => ImmutableList().reduce(
+        (dynamic p, dynamic e) => p * (1 + (e as num)),
+      ),
+      throwsStateError,
+    );
   });
 
   test("reversedView.remove", () {
@@ -436,7 +475,14 @@ void main() {
   });
 
   test("reversedView.removeRange", () {
-    final List<String> reversed = ["do", "re", "mi", "fa", "sol", "la"].reversedView;
+    final List<String> reversed = [
+      "do",
+      "re",
+      "mi",
+      "fa",
+      "sol",
+      "la",
+    ].reversedView;
     reversed.removeRange(1, 3);
     expect(reversed, ["la", "mi", "re", "do"]);
   });
@@ -504,7 +550,10 @@ void main() {
     expect(reversed.singleWhere((int v) => v == 50, orElse: () => 100), 100);
 
     // 2) State Exception
-    expect(() => reversed.singleWhere((int v) => v < 4, orElse: () => 100), throwsStateError);
+    expect(
+      () => reversed.singleWhere((int v) => v < 4, orElse: () => 100),
+      throwsStateError,
+    );
   });
 
   test("reversedView.skip", () {
@@ -552,7 +601,13 @@ void main() {
   });
 
   test("reversedView.sublist", () {
-    final List<String> colors = ["red", "green", "blue", "orange", "pink"].reversedView;
+    final List<String> colors = [
+      "red",
+      "green",
+      "blue",
+      "orange",
+      "pink",
+    ].reversedView;
     expect(colors.sublist(1, 3), ["orange", "blue"]);
     expect(colors.sublist(1), ["orange", "blue", "green", "red"]);
     expect(colors, ["red", "green", "blue", "orange", "pink"].reversed);

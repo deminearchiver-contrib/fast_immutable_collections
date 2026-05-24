@@ -2,11 +2,11 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import 'package:fast_immutable_collections/src/imap/imap.dart';
-import "package:meta/meta.dart";
-import "package:test/test.dart";
+import 'package:fic/src/map/immutable_map.dart';
+import 'package:meta/meta.dart';
+import 'package:test/test.dart';
 
-/// These tests are mainly for coverage purposes, it tests methods inside the [M] class which were
+/// These tests are mainly for coverage purposes, it tests methods inside the [ImmutableMapDelegate] class which were
 /// not reached by its implementations.
 void main() {
   //
@@ -69,18 +69,32 @@ void main() {
 
   test("everyEntry", () {
     final MExample<String, int> mExample = MExample({"a": 1, "b": 2, "c": 3});
-    expect(mExample.everyEntry((MapEntry<String, int?> entry) => entry.value! < 4), isTrue);
-    expect(mExample.everyEntry((MapEntry<String, int?> entry) => entry.key != "z"), isTrue);
-    expect(mExample.everyEntry((MapEntry<String, int?> entry) => entry.value! > 10), isFalse);
-    expect(mExample.everyEntry((MapEntry<String, int?> entry) => entry.key.length == 2), isFalse);
+    expect(
+      mExample.everyEntry((MapEntry<String, int?> entry) => entry.value! < 4),
+      isTrue,
+    );
+    expect(
+      mExample.everyEntry((MapEntry<String, int?> entry) => entry.key != "z"),
+      isTrue,
+    );
+    expect(
+      mExample.everyEntry((MapEntry<String, int?> entry) => entry.value! > 10),
+      isFalse,
+    );
+    expect(
+      mExample.everyEntry(
+        (MapEntry<String, int?> entry) => entry.key.length == 2,
+      ),
+      isFalse,
+    );
   });
 }
 
 @visibleForTesting
-class MExample<K, V> extends M<K, V> {
-  final IMap<K, V> _imap;
+class MExample<K, V> extends ImmutableMapDelegate<K, V> {
+  final ImmutableMap<K, V> _imap;
 
-  MExample([Map<K, V>? map]) : _imap = IMap(map);
+  MExample([Map<K, V>? map]) : _imap = ImmutableMap(map);
 
   @override
   V? operator [](K key) => _imap[key];
@@ -112,7 +126,7 @@ class MExample<K, V> extends M<K, V> {
   bool containsValue(V? value) => _imap.containsValue(value);
 
   /// Used by tail-call-optimisation.
-  /// Returns type [bool] or [M].
+  /// Returns type [bool] or [ImmutableMapDelegate].
   @protected
   @override
   bool containsKeyOrM(K? key) => _imap.containsKey(key);

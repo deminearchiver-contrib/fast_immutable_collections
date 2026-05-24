@@ -2,9 +2,9 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:collection/collection.dart";
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:collection/collection.dart';
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   setUp(() {
@@ -103,8 +103,14 @@ void main() {
     expect({a(1), a(2)}.deepEquals({a(1), a(2)}, ignoreOrder: true), isTrue);
     expect({a(1), a(2)}.deepEquals({a(2), a(1)}, ignoreOrder: true), isTrue);
 
-    expect([a(1), a(2)].lock.deepEquals([a(1), a(2)].lock, ignoreOrder: true), isTrue);
-    expect([a(1), a(2)].lock.deepEquals([a(2), a(1)].lock, ignoreOrder: true), isTrue);
+    expect(
+      [a(1), a(2)].lock.deepEquals([a(1), a(2)].lock, ignoreOrder: true),
+      isTrue,
+    );
+    expect(
+      [a(1), a(2)].lock.deepEquals([a(2), a(1)].lock, ignoreOrder: true),
+      isTrue,
+    );
   });
 
   test("deepEqualsByIdentity", () {
@@ -141,7 +147,10 @@ void main() {
     // Unordered Equality
     expect([1, 2].deepEqualsByIdentity([2, 1], ignoreOrder: true), isTrue);
     expect({1, 2}.deepEqualsByIdentity({2, 1}, ignoreOrder: true), isTrue);
-    expect([1, 2].lock.deepEqualsByIdentity([2, 1].lock, ignoreOrder: true), isTrue);
+    expect(
+      [1, 2].lock.deepEqualsByIdentity([2, 1].lock, ignoreOrder: true),
+      isTrue,
+    );
 
     // Now with objects that are equal by value:
     var obj1 = _ClassEqualsByValue();
@@ -161,7 +170,10 @@ void main() {
     expect([1, 2].deepEqualsByIdentity({1, 2}), isTrue);
     expect([1, 2].deepEqualsByIdentity({3, 4}), isFalse);
     expect([1, 2].deepEqualsByIdentity({1, 3}), isFalse);
-    expect([1, 2].deepEqualsByIdentity([1, 2, 2].iterator.toIterable()), isFalse);
+    expect(
+      [1, 2].deepEqualsByIdentity([1, 2, 2].iterator.toIterable()),
+      isFalse,
+    );
   });
 
   test("whereNoDuplicates", () {
@@ -173,21 +185,57 @@ void main() {
     expect((["abc", "abc", "def"].whereNoDuplicates()), ["abc", "def"]);
     expect((["abc", "abc", "def"].whereNoDuplicates()).take(1), ["abc"]);
 
-    expect((["a", "b", "abc", "ab", "def"].whereNoDuplicates(by: (item) => item.length)),
-        ["a", "abc", "ab"]);
+    expect(
+      ([
+        "a",
+        "b",
+        "abc",
+        "ab",
+        "def",
+      ].whereNoDuplicates(by: (item) => item.length)),
+      ["a", "abc", "ab"],
+    );
 
     expect(
-        (["a", "b", "abc", "ab", "def"]
-            .whereNoDuplicates(by: (item) => item.length, removeNulls: true)),
-        ["a", "abc", "ab"]);
-
-    expect(([null, 1, 2, 3, null, 4, 3, 5, 1, null].whereNoDuplicates(removeNulls: true)),
-        [1, 2, 3, 4, 5]);
+      ([
+        "a",
+        "b",
+        "abc",
+        "ab",
+        "def",
+      ].whereNoDuplicates(by: (item) => item.length, removeNulls: true)),
+      ["a", "abc", "ab"],
+    );
 
     expect(
-        ([null, "a", "b", null, "abc", "ab", "def", null]
-            .whereNoDuplicates(by: ((item) => item?.length), removeNulls: true)),
-        ["a", "abc", "ab"]);
+      ([
+        null,
+        1,
+        2,
+        3,
+        null,
+        4,
+        3,
+        5,
+        1,
+        null,
+      ].whereNoDuplicates(removeNulls: true)),
+      [1, 2, 3, 4, 5],
+    );
+
+    expect(
+      ([
+        null,
+        "a",
+        "b",
+        null,
+        "abc",
+        "ab",
+        "def",
+        null,
+      ].whereNoDuplicates(by: ((item) => item?.length), removeNulls: true)),
+      ["a", "abc", "ab"],
+    );
   });
 
   test("sortedLike", () {
@@ -241,10 +289,7 @@ void main() {
 
     //
     // Replace the first, keep the second.
-    list = [
-      WithId(id: "x", name: "Marc"),
-      WithId(id: "x", name: "John"),
-    ];
+    list = [WithId(id: "x", name: "Marc"), WithId(id: "x", name: "John")];
     newItems = [WithId(id: "x", name: "Lyn")];
     updatedList = list.updateById(newItems, (WithId obj) => obj.id);
     expect(updatedList, [
@@ -256,9 +301,16 @@ void main() {
     // Nulls are kept.
     List<WithId?> listNullable = [];
     List<WithId?> updatedListNullable = [];
-    listNullable = [WithId(id: "x", name: "Marc"), null, WithId(id: "x", name: "Marc")];
+    listNullable = [
+      WithId(id: "x", name: "Marc"),
+      null,
+      WithId(id: "x", name: "Marc"),
+    ];
     newItems = [];
-    updatedListNullable = listNullable.updateById(newItems, (WithId? obj) => obj?.id);
+    updatedListNullable = listNullable.updateById(
+      newItems,
+      (WithId? obj) => obj?.id,
+    );
     expect(updatedListNullable, [
       WithId(id: "x", name: "Marc"),
       null,
@@ -267,10 +319,7 @@ void main() {
 
     //
     list = [WithId(id: "x", name: "Marc")];
-    newItems = [
-      WithId(id: "a", name: "Lyn"),
-      WithId(id: "a", name: "Beth"),
-    ];
+    newItems = [WithId(id: "a", name: "Lyn"), WithId(id: "a", name: "Beth")];
     updatedList = list.updateById(newItems, (WithId obj) => obj.id);
     expect(updatedList, [
       WithId(id: "x", name: "Marc"),
@@ -279,19 +328,17 @@ void main() {
 
     //
     list = [WithId(id: "a", name: "Marc")];
-    newItems = [
-      WithId(id: "a", name: "Lyn"),
-      WithId(id: "a", name: "Lyn"),
-    ];
+    newItems = [WithId(id: "a", name: "Lyn"), WithId(id: "a", name: "Lyn")];
     updatedList = list.updateById(newItems, (WithId obj) => obj.id);
-    expect(updatedList, [
-      WithId(id: "a", name: "Lyn"),
-    ]);
+    expect(updatedList, [WithId(id: "a", name: "Lyn")]);
 
     //
     listNullable = [null, WithId(id: "x", name: "Marc")];
     List<WithId?> newItemsNullable = [null, WithId(id: "a", name: "Lyn"), null];
-    updatedListNullable = listNullable.updateById(newItemsNullable, (WithId? obj) => obj?.id);
+    updatedListNullable = listNullable.updateById(
+      newItemsNullable,
+      (WithId? obj) => obj?.id,
+    );
     expect(updatedListNullable, [
       null,
       WithId(id: "x", name: "Marc"),
@@ -301,7 +348,10 @@ void main() {
     //
     listNullable = [WithId(id: "x", name: "Marc")];
     newItemsNullable = [null, WithId(id: "a", name: "Lyn"), null];
-    updatedListNullable = listNullable.updateById(newItemsNullable, (WithId? obj) => obj?.id);
+    updatedListNullable = listNullable.updateById(
+      newItemsNullable,
+      (WithId? obj) => obj?.id,
+    );
     expect(updatedListNullable, [
       WithId(id: "x", name: "Marc"),
       null,
@@ -413,16 +463,13 @@ void main() {
     List<String> list = ["a", "b", "c"];
 
     expect(
-        list
-            .mapIndexedAndLast(
-              (int index, String item, bool isLast) => "$index $isLast $item",
-            )
-            .toList(),
-        [
-          '0 false a',
-          '1 false b',
-          '2 true c',
-        ]);
+      list
+          .mapIndexedAndLast(
+            (int index, String item, bool isLast) => "$index $isLast $item",
+          )
+          .toList(),
+      ['0 false a', '1 false b', '2 true c'],
+    );
   });
 
   test("intersectsWith", () {
@@ -496,7 +543,8 @@ void main() {
 class _ClassEqualsByValue {
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is _ClassEqualsByValue && runtimeType == other.runtimeType;
+      identical(this, other) ||
+      other is _ClassEqualsByValue && runtimeType == other.runtimeType;
 
   @override
   int get hashCode => 0;
@@ -511,7 +559,10 @@ class WithId {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WithId && runtimeType == other.runtimeType && id == other.id && name == other.name;
+      other is WithId &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
 
   @override
   int get hashCode => id.hashCode ^ name.hashCode;

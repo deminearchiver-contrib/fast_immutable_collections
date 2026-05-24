@@ -2,21 +2,20 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import 'package:fast_immutable_collections/src/ilist/ilist.dart';
-import "package:test/test.dart";
+import 'package:fic/src/fic.dart';
+import 'package:test/test.dart';
 
-extension TestExtension on IList {
-  int get counter => InternalsForTestingPurposesIList(this).counter;
+extension TestExtension on ImmutableList {
+  int get counter => ImmutableListInternals(this).counter;
 }
 
 void main() {
   //
   test("Sync auto-flush when the list is already flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IList.flushFactor = 4;
+    ImmutableList.flushFactor = 4;
 
     // The list is flushed. Counter is 0.
     var ilist = [1, 2, 3, 4].lock;
@@ -39,7 +38,7 @@ void main() {
 
   test("Sync auto-flush when the list is NOT flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IList.flushFactor = 4;
+    ImmutableList.flushFactor = 4;
 
     // The list is flushed. Counter is 0.
     var ilist = [1, 2, 3, 4].lock;
@@ -104,11 +103,10 @@ void main() {
     expect(ilist.isFlushed, isTrue);
   });
 
-  test(
-      "Method 'add' makes counter equal to the source list counter, "
+  test("Method 'add' makes counter equal to the source list counter, "
       "plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IList.flushFactor = 4;
+    ImmutableList.flushFactor = 4;
 
     // The list is flushed. Counter is 0.
     var ilist1 = [1, 2, 3, 4].lock;
@@ -124,11 +122,10 @@ void main() {
     expect(ilist3.counter, 3);
   });
 
-  test(
-      "Method 'addAll' makes counter equal to "
+  test("Method 'addAll' makes counter equal to "
       "the larger counter of its source lists, plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IList.flushFactor = 100;
+    ImmutableList.flushFactor = 100;
 
     // The list is flushed. Counter is 0.
     var ilist1 = [1, 2, 3, 4].lock;

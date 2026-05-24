@@ -1,43 +1,39 @@
 // Developed by Marcelo Glasberg (2021) https://glasberg.dev and https://github.com/marcglasberg
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/src/fic.dart';
+import 'package:test/test.dart';
 
 // --- Keys defined at top level (stable references) ---
 
-final _sumKey = CacheKey<IList<int>, int>(
+final _sumKey = CacheKey<ImmutableList<int>, int>(
   (list) => list.fold(0, (a, b) => a + b),
 );
 
-final _indexByString = CacheKey<IList<String>, Map<String, int>>(
-  (list) {
-    final map = <String, int>{};
-    for (var i = 0; i < list.length; i++) {
-      map[list[i]] = i;
-    }
-    return map;
-  },
-);
+final _indexByString = CacheKey<ImmutableList<String>, Map<String, int>>((
+  list,
+) {
+  final map = <String, int>{};
+  for (var i = 0; i < list.length; i++) {
+    map[list[i]] = i;
+  }
+  return map;
+});
 
 var _computeCount = 0;
 
-final _countingKey = CacheKey<IList<int>, List<int>>(
-  (list) {
-    _computeCount++;
-    return list.toList();
-  },
-);
+final _countingKey = CacheKey<ImmutableList<int>, List<int>>((list) {
+  _computeCount++;
+  return list.toList();
+});
 
-final _byName = CacheKey<IList<_Person>, Map<String, _Person>>(
+final _byName = CacheKey<ImmutableList<_Person>, Map<String, _Person>>(
   (list) => {for (var p in list) p.name: p},
 );
 
-final _nullKey = CacheKey<IList<int>, int?>(
-  (list) => null,
-);
+final _nullKey = CacheKey<ImmutableList<int>, int?>((list) => null);
 
-int _staticSum(IList<int> list) => list.fold(0, (a, b) => a + b);
+int _staticSum(ImmutableList<int> list) => list.fold(0, (a, b) => a + b);
 
 void main() {
   setUp(() {
@@ -110,13 +106,13 @@ void main() {
   });
 
   test("cached | works with const IList.empty()", () {
-    const list = IList<int>.empty();
+    const list = ImmutableList<int>.emptyLiteral();
     expect(list.cached(_sumKey), 0);
   });
 
   test("cached | const IList.empty() computes every time", () {
     _computeCount = 0;
-    const list = IList<int>.empty();
+    const list = ImmutableList<int>.emptyLiteral();
 
     list.cached(_countingKey);
     list.cached(_countingKey);
@@ -127,7 +123,7 @@ void main() {
 
   test("cached | IListConst computes every time", () {
     _computeCount = 0;
-    const list = IListConst<int>([1, 2, 3]);
+    const list = ImmutableListLiteral<int>._([1, 2, 3]);
 
     list.cached(_countingKey);
     list.cached(_countingKey);
@@ -140,7 +136,7 @@ void main() {
     _computeCount = 0;
 
     // Build a non-flushed IList by adding items.
-    var list = IList<int>([1, 2]);
+    var list = ImmutableList<int>([1, 2]);
     list = list.add(3);
 
     list.cached(_countingKey);
@@ -163,7 +159,7 @@ void main() {
   });
 
   test("CacheKey | can be const", () {
-    const key = CacheKey<IList<int>, int>(_staticSum);
+    const key = CacheKey<ImmutableList<int>, int>(_staticSum);
     final list = [1, 2, 3].lock;
     expect(list.cached(key), 6);
   });

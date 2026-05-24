@@ -32,8 +32,6 @@ extension FicNumberExtension<T extends num> on T {
 }
 
 extension FicNumberExtensionNullable<T extends num> on T? {
-  //
-
   /// Returns the number inRange between min and max.
   /// If the number is `null`, return [orElse].
   ///

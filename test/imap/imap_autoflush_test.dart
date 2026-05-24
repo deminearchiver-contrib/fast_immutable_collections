@@ -2,19 +2,19 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import 'package:fast_immutable_collections/src/imap/imap.dart';
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:fic/src/map/immutable_map.dart';
+import 'package:test/test.dart';
 
-extension TestExtension on IMap {
-  int get counter => InternalsForTestingPurposesIMap(this).counter;
+extension TestExtension on ImmutableMap {
+  int get counter => ImmutableMapInternals(this).counter;
 }
 
 void main() {
   //
   test("Sync auto-flush when the map is already flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IMap.flushFactor = 4;
+    ImmutableMap.flushFactor = 4;
 
     // The map is flushed. Counter is 0.
     var imap = {"a": 1, "b": 2, "c": 3, "d": 4}.lock;
@@ -37,7 +37,7 @@ void main() {
 
   test("Sync auto-flush when the map is NOT flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IMap.flushFactor = 4;
+    ImmutableMap.flushFactor = 4;
 
     // The map is flushed. Counter is 0.
     var imap = {"a": 1, "b": 2, "c": 3, "d": 4}.lock;
@@ -103,11 +103,10 @@ void main() {
     expect(imap.isFlushed, isTrue);
   });
 
-  test(
-      "Method 'add' makes counter equal to the source map counter, "
+  test("Method 'add' makes counter equal to the source map counter, "
       "plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IMap.flushFactor = 4;
+    ImmutableMap.flushFactor = 4;
 
     // The map is flushed. Counter is 0.
     var imap1 = {"a": 1, "b": 2, "c": 3, "d": 4}.lock;
@@ -123,11 +122,10 @@ void main() {
     expect(imap3.counter, 3);
   });
 
-  test(
-      "Method 'addAll' makes counter equal to "
+  test("Method 'addAll' makes counter equal to "
       "the larger counter of its source maps, plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    IMap.flushFactor = 4;
+    ImmutableMap.flushFactor = 4;
 
     // The map is flushed. Counter is 0.
     var imap1 = {"a": 1, "b": 2, "c": 3, "d": 4}.lock;

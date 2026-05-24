@@ -2,23 +2,23 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:collection/collection.dart";
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import 'package:fast_immutable_collections/src/imap/imap.dart';
-import "package:fast_immutable_collections/src/imap/m_flat.dart";
-import "package:test/test.dart";
+import 'package:collection/collection.dart';
+import 'package:fic/src/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
   test("Runtime type", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
-    expect(mFlat, isA<MFlat<String, int>>());
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
+    expect(mFlat, isA<ImmutableMapFlatDelegate<String, int>>());
   });
 
   test("unlock", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
     expect(mFlat.unlock, isA<Map<String, int>>());
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2, "c": 3});
     expect(mFlat.unlock, originalMap);
@@ -26,26 +26,30 @@ void main() {
 
   test("isEmpty | isNotEmpty", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
     expect(mFlat.isEmpty, isFalse);
     expect(mFlat.isNotEmpty, isTrue);
   });
 
   test("length", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
     expect(mFlat.length, 3);
   });
 
   test("cast", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
-    final mFlatAsNum = mFlat.cast<String, num>(IMap.defaultConfig);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
+    final mFlatAsNum = mFlat.cast<String, num>(ImmutableMap.defaultConfig);
     expect(mFlatAsNum, isA<Map<String, num>>());
   });
 
   test("empty", () {
-    final M<String, int?> empty = MFlat.empty();
+    final ImmutableMapDelegate<String, int?> empty =
+        ImmutableMapFlatDelegate.empty();
 
     expect(empty.unlock, <String, int>{});
     expect(empty.isEmpty, isTrue);
@@ -54,22 +58,38 @@ void main() {
 
   test("deepMapHashCode", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
     expect(mFlat.deepMapHashcode(), MapEquality().hash(originalMap));
   });
 
   test("deepMapEquals", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
     expect(mFlat.deepMapEquals(null), isFalse);
-    expect(mFlat.deepMapEquals(MFlat<String, int>({})), isFalse);
-    expect(mFlat.deepMapEquals(MFlat<String, int>({"a": 1, "b": 2, "c": 3})), isTrue);
-    expect(mFlat.deepMapEquals(MFlat<String, int>({"a": 1, "b": 2, "c": 4})), isFalse);
+    expect(
+      mFlat.deepMapEquals(ImmutableMapFlatDelegate<String, int>({})),
+      isFalse,
+    );
+    expect(
+      mFlat.deepMapEquals(
+        ImmutableMapFlatDelegate<String, int>({"a": 1, "b": 2, "c": 3}),
+      ),
+      isTrue,
+    );
+    expect(
+      mFlat.deepMapEquals(
+        ImmutableMapFlatDelegate<String, int>({"a": 1, "b": 2, "c": 4}),
+      ),
+      isFalse,
+    );
   });
 
   test("deepMapEqualsToIterable", () {
     const Map<String, int> originalMap = {"a": 1, "b": 2, "c": 3};
-    final MFlat<String, int> mFlat = MFlat(originalMap);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate(originalMap);
 
     final Iterable<MapEntry<String, int>> entries1 = [
           MapEntry<String, int>("b", 2),
@@ -89,18 +109,21 @@ void main() {
   test("from", () {
     // 1) Regular usage
     final Map<String, int> original = {"a": 1, "c": 3, "b": 2};
-    final MFlat<String, int> mFlat1 = MFlat.unsafe(original);
+    final ImmutableMapFlatDelegate<String, int> mFlat1 =
+        ImmutableMapFlatDelegate.unsafe(original);
 
     expect(mFlat1.keys.toList(), ["a", "c", "b"]);
 
-    final MFlat<String, int?> mFlat = MFlat.from(mFlat1);
+    final ImmutableMapFlatDelegate<String, int?> mFlat =
+        ImmutableMapFlatDelegate.from(mFlat1);
 
     expect(mFlat.keys, ["a", "c", "b"]);
   });
 
   test("unsafe", () {
     final Map<String, int> original = {"a": 1, "c": 3, "b": 2};
-    final MFlat<String, int> mFlat = MFlat.unsafe(original);
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate.unsafe(original);
 
     expect(mFlat.unlock, original);
 
@@ -112,22 +135,28 @@ void main() {
   });
 
   test("entries", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
-    mFlat.entries.forEach((MapEntry<String, int?> entry) => expect(mFlat[entry.key], entry.value));
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
+    mFlat.entries.forEach(
+      (MapEntry<String, int?> entry) => expect(mFlat[entry.key], entry.value),
+    );
   });
 
   test("keys", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
-    expect(mFlat.keys.toSet(), IList(["a", "b", "c", "d"]).toSet());
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
+    expect(mFlat.keys.toSet(), ImmutableList(["a", "b", "c", "d"]).toSet());
   });
 
   test("values", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
-    expect(mFlat.values.toSet(), IList([1, 2, 3, 4]).toSet());
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
+    expect(mFlat.values.toSet(), ImmutableList([1, 2, 3, 4]).toSet());
   });
 
   test("any", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
     expect(mFlat.any((String key, int? value) => key == "a"), isTrue);
     expect(mFlat.any((String key, int? value) => key == "z"), isFalse);
     expect(mFlat.any((String key, int? value) => value == 4), isTrue);
@@ -135,31 +164,51 @@ void main() {
   });
 
   test("contains", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
     expect(mFlat.contains("a", 1), isTrue);
     expect(mFlat.contains("a", 2), isFalse);
     expect(mFlat.contains("b", 1), isFalse);
   });
 
   test("contains", () {
-    expect(MFlat(<String, int?>{"a": 1, "b": 2, "c": 3, "d": 4}).contains("a", null), isFalse);
-    expect(MFlat({"a": 1, "b": 2, "c": 3, "d": null}).contains("d", null), isTrue);
+    expect(
+      ImmutableMapFlatDelegate(<String, int?>{
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4,
+      }).contains("a", null),
+      isFalse,
+    );
+    expect(
+      ImmutableMapFlatDelegate({
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": null,
+      }).contains("d", null),
+      isTrue,
+    );
   });
 
   test("containsKey", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
     expect(mFlat.containsKey("a"), isTrue);
     expect(mFlat.containsKey("z"), isFalse);
   });
 
   test("containsValue", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
     expect(mFlat.containsValue(1), isTrue);
     expect(mFlat.containsValue(100), isFalse);
   });
 
   test("[]", () {
-    final MFlat<String, int> mFlat = MFlat({"a": 1, "b": 2, "c": 3, "d": 4});
+    final ImmutableMapFlatDelegate<String, int> mFlat =
+        ImmutableMapFlatDelegate({"a": 1, "b": 2, "c": 3, "d": 4});
     expect(mFlat["a"], 1);
     expect(mFlat["z"], isNull);
   });
@@ -169,7 +218,9 @@ void main() {
 
     // 1.1) Changing the passed mutable map doesn't change the MAdd
     Map<String, int> original = {"a": 1, "b": 2};
-    MFlat<String, int> mFlat = MFlat(original);
+    ImmutableMapFlatDelegate<String, int> mFlat = ImmutableMapFlatDelegate(
+      original,
+    );
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 
@@ -180,11 +231,11 @@ void main() {
 
     // 1.2) Adding to the original MFlat doesn't change it
     original = {"a": 1, "b": 2};
-    mFlat = MFlat(original);
+    mFlat = ImmutableMapFlatDelegate(original);
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 
-    M<String, int?> m = mFlat.add(key: "c", value: 3);
+    ImmutableMapDelegate<String, int?> m = mFlat.add(key: "c", value: 3);
 
     expect(original, <String, int>{"a": 1, "b": 2});
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
@@ -192,7 +243,7 @@ void main() {
 
     // 1.3) If the item being passed is a variable, a pointer to it shouldn't exist inside MAdd
     original = {"a": 1, "b": 2};
-    mFlat = MFlat(original);
+    mFlat = ImmutableMapFlatDelegate(original);
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 
@@ -211,7 +262,7 @@ void main() {
 
     // 2.1) Changing the passed immutable map doesn't change the original MFlat
     original = {"a": 1, "b": 2};
-    mFlat = MFlat(original);
+    mFlat = ImmutableMapFlatDelegate(original);
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 
@@ -224,12 +275,14 @@ void main() {
     // 2.2) If the items being passed are from a variable, it shouldn't have a pointer to the
     // variable
     original = {"a": 1, "b": 2};
-    final MFlat<String, int> mFlat1 = MFlat(original), mFlat2 = MFlat(original);
+    final ImmutableMapFlatDelegate<String, int> mFlat1 =
+            ImmutableMapFlatDelegate(original),
+        mFlat2 = ImmutableMapFlatDelegate(original);
 
     expect(mFlat1.unlock, <String, int>{"a": 1, "b": 2});
     expect(mFlat2.unlock, <String, int>{"a": 1, "b": 2});
 
-    m = mFlat1.addAll(IMap(mFlat2.unlock));
+    m = mFlat1.addAll(ImmutableMap(mFlat2.unlock));
     original.addAll({"z": 5});
 
     expect(original, <String, int>{"a": 1, "b": 2, "z": 5});
@@ -241,7 +294,7 @@ void main() {
 
     // 3.1) Changing the passed mutable map doesn't change the MFlat
     original = {"a": 1, "b": 2};
-    mFlat = MFlat(original);
+    mFlat = ImmutableMapFlatDelegate(original);
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 
@@ -252,7 +305,7 @@ void main() {
 
     // 3.2) Removing from the original MFlat doesn't change it
     original = {"a": 1, "b": 2};
-    mFlat = MFlat(original);
+    mFlat = ImmutableMapFlatDelegate(original);
 
     expect(mFlat.unlock, <String, int>{"a": 1, "b": 2});
 

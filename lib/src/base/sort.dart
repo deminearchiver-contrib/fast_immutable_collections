@@ -2,7 +2,7 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
+import 'package:fic/src/fic.dart';
 
 /// The [compareObject] comparator is similar to the *natural comparator*
 /// provided by [Comparable] objects in their [Comparable.compareTo] method,
@@ -46,14 +46,20 @@ int compareObject<T extends Object>(
   Object? b, {
   bool nullsBefore = false,
 }) {
-  if (a == null)
-    return (b == null) ? 0 : (nullsBefore ? -1 : 1);
-  else if (b == null) return (nullsBefore ? 1 : -1);
-  if (a is Comparable && b is Comparable) return a.compareTo(b);
-  if (a is MapEntry && b is MapEntry)
+  if (a == null) return (b == null) ? 0 : (nullsBefore ? -1 : 1);
+  if (b == null) return (nullsBefore ? 1 : -1);
+  if (a is Comparable && b is Comparable) {
+    return a.compareTo(b);
+  }
+  if (a is MapEntry && b is MapEntry) {
     return compareObject(a.key, b.key).if0(compareObject(a.value, b.value));
-  if (a is bool && b is bool) return a.compareTo(b);
-  if (a is Enum && b.runtimeType == a.runtimeType) return a.name.compareTo((b as Enum).name);
+  }
+  if (a is bool && b is bool) {
+    return a.compareTo(b);
+  }
+  if (a is Enum && b.runtimeType == a.runtimeType) {
+    return a.name.compareTo((b as Enum).name);
+  }
   return 0;
 }
 
@@ -102,15 +108,14 @@ int compareObject<T extends Object>(
 /// Note [sortBy] can be combined with [sortLike].
 ///
 int Function(T, T) sortBy<T>(
-  Predicate<T> test, {
+  bool Function(T element) test, {
   int Function(T, T)? then,
-}) =>
-    (T a, T b) {
-      final ta = test(a);
-      final tb = test(b);
-      if (ta == tb) return (then == null) ? 0 : then(a, b);
-      return ta ? -1 : 1;
-    };
+}) => (a, b) {
+  final ta = test(a);
+  final tb = test(b);
+  if (ta == tb) return (then == null) ? 0 : then(a, b);
+  return ta ? -1 : 1;
+};
 
 /// The [sortLike] function can be used to create a comparator to sort
 /// collections, comparing [a] and [b] such that:
@@ -133,7 +138,7 @@ int Function(T, T) sortBy<T>(
 ///
 /// ## Notes
 ///
-/// - [order] should be [List] or [IList], otherwise it will be converted
+/// - [order] should be [List] or [ImmutableList], otherwise it will be converted
 /// to a list in every use, which will hurt performance.
 ///
 /// - If a value appears twice in [order], only the first time counts.
@@ -166,38 +171,37 @@ int Function(T, T) sortLike<T, E>(
   Iterable<E> order, {
   E Function(T)? mapper,
   int Function(T, T)? then,
-}) =>
-    (T a, T b) {
-      if (a == b) return 0;
-      int posA, posB;
+}) => (a, b) {
+  if (a == b) return 0;
+  int posA, posB;
 
-      E ma, mb;
-      if (mapper != null) {
-        ma = mapper(a);
-        mb = mapper(b);
-      } else {
-        ma = a as E;
-        mb = b as E;
-      }
+  E ma, mb;
+  if (mapper != null) {
+    ma = mapper(a);
+    mb = mapper(b);
+  } else {
+    ma = a as E;
+    mb = b as E;
+  }
 
-      if (order is List<E>) {
-        posA = order.indexOf(ma);
-        posB = order.indexOf(mb);
-      } else if (order is IList<E>) {
-        posA = order.indexOf(ma);
-        posB = order.indexOf(mb);
-      } else {
-        final List<E> _order = order.toList();
-        posA = _order.indexOf(ma);
-        posB = _order.indexOf(mb);
-      }
+  if (order is List<E>) {
+    posA = order.indexOf(ma);
+    posB = order.indexOf(mb);
+  } else if (order is ImmutableList<E>) {
+    posA = order.indexOf(ma);
+    posB = order.indexOf(mb);
+  } else {
+    final list = order.toList();
+    posA = list.indexOf(ma);
+    posB = list.indexOf(mb);
+  }
 
-      return (posA != -1 && posB != -1)
-          ? posA.compareTo(posB)
-          : (then == null)
-              ? 0
-              : then(a, b);
-    };
+  return (posA != -1 && posB != -1)
+      ? posA.compareTo(posB)
+      : (then == null)
+      ? 0
+      : then(a, b);
+};
 
 extension FicComparableExtension on Object? {
   //
@@ -233,8 +237,7 @@ extension FicComparableExtension on Object? {
     Object? other, {
     bool nullsBefore = false,
     bool compareHashCodes = true,
-  }) =>
-      compareObject(this, other, nullsBefore: nullsBefore);
+  }) => compareObject(this, other, nullsBefore: nullsBefore);
 }
 
 /// The [if0] `extension` lets you nest comparators. For example:

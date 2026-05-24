@@ -2,9 +2,9 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "dart:math";
+import 'dart:math';
 
-import "list_map.dart";
+import 'list_map.dart';
 
 /// A [ListMapView] lets you view a regular map as if it was a [ListMap].
 /// At the moment this class is for FIC's internal use only, since a lot of
@@ -32,19 +32,25 @@ class ListMapView<K, V> implements ListMap<K, V> {
   @override
   void operator []=(K key, V? value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void addAll(Map other) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void addEntries(Iterable<MapEntry> newEntries) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -66,13 +72,15 @@ class ListMapView<K, V> implements ListMap<K, V> {
 
   /// Return the key/value entry for the given [key], or throws if [key] is not in the map.
   @override
-  MapEntry<K, V> entry(K key) => _map.containsKey(key) //
+  MapEntry<K, V> entry(K key) =>
+      _map.containsKey(key) //
       ? MapEntry(key, _map[key] as V)
       : throw StateError("Key not found.");
 
   /// Return the key/value entry for the given [key], or `null` if [key] is not in the map.
   @override
-  MapEntry<K, V>? entryOrNull(K key) => _map.containsKey(key) //
+  MapEntry<K, V>? entryOrNull(K key) =>
+      _map.containsKey(key) //
       ? MapEntry(key, _map[key] as V)
       : null;
 
@@ -97,7 +105,8 @@ class ListMapView<K, V> implements ListMap<K, V> {
   int get length => _map.length;
 
   @override
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) f) => _map.map(f);
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) f) =>
+      _map.map(f);
 
   @override
   V putIfAbsent(K key, Function() ifAbsent) {
@@ -117,13 +126,17 @@ class ListMapView<K, V> implements ListMap<K, V> {
   @override
   V update(K key, Function(V value) update, {Function()? ifAbsent}) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void updateAll(V? Function(K key, V value) update) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -157,18 +170,24 @@ class ListMapView<K, V> implements ListMap<K, V> {
   @override
   void shuffle([Random? random]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void sort([int Function(K a, K b)? compare]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void insert(int index, K key, V value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 }

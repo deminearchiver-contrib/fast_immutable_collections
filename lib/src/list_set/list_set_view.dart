@@ -2,11 +2,11 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
+import 'package:fic/src/fic.dart';
 
-class ListSetView<T> implements ListSet<T> {
+class ListSetView<T extends Object?> implements ListSet<T> {
   final Set<T> _set;
 
   ListSetView(this._set);
@@ -30,7 +30,7 @@ class ListSetView<T> implements ListSet<T> {
   }
 
   @override
-  bool any(Predicate<T> test) => _set.any(test);
+  bool any(bool Function(T element) test) => _set.any(test);
 
   /// Returns a list-set of [R] instances.
   /// If this list-set contains instances which cannot be cast to [R],
@@ -56,7 +56,7 @@ class ListSetView<T> implements ListSet<T> {
   T elementAt(int index) => _set.elementAt(index);
 
   @override
-  bool every(Predicate<T> test) => _set.every(test);
+  bool every(bool Function(T element) test) => _set.every(test);
 
   @override
   Iterable<E> expand<E>(Iterable<E> Function(T element) f) => _set.expand(f);
@@ -68,10 +68,12 @@ class ListSetView<T> implements ListSet<T> {
   T get last => _set.last;
 
   @override
-  T firstWhere(Predicate<T> test, {T Function()? orElse}) => _set.firstWhere(test, orElse: orElse);
+  T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
+      _set.firstWhere(test, orElse: orElse);
 
   @override
-  T lastWhere(Predicate<T> test, {T Function()? orElse}) => _set.lastWhere(test, orElse: orElse);
+  T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
+      _set.lastWhere(test, orElse: orElse);
 
   @override
   E fold<E>(E initialValue, E Function(E previousValue, T element) combine) =>
@@ -121,7 +123,7 @@ class ListSetView<T> implements ListSet<T> {
   }
 
   @override
-  void removeWhere(Predicate<T> test) {
+  void removeWhere(bool Function(T element) test) {
     throw UnsupportedError("Can't removeWhere from a ListSetView.");
   }
 
@@ -131,7 +133,7 @@ class ListSetView<T> implements ListSet<T> {
   }
 
   @override
-  void retainWhere(Predicate<T> test) {
+  void retainWhere(bool Function(T element) test) {
     throw UnsupportedError("Can't retainWhere from a ListSetView.");
   }
 
@@ -139,7 +141,7 @@ class ListSetView<T> implements ListSet<T> {
   T get single => _set.single;
 
   @override
-  T singleWhere(Predicate<T> test, {T Function()? orElse}) =>
+  T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
       _set.singleWhere(test, orElse: orElse);
 
   @override
@@ -164,7 +166,7 @@ class ListSetView<T> implements ListSet<T> {
   Set<T> union(Set<T> other) => _set.union(other);
 
   @override
-  Iterable<T> where(Predicate<T> test) => _set.where(test);
+  Iterable<T> where(bool Function(T element) test) => _set.where(test);
 
   @override
   Iterable<E> whereType<E>() => _set.whereType();
@@ -177,7 +179,9 @@ class ListSetView<T> implements ListSet<T> {
 
   @override
   void operator []=(int index, T value) {
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -190,18 +194,24 @@ class ListSetView<T> implements ListSet<T> {
 
   @override
   set first(T value) {
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
-  Iterable<T> getRange(int start, int end) => _set.toList(growable: false).getRange(start, end);
+  Iterable<T> getRange(int start, int end) =>
+      _set.toList(growable: false).getRange(start, end);
 
   @override
-  int indexOf(T element, [int start = 0]) => _set.toList(growable: false).indexOf(element, start);
+  int indexOf(T element, [int start = 0]) =>
+      _set.toList(growable: false).indexOf(element, start);
 
   @override
-  int indexWhere(Predicate<T> test, [int start = 0]) {
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+  int indexWhere(bool Function(T element) test, [int start = 0]) {
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -217,19 +227,25 @@ class ListSetView<T> implements ListSet<T> {
   @override
   set last(T value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   int lastIndexOf(T element, [int? start]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
-  int lastIndexWhere(Predicate<T> test, [int? start]) {
+  int lastIndexWhere(bool Function(T element) test, [int? start]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -255,48 +271,64 @@ class ListSetView<T> implements ListSet<T> {
   @override
   void replaceRange(int start, int end, Iterable<T> replacement) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   Iterable<T> get reversed {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   ListSet<T> get reversedView {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void setAll(int index, Iterable<T> iterable) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void shuffle([Random? random]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void sort([int Function(T a, T b)? compare]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   List<T> sublist(int start, [int? end]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 }

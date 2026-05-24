@@ -2,11 +2,11 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import 'package:fast_immutable_collections/src/iset/iset.dart';
-import "package:meta/meta.dart";
-import "package:test/test.dart";
+import 'package:fic/src/set/immutable_set.dart';
+import 'package:meta/meta.dart';
+import 'package:test/test.dart';
 
-/// These tests are mainly for coverage purposes, it tests methods inside the [S] class which were
+/// These tests are mainly for coverage purposes, it tests methods inside the [ImmutableSetDelegate] class which were
 /// not reached by its implementations.
 void main() {
   //
@@ -52,10 +52,10 @@ void main() {
 }
 
 @visibleForTesting
-class SExample<T> extends S<T> {
-  final ISet<T> _iset;
+class SExample<T> extends ImmutableSetDelegate<T> {
+  final ImmutableSet<T> _iset;
 
-  SExample([Iterable<T>? iterable]) : _iset = ISet(iterable);
+  SExample([Iterable<T>? iterable]) : _iset = ImmutableSet(iterable);
 
   @override
   Iterable<T> get iter => _iset;

@@ -1,23 +1,21 @@
 // Developed by Marcelo Glasberg (2021) https://glasberg.dev and https://github.com/marcglasberg
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
-final _sumKey = CacheKey<ISet<int>, int>(
+final _sumKey = CacheKey<ImmutableSet<int>, int>(
   (set) => set.fold(0, (a, b) => a + b),
 );
 
 var _computeCount = 0;
 
-final _countingKey = CacheKey<ISet<int>, List<int>>(
-  (set) {
-    _computeCount++;
-    return set.toList();
-  },
-);
+final _countingKey = CacheKey<ImmutableSet<int>, List<int>>((set) {
+  _computeCount++;
+  return set.toList();
+});
 
-final _indexByValue = CacheKey<ISet<String>, Map<String, bool>>(
+final _indexByValue = CacheKey<ImmutableSet<String>, Map<String, bool>>(
   (set) => {for (var s in set) s: true},
 );
 
@@ -80,13 +78,13 @@ void main() {
   });
 
   test("cached | works with const ISet.empty()", () {
-    const set = ISet<int>.empty();
+    const set = ImmutableSet<int>.empty();
     expect(set.cached(_sumKey), 0);
   });
 
   test("cached | const ISet.empty() computes every time", () {
     _computeCount = 0;
-    const set = ISet<int>.empty();
+    const set = ImmutableSet<int>.empty();
 
     set.cached(_countingKey);
     set.cached(_countingKey);
@@ -97,7 +95,7 @@ void main() {
   test("cached | cache survives flush", () {
     _computeCount = 0;
 
-    var set = ISet<int>({1, 2});
+    var set = ImmutableSet<int>({1, 2});
     set = set.add(3);
 
     set.cached(_countingKey);

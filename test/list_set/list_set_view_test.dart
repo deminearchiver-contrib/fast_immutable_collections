@@ -2,10 +2,10 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
@@ -31,12 +31,21 @@ void main() {
   });
 
   test("add", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).add(100), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).add(100),
+      throwsUnsupportedError,
+    );
   });
 
   test("addAll", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).addAll([100, 1000]), throwsUnsupportedError);
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).addAll({100, 1000}), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).addAll([100, 1000]),
+      throwsUnsupportedError,
+    );
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).addAll({100, 1000}),
+      throwsUnsupportedError,
+    );
   });
 
   test("any", () {
@@ -77,41 +86,82 @@ void main() {
   test("expand", () {
     final ListSetView<int> iset = ListSetView({1, 2, 3, 4, 5, 6});
     expect(
-        iset.expand((int v) => {v, v}),
-        // ignore: equal_elements_in_set
-        {1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6});
+      iset.expand((int v) => {v, v}),
+      // ignore: equal_elements_in_set
+      {1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6},
+    );
     expect(iset.expand((int v) => <int>{}), <int>{});
   });
 
   test("cast", () {
-    expect(ListSetView({1, 10, 50, -2, 8, 20}).cast<num>(), {1, 10, 50, -2, 8, 20});
+    expect(ListSetView({1, 10, 50, -2, 8, 20}).cast<num>(), {
+      1,
+      10,
+      50,
+      -2,
+      8,
+      20,
+    });
   });
 
   test("clear", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).clear(), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).clear(),
+      throwsUnsupportedError,
+    );
   });
 
   test("remove", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).remove(10), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).remove(10),
+      throwsUnsupportedError,
+    );
   });
 
   test("removeAll", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeAll({10}), throwsUnsupportedError);
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeAll([10]), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).removeAll({10}),
+      throwsUnsupportedError,
+    );
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).removeAll([10]),
+      throwsUnsupportedError,
+    );
   });
 
   test("removeWhere", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeWhere((int value) => value == 10),
-        throwsUnsupportedError);
+    expect(
+      () => ListSetView({
+        1,
+        10,
+        50,
+        -2,
+        8,
+        20,
+      }).removeWhere((int value) => value == 10),
+      throwsUnsupportedError,
+    );
   });
 
   test("retainAll", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).retainAll([10, 50]), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).retainAll([10, 50]),
+      throwsUnsupportedError,
+    );
   });
 
   test("retainWhere", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).retainWhere((int value) => value == 10),
-        throwsUnsupportedError);
+    expect(
+      () => ListSetView({
+        1,
+        10,
+        50,
+        -2,
+        8,
+        20,
+      }).retainWhere((int value) => value == 10),
+      throwsUnsupportedError,
+    );
   });
 
   test("single", () {
@@ -132,7 +182,10 @@ void main() {
 
     // 2) Exception
     listSetView = ListSetView({1, 2, 3, 4, 5, 6});
-    expect(() => listSetView.singleWhere((int v) => v < 4, orElse: () => 100), throwsStateError);
+    expect(
+      () => listSetView.singleWhere((int v) => v < 4, orElse: () => 100),
+      throwsStateError,
+    );
   });
 
   test("skip", () {
@@ -238,19 +291,35 @@ void main() {
   });
 
   test("asMap", () {
-    expect(ListSetView({"hel", "lo", "there"}).asMap(), isA<Map<int, String>>());
-    expect(ListSetView({"hel", "lo", "there"}).asMap(), {0: "hel", 1: "lo", 2: "there"});
+    expect(
+      ListSetView({"hel", "lo", "there"}).asMap(),
+      isA<Map<int, String>>(),
+    );
+    expect(ListSetView({"hel", "lo", "there"}).asMap(), {
+      0: "hel",
+      1: "lo",
+      2: "there",
+    });
   });
 
   test("getRange", () {
-    final ListSetView<String> colors = ListSetView({"red", "green", "blue", "orange", "pink"});
+    final ListSetView<String> colors = ListSetView({
+      "red",
+      "green",
+      "blue",
+      "orange",
+      "pink",
+    });
     final Iterable<String> range = colors.getRange(1, 4);
     expect(range, ["green", "blue", "orange"]);
     expect(colors, ["red", "green", "blue", "orange", "pink"]);
   });
 
   test("retainWhere", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).fillRange(1, 3, 100), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).fillRange(1, 3, 100),
+      throwsUnsupportedError,
+    );
   });
 
   test("first setter", () {
@@ -335,7 +404,11 @@ void main() {
     expect({5}.lock.reduce((int p, int e) => p * (1 + e)), 5);
 
     // 2) Exception
-    expect(() => ISet().reduce((dynamic p, dynamic e) => p * (1 + (e as num))), throwsStateError);
+    expect(
+      () =>
+          ImmutableSet().reduce((dynamic p, dynamic e) => p * (1 + (e as num))),
+      throwsStateError,
+    );
   });
 
   test("first, last", () {
@@ -372,16 +445,24 @@ void main() {
 
     // TODO: This is not yet supported, but will be in the future.
     // expect(view.indexWhere((int value) => value == 10), 1);
-    expect(() => view.indexWhere((int value) => value == 10), throwsUnsupportedError);
+    expect(
+      () => view.indexWhere((int value) => value == 10),
+      throwsUnsupportedError,
+    );
   });
 
   test("insert", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).insert(1, 100), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).insert(1, 100),
+      throwsUnsupportedError,
+    );
   });
 
   test("insertAll", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).insertAll(1, [100, 1000]),
-        throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).insertAll(1, [100, 1000]),
+      throwsUnsupportedError,
+    );
   });
 
   test("last", () {
@@ -406,88 +487,103 @@ void main() {
 
     // TODO: This is not yet supported, but will be in the future.
     //    expect(view.lastIndexWhere((int value) => value == -2), 3);
-    expect(() => view.lastIndexWhere((int value) => value == -2), throwsUnsupportedError);
+    expect(
+      () => view.lastIndexWhere((int value) => value == -2),
+      throwsUnsupportedError,
+    );
   });
 
   test("length setter", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).length = 10, throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).length = 10,
+      throwsUnsupportedError,
+    );
   });
 
   test("removeAt", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeAt(1), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).removeAt(1),
+      throwsUnsupportedError,
+    );
   });
 
   test("removeLast", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeLast(), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).removeLast(),
+      throwsUnsupportedError,
+    );
   });
 
   test("removeRange", () {
-    expect(() => ListSetView({1, 10, 50, -2, 8, 20}).removeRange(1, 3), throwsUnsupportedError);
+    expect(
+      () => ListSetView({1, 10, 50, -2, 8, 20}).removeRange(1, 3),
+      throwsUnsupportedError,
+    );
   });
 
   test("replaceRange", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.replaceRange(1, 3, [100, 1000]);
-//    expect(view, [1, 100, 1000, -2, 8, 20]);
+    //    view.replaceRange(1, 3, [100, 1000]);
+    //    expect(view, [1, 100, 1000, -2, 8, 20]);
     expect(() => view.replaceRange(1, 3, [100, 1000]), throwsUnsupportedError);
   });
 
   test("reversed", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    expect(view.reversed, allOf(isA<Iterable<int>>(), [20, 8, -2, 50, 10, 1]));
+    //    expect(view.reversed, allOf(isA<Iterable<int>>(), [20, 8, -2, 50, 10, 1]));
     expect(() => view.reversed, throwsUnsupportedError);
   });
 
   test("reversedView", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    expect(view.reversedView, allOf(isA<ListSetView<int>>(), [20, 8, -2, 50, 10, 1]));
+    //    expect(view.reversedView, allOf(isA<ListSetView<int>>(), [20, 8, -2, 50, 10, 1]));
     expect(() => view.reversedView, throwsUnsupportedError);
   });
 
   test("setAll", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.setAll(1, [100, 1000]);
-//    expect(view, [1, 100, 1000, 10, 50, -2, 8, 20]);
+    //    view.setAll(1, [100, 1000]);
+    //    expect(view, [1, 100, 1000, 10, 50, -2, 8, 20]);
     expect(() => view.setAll(1, [100, 1000]), throwsUnsupportedError);
   });
 
   test("setRange", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.setRange(1, 5, [100, 1000]);
-//    expect(view, [1, 100, 1000, -2, 8, 20]);
+    //    view.setRange(1, 5, [100, 1000]);
+    //    expect(view, [1, 100, 1000, -2, 8, 20]);
     expect(() => view.setRange(1, 5, [100, 1000]), throwsUnsupportedError);
   });
 
   test("shuffle", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.shuffle(Random(0));
-//    expect(view, [1, 10, 50, -2, 8, 20]);
+    //    view.shuffle(Random(0));
+    //    expect(view, [1, 10, 50, -2, 8, 20]);
     expect(() => view.shuffle(Random(0)), throwsUnsupportedError);
   });
 
   test("sort", () {
     // TODO: Complete specification
     ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.sort();
-//    expect(view, [-2, 1, 8, 10, 20, 50]);
+    //    view.sort();
+    //    expect(view, [-2, 1, 8, 10, 20, 50]);
     expect(() => view.sort(), throwsUnsupportedError);
 
     view = ListSetView({1, 10, 50, -2, 8, 20});
-//    view.sort((int a, int b) => -a.compareTo(b));
-//    expect(view, [50, 20, 10, 8, 1, -2]);
+    //    view.sort((int a, int b) => -a.compareTo(b));
+    //    expect(view, [50, 20, 10, 8, 1, -2]);
     expect(() => view.sort(), throwsUnsupportedError);
   });
 
   test("sublist", () {
     // TODO: Complete specification
     final ListSetView<int> view = ListSetView({1, 10, 50, -2, 8, 20});
-//    expect(view.sublist(1, 3), allOf(isA<List<int>>(), [10, 50]));
+    //    expect(view.sublist(1, 3), allOf(isA<List<int>>(), [10, 50]));
     expect(() => view.sublist(1, 3), throwsUnsupportedError);
   });
 }

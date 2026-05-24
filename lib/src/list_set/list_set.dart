@@ -2,11 +2,10 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "dart:collection";
-import "dart:math";
+import 'dart:collection';
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:fast_immutable_collections/src/iterator/iterator_flat.dart";
+import 'package:fic/src/fic.dart';
 
 /// A [ListSet] is, at the same time:
 /// 1) A mutable, fixed-sized, ordered, [Set].
@@ -21,7 +20,7 @@ import "package:fast_immutable_collections/src/iterator/iterator_flat.dart";
 /// efficient [sort] method, while a [LinkedHashSet] would force you to turn it into a [List],
 /// then sort it, than turn it back into a [Set].
 ///
-class ListSet<T> implements Set<T>, List<T> {
+class ListSet<T extends Object?> implements Set<T>, List<T> {
   late Set<T> _set;
   late List<T> _list;
 
@@ -40,7 +39,7 @@ class ListSet<T> implements Set<T>, List<T> {
     Iterable<T> items, {
     bool sort = false,
     int Function(T a, T b)? compare,
-  }) : assert(compare == null || sort == true) {
+  }) : assert(compare == null || sort) {
     _set = HashSet();
     _list = List.of(items.where((item) => _set.add(item)), growable: false);
     if (sort) _list.sort(compare ?? compareObject);
@@ -66,7 +65,7 @@ class ListSet<T> implements Set<T>, List<T> {
   }
 
   @override
-  bool any(Predicate<T> test) => _list.any(test);
+  bool any(bool Function(T element) test) => _list.any(test);
 
   @override
   ListSet<E> cast<E>() => ListSet<E>._(_set.cast<E>(), _list.cast<E>());
@@ -95,7 +94,7 @@ class ListSet<T> implements Set<T>, List<T> {
   T elementAt(int index) => _list[index];
 
   @override
-  bool every(Predicate<T> test) => _list.every(test);
+  bool every(bool Function(T element) test) => _list.every(test);
 
   @override
   Iterable<E> expand<E>(Iterable<E> Function(T element) f) => _list.expand(f);
@@ -107,10 +106,12 @@ class ListSet<T> implements Set<T>, List<T> {
   T get last => _list.last;
 
   @override
-  T firstWhere(Predicate<T> test, {T Function()? orElse}) => _list.firstWhere(test, orElse: orElse);
+  T firstWhere(bool Function(T element) test, {T Function()? orElse}) =>
+      _list.firstWhere(test, orElse: orElse);
 
   @override
-  T lastWhere(Predicate<T> test, {T Function()? orElse}) => _list.lastWhere(test, orElse: orElse);
+  T lastWhere(bool Function(T element) test, {T Function()? orElse}) =>
+      _list.lastWhere(test, orElse: orElse);
 
   @override
   E fold<E>(E initialValue, E Function(E previousValue, T element) combine) =>
@@ -157,7 +158,7 @@ class ListSet<T> implements Set<T>, List<T> {
   }
 
   @override
-  void removeWhere(Predicate<T> test) {
+  void removeWhere(bool Function(T element) test) {
     throw UnsupportedError("Can't removeWhere from a ListSet.");
   }
 
@@ -167,7 +168,7 @@ class ListSet<T> implements Set<T>, List<T> {
   }
 
   @override
-  void retainWhere(Predicate<T> test) {
+  void retainWhere(bool Function(T element) test) {
     throw UnsupportedError("Can't retainWhere from a ListSet.");
   }
 
@@ -175,7 +176,7 @@ class ListSet<T> implements Set<T>, List<T> {
   T get single => _list.single;
 
   @override
-  T singleWhere(Predicate<T> test, {T Function()? orElse}) =>
+  T singleWhere(bool Function(T element) test, {T Function()? orElse}) =>
       _list.singleWhere(test, orElse: orElse);
 
   @override
@@ -197,7 +198,7 @@ class ListSet<T> implements Set<T>, List<T> {
   Set<T> toSet() => _list.toSet();
 
   @override
-  Iterable<T> where(Predicate<T> test) => _list.where(test);
+  Iterable<T> where(bool Function(T element) test) => _list.where(test);
 
   @override
   Iterable<E> whereType<E>() => _list.whereType();
@@ -211,7 +212,9 @@ class ListSet<T> implements Set<T>, List<T> {
   @override
   void operator []=(int index, T value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -225,7 +228,9 @@ class ListSet<T> implements Set<T>, List<T> {
   @override
   set first(T value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -235,7 +240,8 @@ class ListSet<T> implements Set<T>, List<T> {
   int indexOf(T element, [int start = 0]) => _list.indexOf(element, start);
 
   @override
-  int indexWhere(Predicate<T> test, [int start = 0]) => _list.indexWhere(test, start);
+  int indexWhere(bool Function(T element) test, [int start = 0]) =>
+      _list.indexWhere(test, start);
 
   @override
   void insert(int index, T element) {
@@ -250,14 +256,17 @@ class ListSet<T> implements Set<T>, List<T> {
   @override
   set last(T value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   int lastIndexOf(T element, [int? start]) => _list.lastIndexOf(element, start);
 
   @override
-  int lastIndexWhere(Predicate<T> test, [int? start]) => _list.lastIndexWhere(test, start);
+  int lastIndexWhere(bool Function(T element) test, [int? start]) =>
+      _list.lastIndexWhere(test, start);
 
   @override
   set length(int newLength) {
@@ -282,7 +291,9 @@ class ListSet<T> implements Set<T>, List<T> {
   @override
   void replaceRange(int start, int end, Iterable<T> replacement) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -293,13 +304,17 @@ class ListSet<T> implements Set<T>, List<T> {
   @override
   void setAll(int index, Iterable<T> iterable) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void setRange(int start, int end, Iterable<T> iterable, [int skipCount = 0]) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
@@ -318,5 +333,6 @@ class ListSet<T> implements Set<T>, List<T> {
   /// Creates a [ListSet] form the given [set].
   /// If the [set] is already of type [ListSet], return the same instance.
   /// This is unsafe because a [ListSetView] is fixed size, but the given [set] may not.
-  static ListSet<T> unsafeView<T>(Set<T> set) => (set is ListSet<T>) ? set : ListSetView<T>(set);
+  static ListSet<T> unsafeView<T>(Set<T> set) =>
+      (set is ListSet<T>) ? set : ListSetView<T>(set);
 }

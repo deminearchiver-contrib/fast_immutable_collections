@@ -2,29 +2,37 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "dart:collection";
+import 'dart:collection';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import 'package:fast_immutable_collections/src/ilist/ilist.dart';
-import "package:meta/meta.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:fic/src/list/immutable_list.dart';
+import 'package:meta/meta.dart';
+import 'package:test/test.dart';
 
-/// These tests are mainly for coverage purposes, it tests methods inside the [L] class which were
+/// These tests are mainly for coverage purposes, it tests methods inside the [ImmutableListDelegate] class which were
 /// not reached by its implementations.
 void main() {
   //
   test("sort", () {
-    final L sorted = LExample<MapEntry<String, int>>(
-        [const MapEntry<String, int>("c", 3), const MapEntry<String, int>("b", 2)]).sort();
-    expect(
-        sorted.unlock, [const MapEntry<String, int>("b", 2), const MapEntry<String, int>("c", 3)]);
+    final ImmutableListDelegate sorted = LExample<MapEntry<String, int>>([
+      const MapEntry<String, int>("c", 3),
+      const MapEntry<String, int>("b", 2),
+    ]).sort();
+    expect(sorted.unlock, [
+      const MapEntry<String, int>("b", 2),
+      const MapEntry<String, int>("c", 3),
+    ]);
   });
 
   test("sortOrdered", () {
-    final L sorted = LExample<MapEntry<String, int>>(
-        [const MapEntry<String, int>("c", 3), const MapEntry<String, int>("b", 2)]).sortOrdered();
-    expect(
-        sorted.unlock, [const MapEntry<String, int>("b", 2), const MapEntry<String, int>("c", 3)]);
+    final ImmutableListDelegate sorted = LExample<MapEntry<String, int>>([
+      const MapEntry<String, int>("c", 3),
+      const MapEntry<String, int>("b", 2),
+    ]).sortOrdered();
+    expect(sorted.unlock, [
+      const MapEntry<String, int>("b", 2),
+      const MapEntry<String, int>("c", 3),
+    ]);
   });
 
   test("sortLike", () {
@@ -88,9 +96,14 @@ void main() {
 
   test("expand", () {
     final LExample<int> lExample = LExample([1, 2, 3, 4, 5, 6]);
-    expect(lExample.expand((int v) => [v, v]),
-        allOf(isA<Iterable<int>>(), [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6].lock));
-    expect(lExample.expand((int v) => <int>[]), allOf(isA<Iterable<int>>(), <int>[].lock));
+    expect(
+      lExample.expand((int v) => [v, v]),
+      allOf(isA<Iterable<int>>(), [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6].lock),
+    );
+    expect(
+      lExample.expand((int v) => <int>[]),
+      allOf(isA<Iterable<int>>(), <int>[].lock),
+    );
   });
 
   test("length, first, last, single", () {
@@ -110,14 +123,26 @@ void main() {
   });
 
   test("fold", () {
-    expect(LExample([1, 2, 3, 4, 5, 6]).fold(100, (int p, int? e) => p * (1 + e!)), 504000);
+    expect(
+      LExample([1, 2, 3, 4, 5, 6]).fold(100, (int p, int? e) => p * (1 + e!)),
+      504000,
+    );
   });
 
   test("followedBy", () {
     final LExample<int> lExample = LExample([1, 2, 3, 4, 5, 6]);
     expect(lExample.followedBy([7, 8]), [1, 2, 3, 4, 5, 6, 7, 8]);
-    expect(
-        lExample.followedBy(LExample(<int>[]).add(7).addAll([8, 9])), [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(lExample.followedBy(LExample(<int>[]).add(7).addAll([8, 9])), [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+    ]);
   });
 
   test("forEach", () {
@@ -143,11 +168,21 @@ void main() {
 
   test("map", () {
     expect(LExample([1, 2, 3]).map((int? v) => v! + 1), [2, 3, 4]);
-    expect(LExample([1, 2, 3, 4, 5, 6]).map((int? v) => v! + 1), [2, 3, 4, 5, 6, 7]);
+    expect(LExample([1, 2, 3, 4, 5, 6]).map((int? v) => v! + 1), [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+    ]);
   });
 
   test("reduce", () {
-    expect(LExample([1, 2, 3, 4, 5, 6]).reduce((int? p, int? e) => p! * (1 + e!)), 2520);
+    expect(
+      LExample([1, 2, 3, 4, 5, 6]).reduce((int? p, int? e) => p! * (1 + e!)),
+      2520,
+    );
     expect(LExample([5]).reduce((int? p, int? e) => p! * (1 + e!)), 5);
   });
 
@@ -212,29 +247,36 @@ void main() {
     final LExample<int> lExample = LExample([1, 2, 3, 4, 5, 6]);
     expect(lExample.toSet()..add(7), {1, 2, 3, 4, 5, 6, 7});
     expect(
-        lExample
-          ..add(6)
-          ..toSet(),
-        {1, 2, 3, 4, 5, 6});
+      lExample
+        ..add(6)
+        ..toSet(),
+      {1, 2, 3, 4, 5, 6},
+    );
     expect(lExample.unlock, [1, 2, 3, 4, 5, 6]);
   });
 
   test("toHashSet", () {
     final LExample<int> lExample = LExample([1, 2, 3, 3, 4, 5, 6]);
-    expect(lExample.toHashSet(), allOf(isA<HashSet<int>>(), {1, 2, 3, 4, 5, 6}));
+    expect(
+      lExample.toHashSet(),
+      allOf(isA<HashSet<int>>(), {1, 2, 3, 4, 5, 6}),
+    );
   });
 
   test("toListSet", () {
     final LExample<int> lExample = LExample([1, 2, 3, 3, 4, 5, 6]);
-    expect(lExample.toListSet(), allOf(isA<ListSet<int>>(), {1, 2, 3, 4, 5, 6}));
+    expect(
+      lExample.toListSet(),
+      allOf(isA<ListSet<int>>(), {1, 2, 3, 4, 5, 6}),
+    );
   });
 }
 
 @visibleForTesting
-class LExample<T> extends L<T> {
-  final IList<T> _ilist;
+class LExample<T> extends ImmutableListDelegate<T> {
+  final ImmutableList<T> _ilist;
 
-  LExample([Iterable<T>? iterable]) : _ilist = IList(iterable);
+  LExample([Iterable<T>? iterable]) : _ilist = ImmutableList(iterable);
 
   @override
   Iterator<T> get iterator {

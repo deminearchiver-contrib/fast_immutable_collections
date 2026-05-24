@@ -25,10 +25,10 @@
 /// Creating a new [CacheKey] on every call defeats caching, since identity
 /// is used to look up cached values.
 ///
-class CacheKey<C, R> {
-  final R Function(C collection) _compute;
-
+class CacheKey<C extends Object?, R extends Object?> {
   const CacheKey(this._compute);
+
+  final R Function(C collection) _compute;
 
   R computeFrom(C collection) => _compute(collection);
 }

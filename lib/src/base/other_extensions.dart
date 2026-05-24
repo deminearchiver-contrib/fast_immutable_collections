@@ -2,7 +2,7 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
+import 'package:fic/src/fic.dart';
 
 /// See also: [compareObject], [FicComparableExtension], [FicComparatorExtension], [sortBy], [sortLike]
 extension FicBooleanExtension on bool {
@@ -13,6 +13,6 @@ extension FicBooleanExtension on bool {
   int compareTo(bool other) => (this == other)
       ? 0
       : this
-          ? 1
-          : -1;
+      ? 1
+      : -1;
 }

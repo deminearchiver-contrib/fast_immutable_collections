@@ -19,10 +19,6 @@
   <img src="https://contrib.rocks/image?repo=marcglasberg/fast_immutable_collections" alt="contributors"/>
 </a>
 
-#### Sponsor
-
-[![](./example/SponsoredByMyTextAi.png)](https://mytext.ai)
-
 # Fast Immutable Collections
 
 <p align="center">

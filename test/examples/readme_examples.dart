@@ -2,29 +2,26 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each, unreachable_from_main
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 int testCount = 0;
 
 void testAndPrint(dynamic description, dynamic Function() body) {
-  test(
-    description,
-    () {
-      testCount++;
-      print("\n\n$testCount. $description -----------\n\n");
-      body();
-    },
-  );
+  test(description, () {
+    testCount++;
+    print("\n\n$testCount. $description -----------\n\n");
+    body();
+  });
 }
 
 void main() {
   print("THESE ARE THE EXAMPLES IN README.md");
 
   testAndPrint("Creating IList", () {
-    IList<int> ilist1 = IList([1, 2]);
-    IList<int> ilist2 = [1, 2].lock;
-    IList<int>? ilist3 = {1, 2}.toIList();
+    ImmutableList<int> ilist1 = ImmutableList([1, 2]);
+    ImmutableList<int> ilist2 = [1, 2].lock;
+    ImmutableList<int>? ilist3 = {1, 2}.toIList();
 
     var list1 = List.of(ilist1);
     var list2 = ilist1.unlock;
@@ -58,8 +55,7 @@ void main() {
   });
 
   testAndPrint("Some IList methods (like map and take) return Iterable", () {
-    IList<int> ilist = ["Bob", "Alice", "Dominic", "Carl"]
-        .lock
+    ImmutableList<int> ilist = ["Bob", "Alice", "Dominic", "Carl"].lock
         .sort() // Alice, Bob, Carl, Dominic
         .map(((name) => name.length)) // 5, 3, 4, 7
         .take(3) // 5, 3, 4
@@ -73,7 +69,7 @@ void main() {
   });
 
   testAndPrint("ILists can be used as map keys", () {
-    Map<IList, int> sumResult = {};
+    Map<ImmutableList, int> sumResult = {};
 
     String getSum(int a, int b) {
       var keys = [a, b].lock;
@@ -111,8 +107,8 @@ void main() {
 
   testAndPrint("Method `withConfig`", () {
     var list = [1, 2];
-    var ilist1 = list.lock.withConfig(ConfigList(isDeepEquals: true));
-    var ilist2 = list.lock.withConfig(ConfigList(isDeepEquals: false));
+    var ilist1 = list.lock.withConfig(ImmutableListConfig(isDeepEquals: true));
+    var ilist2 = list.lock.withConfig(ImmutableListConfig(isDeepEquals: false));
 
     print(list.lock == ilist1); // True!
     print(list.lock == ilist2); // False!
@@ -120,8 +116,14 @@ void main() {
 
   testAndPrint("Constructor `withConfig`", () {
     var list = [1, 2];
-    var ilist1 = IList.withConfig(list, ConfigList(isDeepEquals: true));
-    var ilist2 = IList.withConfig(list, ConfigList(isDeepEquals: false));
+    var ilist1 = ImmutableList.withConfig(
+      list,
+      ImmutableListConfig(isDeepEquals: true),
+    );
+    var ilist2 = ImmutableList.withConfig(
+      list,
+      ImmutableListConfig(isDeepEquals: false),
+    );
 
     print(list.lock == ilist1); // True!
     print(list.lock == ilist2); // False!
@@ -131,15 +133,15 @@ void main() {
     var list = [1, 2];
 
     // The default.
-    var ilistA1 = IList(list);
-    var ilistA2 = IList(list);
+    var ilistA1 = ImmutableList(list);
+    var ilistA2 = ImmutableList(list);
     print(ilistA1 == ilistA2); // True!
     expect(ilistA1 == ilistA2, isTrue);
 
     // Change the default to identity equals, for lists created from now on.
-    IList.defaultConfig = ConfigList(isDeepEquals: false);
-    var ilistB1 = IList(list);
-    var ilistB2 = IList(list);
+    ImmutableList.defaultConfig = ImmutableListConfig(isDeepEquals: false);
+    var ilistB1 = ImmutableList(list);
+    var ilistB2 = ImmutableList(list);
     print(ilistB1 == ilistB2); // False!
     expect(ilistB1 == ilistB2, isFalse);
 
@@ -148,9 +150,9 @@ void main() {
     expect(ilistA1 == ilistA2, isTrue);
 
     // Change the default back to deep equals.
-    IList.defaultConfig = ConfigList(isDeepEquals: true);
-    var ilistC1 = IList(list);
-    var ilistC2 = IList(list);
+    ImmutableList.defaultConfig = ImmutableListConfig(isDeepEquals: true);
+    var ilistC1 = ImmutableList(list);
+    var ilistC2 = ImmutableList(list);
     print(ilistC1 == ilistC2); // True!
     expect(ilistC1 == ilistC2, isTrue);
   });
@@ -178,12 +180,18 @@ void main() {
     expect({2, 1}, isNot([1, 2])); // Ordered Set in the WRONG order with List.
 
     expect([1, 2].lock, {2, 1}); // IList with ordered Set in the WRONG order.
-    expect({2, 1}, isNot([1, 2].lock)); // Ordered Set in the WRONG order with IList.
+    expect({
+      2,
+      1,
+    }, isNot([1, 2].lock)); // Ordered Set in the WRONG order with IList.
 
     expect({1, 2}, isNot([2, 1])); // Ordered Set in the WRONG order with List.
     expect([2, 1], {1, 2}); // List with ordered Set in the WRONG order.
 
-    expect({1, 2}, isNot([2, 1].lock)); // Ordered Set in the WRONG order with IList.
+    expect({
+      1,
+      2,
+    }, isNot([2, 1].lock)); // Ordered Set in the WRONG order with IList.
     expect([2, 1].lock, {1, 2}); // IList with ordered Set in the WRONG order.
   });
 
@@ -202,7 +210,7 @@ void main() {
     var originalSet = {2, 4, 1, 9, 3};
 
     /// Sorts: "1,2,3,4,9"
-    var iset = originalSet.lock.withConfig(ConfigSet(sort: true));
+    var iset = originalSet.lock.withConfig(ImmutableSetConfig(sort: true));
     var result1 = iset.join(",");
     var result2 = iset.iterator.toIterable().join(",");
     var result3 = iset.toList().join(",");
@@ -221,7 +229,7 @@ void main() {
     expect(result5, "1,2,3,4,9");
 
     /// Does not sort, but keeps original order: "2,4,1,9,3"
-    iset = originalSet.lock.withConfig(ConfigSet(sort: false));
+    iset = originalSet.lock.withConfig(ImmutableSetConfig(sort: false));
     result1 = iset.join(",");
     result2 = iset.iterator.toIterable().join(",");
     result3 = iset.toList().join(",");
@@ -265,35 +273,64 @@ void main() {
         //
         .addStudentsToCourses({
           math: {bill},
-          geo: {lucy, sara}
+          geo: {lucy, sara},
         })
         //
         .addStudentToCourses(megan, [english, arts]);
 
-    expect(
-      studentsPerCourse.toMap(),
-      {
-        math: {james, sara, lucy, bill},
-        geo: {lucy, sara},
-        arts: {lucy, bill, megan},
-        english: {megan},
-      },
-    );
+    expect(studentsPerCourse.toMap(), {
+      math: {james, sara, lucy, bill},
+      geo: {lucy, sara},
+      arts: {lucy, bill, megan},
+      english: {megan},
+    });
 
     expect(studentsPerCourse.courses(), {math, geo, arts, english});
 
-    expect(studentsPerCourse.removeCourse(arts).courses(), {math, geo, english});
+    expect(studentsPerCourse.removeCourse(arts).courses(), {
+      math,
+      geo,
+      english,
+    });
 
     expect(studentsPerCourse.students(), {james, sara, lucy, bill, megan});
 
-    expect(studentsPerCourse.studentsInAlphabeticOrder(), [bill, james, lucy, megan, sara]);
+    expect(studentsPerCourse.studentsInAlphabeticOrder(), [
+      bill,
+      james,
+      lucy,
+      megan,
+      sara,
+    ]);
 
-    expect(studentsPerCourse.studentNamesInAlphabeticOrder(),
-        ["Bill", "James", "Lucy", "Megan", "Sara"]);
+    expect(studentsPerCourse.studentNamesInAlphabeticOrder(), [
+      "Bill",
+      "James",
+      "Lucy",
+      "Megan",
+      "Sara",
+    ]);
   });
 
   testAndPrint("compare", () {
-    List<int> list = [1, 15, 3, 21, 360, 9, 17, 300, 25, 5, 22, 10, 12, 27, 14, 5];
+    List<int> list = [
+      1,
+      15,
+      3,
+      21,
+      360,
+      9,
+      17,
+      300,
+      25,
+      5,
+      22,
+      10,
+      12,
+      27,
+      14,
+      5,
+    ];
 
     /// Comparator Rules:
     /// 1) If present, number 14 is always the first, followed by number 15.
@@ -301,14 +338,22 @@ void main() {
     /// 3) Otherwise, come numbers which are multiples of 3,
     /// 4) Otherwise, come numbers which are multiples of 5,
     /// 5) Otherwise, numbers come in their natural order.
-    int Function(int, int) compare = sortBy((x) => x == 14,
-        then: sortBy((x) => x == 15,
-            then: sortBy((x) => x % 2 == 1,
-                then: sortBy((x) => x % 3 == 0,
-                    then: sortBy(
-                      (x) => x % 5 == 0,
-                      then: (int a, int b) => a.compareTo(b),
-                    )))));
+    int Function(int, int) compare = sortBy(
+      (x) => x == 14,
+      then: sortBy(
+        (x) => x == 15,
+        then: sortBy(
+          (x) => x % 2 == 1,
+          then: sortBy(
+            (x) => x % 3 == 0,
+            then: sortBy(
+              (x) => x % 5 == 0,
+              then: (int a, int b) => a.compareTo(b),
+            ),
+          ),
+        ),
+      ),
+    );
 
     print(list);
     list.sort(compare);
@@ -339,7 +384,9 @@ class Student implements Comparable<Student> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Student && runtimeType == other.runtimeType && name == other.name;
+      other is Student &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
 
   @override
   int get hashCode => name.hashCode;
@@ -348,16 +395,16 @@ class Student implements Comparable<Student> {
   int compareTo(Student other) => name.compareTo(other.name);
 }
 
-class Students with FromIListMixin<Student, Students> {
-  final IList<Student> _students;
+class Students with FromImmutableListMixin<Student, Students> {
+  final ImmutableList<Student> _students;
 
-  Students([Iterable<Student>? students]) : _students = IList(students);
-
-  @override
-  Students newInstance(IList<Student> ilist) => Students(ilist);
+  Students([Iterable<Student>? students]) : _students = ImmutableList(students);
 
   @override
-  IList<Student> get iter => _students;
+  Students newInstance(ImmutableList<Student> ilist) => Students(ilist);
+
+  @override
+  ImmutableList<Student> get iter => _students;
 
   String greetings() => "Hello ${_students.join(", ")}.";
 }
@@ -383,40 +430,48 @@ class StudentsPerCourse {
   final IMapOfSets<Course, Student> imap;
 
   StudentsPerCourse([Map<Course, Set<Student>>? studentsPerCourse])
-      : imap = (studentsPerCourse ?? {}).lock;
+    : imap = (studentsPerCourse ?? {}).lock;
 
   StudentsPerCourse._(this.imap);
 
-  ISet<Course> courses() => imap.keysAsSet;
+  ImmutableSet<Course> courses() => imap.keysAsSet;
 
-  ISet<Student?> students() => imap.valuesAsSet;
+  ImmutableSet<Student?> students() => imap.valuesAsSet;
 
-  IMapOfSets<Student?, Course> getCoursesPerStudent() => imap.invertKeysAndValues();
+  IMapOfSets<Student?, Course> getCoursesPerStudent() =>
+      imap.invertKeysAndValues();
 
-  IList<Student?> studentsInAlphabeticOrder() =>
+  ImmutableList<Student?> studentsInAlphabeticOrder() =>
       imap.valuesAsSet.toIList(compare: (s1, s2) => s1.name.compareTo(s2.name));
 
-  IList<String>? studentNamesInAlphabeticOrder() => imap.valuesAsSet.map((s) => s.name).toIList();
+  ImmutableList<String>? studentNamesInAlphabeticOrder() =>
+      imap.valuesAsSet.map((s) => s.name).toIList();
 
   StudentsPerCourse addStudentToCourse(Student student, Course course) =>
       StudentsPerCourse._(imap.add(course, student));
 
-  StudentsPerCourse addStudentToCourses(Student student, Iterable<Course> courses) =>
-      StudentsPerCourse._(imap.addValuesToKeys(courses, [student]));
+  StudentsPerCourse addStudentToCourses(
+    Student student,
+    Iterable<Course> courses,
+  ) => StudentsPerCourse._(imap.addValuesToKeys(courses, [student]));
 
-  StudentsPerCourse addStudentsToCourse(Iterable<Student> students, Course course) =>
-      StudentsPerCourse._(imap.addValues(course, students));
+  StudentsPerCourse addStudentsToCourse(
+    Iterable<Student> students,
+    Course course,
+  ) => StudentsPerCourse._(imap.addValues(course, students));
 
-  StudentsPerCourse addStudentsToCourses(Map<Course, Set<Student>> studentsPerCourse) =>
-      StudentsPerCourse._(imap.addMap(studentsPerCourse));
+  StudentsPerCourse addStudentsToCourses(
+    Map<Course, Set<Student>> studentsPerCourse,
+  ) => StudentsPerCourse._(imap.addMap(studentsPerCourse));
 
   StudentsPerCourse removeStudentFromCourse(Student student, Course course) =>
       StudentsPerCourse._(imap.remove(course, student));
 
   StudentsPerCourse removeStudentFromAllCourses(Student student) =>
-      StudentsPerCourse._(imap.removeValues([student]));
+      StudentsPerCourse._(imap.removeValues([student]).$1);
 
-  StudentsPerCourse removeCourse(Course course) => StudentsPerCourse._(imap.removeSet(course));
+  StudentsPerCourse removeCourse(Course course) =>
+      StudentsPerCourse._(imap.removeSet(course));
 
   Map<Course, Set<Student?>> toMap() => imap.unlock;
 

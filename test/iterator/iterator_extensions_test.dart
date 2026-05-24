@@ -2,8 +2,8 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
@@ -26,12 +26,18 @@ void main() {
     final List<int> list2 = [1, 2, 3];
     final Iterator<int> iterator2 = list2.iterator;
 
-    expect(iterator2.toList(growable: false), allOf(isA<List<int>>(), [1, 2, 3]));
-    expect(() => iterator2.toList(growable: false).add(4), throwsUnsupportedError);
+    expect(
+      iterator2.toList(growable: false),
+      allOf(isA<List<int>>(), [1, 2, 3]),
+    );
+    expect(
+      () => iterator2.toList(growable: false).add(4),
+      throwsUnsupportedError,
+    );
   });
 
   test("toIList", () {
-    expect([1, 2, 3].iterator.toIList(), isA<IList<int>>());
+    expect([1, 2, 3].iterator.toIList(), isA<ImmutableList<int>>());
     expect([1, 2, 3].iterator.toIList(), [1, 2, 3]);
   });
 
@@ -39,7 +45,7 @@ void main() {
     expect([1, 2, 3, 3].iterator.toSet(), isA<Set<int>>());
     expect([1, 2, 3, 3].iterator.toSet(), {1, 2, 3});
 
-    expect({1, 2, 3}.iterator.toISet(), isA<ISet<int>>());
+    expect({1, 2, 3}.iterator.toISet(), isA<ImmutableSet<int>>());
     expect({1, 2, 3}.iterator.toISet(), {1, 2, 3});
   });
 }

@@ -2,8 +2,8 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 void main() {
   ImmutableCollection.autoFlush = false;
@@ -14,8 +14,12 @@ void main() {
 
   test("IList deep equality ignores type parameter.", () {
     //
-    IList<Supertype> ilist1 = IList(<Subtype>[obj1, obj2, obj3]);
-    IList<Supertype> ilist2 = [obj1, obj2, obj3].lock;
+    ImmutableList<Supertype> ilist1 = ImmutableList(<Subtype>[
+      obj1,
+      obj2,
+      obj3,
+    ]);
+    ImmutableList<Supertype> ilist2 = [obj1, obj2, obj3].lock;
 
     expect(ilist1.runtimeType.toString(), "IListImpl<Supertype>");
     expect(ilist2.runtimeType.toString(), "IListImpl<Subtype>");
@@ -39,8 +43,8 @@ void main() {
 
   test("ISet deep equality ignores type parameter.", () {
     //
-    ISet<Supertype> iset1 = ISet(<Subtype>[obj1, obj2, obj3]);
-    ISet<Supertype> iset2 = {obj1, obj2, obj3}.lock;
+    ImmutableSet<Supertype> iset1 = ImmutableSet(<Subtype>[obj1, obj2, obj3]);
+    ImmutableSet<Supertype> iset2 = {obj1, obj2, obj3}.lock;
 
     expect(iset1.runtimeType.toString(), "ISetImpl<Supertype>");
     expect(iset2.runtimeType.toString(), "ISetImpl<Subtype>");
@@ -63,8 +67,16 @@ void main() {
 
   test("IMap deep equality ignores type parameter of keys", () {
     //
-    IMap<Supertype, String> imap1 = IMap(<Subtype, String>{obj1: "a", obj2: "a", obj3: "a"});
-    IMap<Supertype, String> imap2 = {obj1: "a", obj2: "a", obj3: "a"}.lock;
+    ImmutableMap<Supertype, String> imap1 = ImmutableMap(<Subtype, String>{
+      obj1: "a",
+      obj2: "a",
+      obj3: "a",
+    });
+    ImmutableMap<Supertype, String> imap2 = {
+      obj1: "a",
+      obj2: "a",
+      obj3: "a",
+    }.lock;
 
     expect(imap1.runtimeType.toString(), "IMapImpl<Supertype, String>");
     expect(imap2.runtimeType.toString(), "IMapImpl<Subtype, String>");
@@ -87,8 +99,16 @@ void main() {
 
   test("IMap deep equality ignores type parameter of values", () {
     //
-    IMap<String, Supertype> imap1 = IMap(<String, Subtype>{"a": obj1, "b": obj2, "c": obj3});
-    IMap<String, Supertype> imap2 = {"a": obj1, "b": obj2, "c": obj3}.lock;
+    ImmutableMap<String, Supertype> imap1 = ImmutableMap(<String, Subtype>{
+      "a": obj1,
+      "b": obj2,
+      "c": obj3,
+    });
+    ImmutableMap<String, Supertype> imap2 = {
+      "a": obj1,
+      "b": obj2,
+      "c": obj3,
+    }.lock;
 
     expect(imap1.runtimeType.toString(), "IMapImpl<String, Supertype>");
     expect(imap2.runtimeType.toString(), "IMapImpl<String, Subtype>");
@@ -111,11 +131,13 @@ void main() {
 
   test("IMapOfSets deep equality ignores type parameter of keys", () {
     //
-    IMapOfSets<Supertype, String> imapOfSets1 = IMapOfSets(<Subtype, Set<String>>{
-      obj1: {"a"},
-      obj2: {"b"},
-      obj3: {"c"},
-    });
+    IMapOfSets<Supertype, String> imapOfSets1 = IMapOfSets(
+      <Subtype, Set<String>>{
+        obj1: {"a"},
+        obj2: {"b"},
+        obj3: {"c"},
+      },
+    );
     IMapOfSets<Supertype, String> imapOfSets2 = {
       obj1: {"a"},
       obj2: {"b"},
@@ -143,15 +165,17 @@ void main() {
 
   test("IMapOfSets deep equality ignores type parameter of values", () {
     //
-    IMapOfSets<String, Supertype> imapOfSets1 = IMapOfSets(<String, Set<Subtype>>{
-      "a": {obj1},
-      "b": {obj2},
-      "c": {obj3}
-    });
+    IMapOfSets<String, Supertype> imapOfSets1 = IMapOfSets(
+      <String, Set<Subtype>>{
+        "a": {obj1},
+        "b": {obj2},
+        "c": {obj3},
+      },
+    );
     IMapOfSets<String, Supertype> imapOfSets2 = {
       "a": {obj1},
       "b": {obj2},
-      "c": {obj3}
+      "c": {obj3},
     }.lock;
 
     expect(imapOfSets1 == imapOfSets2, isTrue);
@@ -179,7 +203,9 @@ class Supertype {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Supertype && runtimeType == other.runtimeType && nome == other.nome;
+      other is Supertype &&
+          runtimeType == other.runtimeType &&
+          nome == other.nome;
 
   @override
   int get hashCode => nome.hashCode;

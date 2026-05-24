@@ -2,21 +2,21 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import 'package:fast_immutable_collections/src/iset/iset.dart';
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:fic/src/set/immutable_set.dart';
+import 'package:test/test.dart';
 
-extension TestExtension on ISet {
-  int get counter => InternalsForTestingPurposesISet(this).counter;
+extension TestExtension on ImmutableSet {
+  int get counter => ImmutableSetInternals(this).counter;
 }
 
 void main() {
   //
   test("Sync auto-flush when the set is already flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    ISet.flushFactor = 4;
+    ImmutableSet.flushFactor = 4;
 
     // The set is flushed. Counter is 0.
     var iset = {1, 2, 3, 4}.lock;
@@ -39,7 +39,7 @@ void main() {
 
   test("Sync auto-flush when the set is NOT flushed.", () async {
     ImmutableCollection.resetAllConfigurations();
-    ISet.flushFactor = 4;
+    ImmutableSet.flushFactor = 4;
 
     // The set is flushed. Counter is 0.
     var iset = {1, 2, 3, 4}.lock;
@@ -104,11 +104,10 @@ void main() {
     expect(iset.isFlushed, isTrue);
   });
 
-  test(
-      "Method 'add' makes counter equal to the source set counter, "
+  test("Method 'add' makes counter equal to the source set counter, "
       "plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    ISet.flushFactor = 4;
+    ImmutableSet.flushFactor = 4;
 
     // The set is flushed. Counter is 0.
     var iset = {1, 2, 3, 4}.lock;
@@ -130,11 +129,10 @@ void main() {
     expect(iset.isFlushed, isFalse);
   });
 
-  test(
-      "Method 'addAll' makes counter equal to "
+  test("Method 'addAll' makes counter equal to "
       "the larger counter of its source sets, plus one.", () async {
     ImmutableCollection.resetAllConfigurations();
-    ISet.flushFactor = 100;
+    ImmutableSet.flushFactor = 100;
 
     // The set is flushed. Counter is 0.
     var iset1 = {1, 2, 3, 4}.lock;

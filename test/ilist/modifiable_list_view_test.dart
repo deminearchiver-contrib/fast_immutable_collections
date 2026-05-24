@@ -2,58 +2,63 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:test/test.dart';
 
 import '../utils.dart';
 
 void main() {
   //
   test("Simple Empty Initialization", () {
-    expect(ModifiableListFromIList([].lock).isEmpty, isTrue);
-    expect(ModifiableListFromIList(null).isEmpty, isTrue);
+    expect(ModifiableFromImmutableList([].lock).isEmpty, isTrue);
+    expect(ModifiableFromImmutableList(null).isEmpty, isTrue);
   });
 
   test("[]", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     expect(modifiableListView[0], 1);
     expect(modifiableListView[1], 2);
     expect(modifiableListView[2], 3);
   });
 
   test("length", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     expect(modifiableListView.length, 3);
   });
 
   test("lock", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
-    expect(modifiableListView.lock, isA<IList<int>>());
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
+    expect(modifiableListView.lock, isA<ImmutableList<int>>());
     expect(modifiableListView.lock, [1, 2, 3]);
   });
 
   test("isEmpty | isNotEmpty", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     expect(modifiableListView.isEmpty, isFalse);
     expect(modifiableListView.isNotEmpty, isTrue);
   });
 
   test("[]= operator", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     modifiableListView[2] = 4;
     expect(modifiableListView.length, 3);
     expect(modifiableListView[2], 4);
   });
 
   test("length setter", () {
-    final IList<int?> nullableIlist = [null, 1, 2, 3].lock;
-    final ModifiableListFromIList<int?> modifiableListViewNullable =
-        ModifiableListFromIList(nullableIlist);
+    final ImmutableList<int?> nullableIlist = [null, 1, 2, 3].lock;
+    final ModifiableFromImmutableList<int?> modifiableListViewNullable =
+        ModifiableFromImmutableList(nullableIlist);
 
     // Make it smaller.
     modifiableListViewNullable.length = 2;
@@ -64,8 +69,9 @@ void main() {
     expect(modifiableListViewNullable.length, 4);
 
     // ---
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int?> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int?> modifiableListView =
+        ModifiableFromImmutableList(ilist);
 
     // Make it smaller.
     modifiableListView.length = 2;
@@ -76,16 +82,18 @@ void main() {
   });
 
   test("add", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     modifiableListView.add(4);
     expect(modifiableListView.length, 4);
     expect(modifiableListView.last, 4);
   });
 
   test("addAll", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     modifiableListView.addAll([4, 5]);
     expect(modifiableListView.length, 5);
     expect(modifiableListView[3], 4);
@@ -93,8 +101,9 @@ void main() {
   });
 
   test("remove", () {
-    final IList<int> ilist = [1, 2, 3].lock;
-    final ModifiableListFromIList<int> modifiableListView = ModifiableListFromIList(ilist);
+    final ImmutableList<int> ilist = [1, 2, 3].lock;
+    final ModifiableFromImmutableList<int> modifiableListView =
+        ModifiableFromImmutableList(ilist);
     modifiableListView.remove(2);
     expect(modifiableListView.length, 2);
     expect(modifiableListView[0], 1);

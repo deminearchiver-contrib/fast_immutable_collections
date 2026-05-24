@@ -2,11 +2,11 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 // ignore_for_file: prefer_const_constructors, prefer_final_locals, prefer_final_in_for_each
-import "dart:math";
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
-import "package:meta/meta.dart";
-import "package:test/test.dart";
+import 'package:fic/fic.dart';
+import 'package:meta/meta.dart';
+import 'package:test/test.dart';
 
 void main() {
   //
@@ -43,8 +43,14 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.any((Student? student) => student!.name == "James"), isTrue);
-    expect(students.any((Student? student) => student!.name == "John"), isFalse);
+    expect(
+      students.any((Student? student) => student!.name == "James"),
+      isTrue,
+    );
+    expect(
+      students.any((Student? student) => student!.name == "John"),
+      isFalse,
+    );
   });
 
   test("cast", () {
@@ -92,8 +98,14 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.every((Student? student) => student!.name.length > 1), isTrue);
-    expect(students.every((Student? student) => student!.name.length > 4), isFalse);
+    expect(
+      students.every((Student? student) => student!.name.length > 1),
+      isTrue,
+    );
+    expect(
+      students.every((Student? student) => student!.name.length > 4),
+      isFalse,
+    );
   });
 
   test("expand", () {
@@ -102,10 +114,17 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.expand((Student student) => [student, student]),
-        allOf(isA<Iterable<Student>>(), <Student>[james, james, sara, sara, lucy, lucy].lock));
-    expect(students.expand((Student? student) => <Student>[]),
-        allOf(<Student>[].lock, isA<Iterable<Student>>()));
+    expect(
+      students.expand((Student student) => [student, student]),
+      allOf(
+        isA<Iterable<Student>>(),
+        <Student>[james, james, sara, sara, lucy, lucy].lock,
+      ),
+    );
+    expect(
+      students.expand((Student? student) => <Student>[]),
+      allOf(<Student>[].lock, isA<Iterable<Student>>()),
+    );
   });
 
   test("length", () {
@@ -155,17 +174,26 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.firstWhere((Student? student) => student!.name.length == 5,
-            orElse: () => const Student("John")),
-        const Student("James"));
+      students.firstWhere(
+        (Student? student) => student!.name.length == 5,
+        orElse: () => const Student("John"),
+      ),
+      const Student("James"),
+    );
     expect(
-        students.firstWhere((Student? student) => student!.name.length == 4,
-            orElse: () => const Student("John")),
-        const Student("Sara"));
+      students.firstWhere(
+        (Student? student) => student!.name.length == 4,
+        orElse: () => const Student("John"),
+      ),
+      const Student("Sara"),
+    );
     expect(
-        students.firstWhere((Student? student) => student == const Student("Bob"),
-            orElse: () => const Student("John")),
-        const Student("John"));
+      students.firstWhere(
+        (Student? student) => student == const Student("Bob"),
+        orElse: () => const Student("John"),
+      ),
+      const Student("John"),
+    );
   });
 
   test("firstWhereOrNull", () {
@@ -174,9 +202,18 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.firstWhereOrNull((Student student) => student == Student("Lucy")),
-        Student("Lucy"));
-    expect(students.firstWhereOrNull((Student student) => student == Student("Marcus")), null);
+    expect(
+      students.firstWhereOrNull(
+        (Student student) => student == Student("Lucy"),
+      ),
+      Student("Lucy"),
+    );
+    expect(
+      students.firstWhereOrNull(
+        (Student student) => student == Student("Marcus"),
+      ),
+      null,
+    );
   });
 
   test("fold", () {
@@ -186,11 +223,13 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.fold(
-            Student("Class"),
-            (Student previousStudent, Student? currentStudent) =>
-                Student(previousStudent.name + " : " + currentStudent!.name)),
-        const Student("Class : James : Sara : Lucy"));
+      students.fold(
+        Student("Class"),
+        (Student previousStudent, Student? currentStudent) =>
+            Student(previousStudent.name + " : " + currentStudent!.name),
+      ),
+      const Student("Class : James : Sara : Lucy"),
+    );
   });
 
   test("followedBy", () {
@@ -203,7 +242,13 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(students.followedBy([bob]), [james, sara, lucy, bob]);
-    expect(students.followedBy([bob, charles].lock), [james, sara, lucy, bob, charles]);
+    expect(students.followedBy([bob, charles].lock), [
+      james,
+      sara,
+      lucy,
+      bob,
+      charles,
+    ]);
   });
 
   test("forEach", () {
@@ -214,7 +259,9 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    students.forEach((Student? student) => concatenated += student!.name + ", ");
+    students.forEach(
+      (Student? student) => concatenated += student!.name + ", ",
+    );
 
     expect(concatenated, "James, Sara, Lucy, ");
   });
@@ -236,17 +283,26 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.lastWhere((Student? student) => student!.name.length == 5,
-            orElse: () => const Student("John")),
-        const Student("James"));
+      students.lastWhere(
+        (Student? student) => student!.name.length == 5,
+        orElse: () => const Student("John"),
+      ),
+      const Student("James"),
+    );
     expect(
-        students.lastWhere((Student? student) => student!.name.length == 4,
-            orElse: () => const Student("John")),
-        const Student("Lucy"));
+      students.lastWhere(
+        (Student? student) => student!.name.length == 4,
+        orElse: () => const Student("John"),
+      ),
+      const Student("Lucy"),
+    );
     expect(
-        students.lastWhere((Student? student) => student == const Student("Bob"),
-            orElse: () => const Student("John")),
-        const Student("John"));
+      students.lastWhere(
+        (Student? student) => student == const Student("Bob"),
+        orElse: () => const Student("John"),
+      ),
+      const Student("John"),
+    );
   });
 
   test("map", () {
@@ -254,8 +310,10 @@ void main() {
     const Student sara = Student("Sara");
     final Students students = Students([james, sara]);
 
-    expect(students.map((Student? student) => Student(student!.name + student.name)),
-        [const Student("JamesJames"), const Student("SaraSara")]);
+    expect(
+      students.map((Student? student) => Student(student!.name + student.name)),
+      [const Student("JamesJames"), const Student("SaraSara")],
+    );
   });
 
   test("reduce", () {
@@ -265,9 +323,12 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.reduce((Student? currentStudent, Student? nextStudent) =>
-            Student(currentStudent!.name + " " + nextStudent!.name)),
-        Student("James Sara Lucy"));
+      students.reduce(
+        (Student? currentStudent, Student? nextStudent) =>
+            Student(currentStudent!.name + " " + nextStudent!.name),
+      ),
+      Student("James Sara Lucy"),
+    );
   });
 
   test("singleWhere", () {
@@ -277,13 +338,19 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.singleWhere((Student? student) => student!.name == "Sara",
-            orElse: () => Student("Bob")),
-        const Student("Sara"));
+      students.singleWhere(
+        (Student? student) => student!.name == "Sara",
+        orElse: () => Student("Bob"),
+      ),
+      const Student("Sara"),
+    );
     expect(
-        students.singleWhere((Student? student) => student!.name == "Goat",
-            orElse: () => Student("Bob")),
-        const Student("Bob"));
+      students.singleWhere(
+        (Student? student) => student!.name == "Goat",
+        orElse: () => Student("Bob"),
+      ),
+      const Student("Bob"),
+    );
   });
 
   test("skip", () {
@@ -302,8 +369,10 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.skipWhile((Student? student) => student!.name.length > 4),
-        [const Student("Sara"), const Student("Lucy")]);
+    expect(students.skipWhile((Student? student) => student!.name.length > 4), [
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
   });
 
   test("take", () {
@@ -314,11 +383,20 @@ void main() {
 
     expect(students.take(0), <Student>[]);
     expect(students.take(1), <Student>[const Student("James")]);
-    expect(students.take(2), <Student>[const Student("James"), const Student("Sara")]);
-    expect(students.take(3),
-        <Student>[const Student("James"), const Student("Sara"), const Student("Lucy")]);
-    expect(students.take(10),
-        <Student>[const Student("James"), const Student("Sara"), const Student("Lucy")]);
+    expect(students.take(2), <Student>[
+      const Student("James"),
+      const Student("Sara"),
+    ]);
+    expect(students.take(3), <Student>[
+      const Student("James"),
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
+    expect(students.take(10), <Student>[
+      const Student("James"),
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
   });
 
   test("takeWhile", () {
@@ -327,8 +405,10 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.takeWhile((Student? student) => student!.name.length >= 5),
-        [const Student("James")]);
+    expect(
+      students.takeWhile((Student? student) => student!.name.length >= 5),
+      [const Student("James")],
+    );
   });
 
   test("where", () {
@@ -337,9 +417,13 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
+    expect(students.where((Student? student) => student!.name.length == 5), [
+      const Student("James"),
+    ]);
     expect(
-        students.where((Student? student) => student!.name.length == 5), [const Student("James")]);
-    expect(students.where((Student? student) => student!.name.length == 100), <Student>[]);
+      students.where((Student? student) => student!.name.length == 100),
+      <Student>[],
+    );
   });
 
   test("whereType", () {
@@ -348,8 +432,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.whereType<Student>(),
-        [const Student("James"), const Student("Sara"), const Student("Lucy")]);
+    expect(students.whereType<Student>(), [
+      const Student("James"),
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
     expect(students.whereType<String>(), <Student>[]);
   });
 
@@ -369,8 +456,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(
-        students.toList(), [const Student("James"), const Student("Sara"), const Student("Lucy")]);
+    expect(students.toList(), [
+      const Student("James"),
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
   });
 
   test("toSet", () {
@@ -379,8 +469,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, sara, lucy]);
 
-    expect(
-        students.toSet(), {const Student("James"), const Student("Sara"), const Student("Lucy")});
+    expect(students.toSet(), {
+      const Student("James"),
+      const Student("Sara"),
+      const Student("Lucy"),
+    });
   });
 
   test("+", () {
@@ -395,7 +488,7 @@ void main() {
       const Student("James"),
       const Student("Sara"),
       const Student("Lucy"),
-      const Student("James")
+      const Student("James"),
     ]);
   });
 
@@ -416,9 +509,18 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    final Students studentsResult = students.addAll([const Student("Bob"), const Student("John")]);
+    final Students studentsResult = students.addAll([
+      const Student("Bob"),
+      const Student("John"),
+    ]);
 
-    expect(studentsResult.unlock, [james, sara, lucy, const Student("Bob"), const Student("John")]);
+    expect(studentsResult.unlock, [
+      james,
+      sara,
+      lucy,
+      const Student("Bob"),
+      const Student("John"),
+    ]);
   });
 
   test("asMap", () {
@@ -483,8 +585,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.fillRange(1, 3, Student("Placeholder")).iter,
-        [james, const Student("Placeholder"), const Student("Placeholder")]);
+    expect(students.fillRange(1, 3, Student("Placeholder")).iter, [
+      james,
+      const Student("Placeholder"),
+      const Student("Placeholder"),
+    ]);
   });
 
   test("firstOr", () {
@@ -513,7 +618,10 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.getRange(1, 3), [const Student("Sara"), const Student("Lucy")]);
+    expect(students.getRange(1, 3), [
+      const Student("Sara"),
+      const Student("Lucy"),
+    ]);
   });
 
   test("indexOf", () {
@@ -534,8 +642,14 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.indexWhere((Student? student) => student!.name.length == 5), 0);
-    expect(students.indexWhere((Student? student) => student!.name.length == 100), -1);
+    expect(
+      students.indexWhere((Student? student) => student!.name.length == 5),
+      0,
+    );
+    expect(
+      students.indexWhere((Student? student) => student!.name.length == 100),
+      -1,
+    );
   });
 
   test("insert", () {
@@ -555,10 +669,18 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    final Students studentsResult =
-        students.insertAll(1, [const Student("Bob"), const Student("John")]);
+    final Students studentsResult = students.insertAll(1, [
+      const Student("Bob"),
+      const Student("John"),
+    ]);
 
-    expect(studentsResult.iter, [james, const Student("Bob"), const Student("John"), sara, lucy]);
+    expect(studentsResult.iter, [
+      james,
+      const Student("Bob"),
+      const Student("John"),
+      sara,
+      lucy,
+    ]);
   });
 
   test("lastIndexOf", () {
@@ -576,7 +698,10 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, sara]);
 
-    expect(students.lastIndexWhere((Student? student) => student!.name == "Sara"), 3);
+    expect(
+      students.lastIndexWhere((Student? student) => student!.name == "Sara"),
+      3,
+    );
   });
 
   test("lastOr", () {
@@ -611,11 +736,15 @@ void main() {
 
     // 2) Priority
     expect(
-        students
-            .maxLength(2,
-                priority: (Student? a, Student? b) => a!.name.length.compareTo(b!.name.length))
-            .iter,
-        [sara, lucy]);
+      students
+          .maxLength(
+            2,
+            priority: (Student? a, Student? b) =>
+                a!.name.length.compareTo(b!.name.length),
+          )
+          .iter,
+      [sara, lucy],
+    );
   });
 
   test("process", () {
@@ -625,12 +754,14 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students
-            .process(
-                test: (_, __, Student? student) => student!.name.length == 5,
-                apply: (_, __, Student? student) => [Student(student!.name * 2)])
-            .iter,
-        [const Student("JamesJames"), sara, lucy]);
+      students
+          .process(
+            test: (_, __, Student? student) => student!.name.length == 5,
+            apply: (_, __, Student? student) => [Student(student!.name * 2)],
+          )
+          .iter,
+      [const Student("JamesJames"), sara, lucy],
+    );
   });
 
   test("put", () {
@@ -639,7 +770,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.put(2, const Student("Bob")).iter, [james, sara, const Student("Bob")]);
+    expect(students.put(2, const Student("Bob")).iter, [
+      james,
+      sara,
+      const Student("Bob"),
+    ]);
   });
 
   test("remove", () {
@@ -656,12 +791,11 @@ void main() {
     const Student sara = Student("Sara");
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
-    final Output<Student> output = Output();
 
-    final Students removed = students.removeAt(1, output);
+    final (removed, output) = students.removeAt(1);
 
     expect(removed.iter, [james, lucy]);
-    expect(output.value, const Student("Sara"));
+    expect(output, const Student("Sara"));
   });
 
   test("removeLast", () {
@@ -692,7 +826,12 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.removeWhere((Student? student) => student!.name.length == 4).iter, [james]);
+    expect(
+      students
+          .removeWhere((Student? student) => student!.name.length == 4)
+          .iter,
+      [james],
+    );
   });
 
   test("replaceAll", () {
@@ -701,8 +840,12 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, james]);
 
-    expect(students.replaceAll(from: const Student("James"), to: const Student("Bob")).iter,
-        [const Student("Bob"), sara, lucy, const Student("Bob")]);
+    expect(
+      students
+          .replaceAll(from: const Student("James"), to: const Student("Bob"))
+          .iter,
+      [const Student("Bob"), sara, lucy, const Student("Bob")],
+    );
   });
 
   test("replaceAllWhere", () {
@@ -712,10 +855,14 @@ void main() {
     final Students students = Students([james, sara, lucy, james]);
 
     expect(
-        students
-            .replaceAllWhere((Student? student) => student!.name.length == 5, const Student("Bob"))
-            .iter,
-        [const Student("Bob"), sara, lucy, const Student("Bob")]);
+      students
+          .replaceAllWhere(
+            (Student? student) => student!.name.length == 5,
+            const Student("Bob"),
+          )
+          .iter,
+      [const Student("Bob"), sara, lucy, const Student("Bob")],
+    );
   });
 
   test("replaceFirst", () {
@@ -724,8 +871,12 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, james]);
 
-    expect(students.replaceFirst(from: const Student("James"), to: const Student("Bob")).iter,
-        [const Student("Bob"), sara, lucy, james]);
+    expect(
+      students
+          .replaceFirst(from: const Student("James"), to: const Student("Bob"))
+          .iter,
+      [const Student("Bob"), sara, lucy, james],
+    );
   });
 
   test("replaceFirstWhere", () {
@@ -735,11 +886,14 @@ void main() {
     final Students students = Students([james, sara, lucy, james]);
 
     expect(
-        students
-            .replaceFirstWhere(
-                (Student? student) => student!.name.length == 5, (_) => const Student("Bob"))
-            .iter,
-        [const Student("Bob"), sara, lucy, james]);
+      students
+          .replaceFirstWhere(
+            (Student? student) => student!.name.length == 5,
+            (_) => const Student("Bob"),
+          )
+          .iter,
+      [const Student("Bob"), sara, lucy, james],
+    );
   });
 
   test("replaceRange", () {
@@ -748,8 +902,13 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy, james]);
 
-    expect(students.replaceRange(1, 3, [const Student("Bob"), const Student("John")]).iter,
-        [james, const Student("Bob"), const Student("John"), james]);
+    expect(
+      students.replaceRange(1, 3, [
+        const Student("Bob"),
+        const Student("John"),
+      ]).iter,
+      [james, const Student("Bob"), const Student("John"), james],
+    );
   });
 
   test("retainWhere", () {
@@ -759,7 +918,11 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(
-        students.retainWhere((Student? student) => student!.name.length == 4).iter, [sara, lucy]);
+      students
+          .retainWhere((Student? student) => student!.name.length == 4)
+          .iter,
+      [sara, lucy],
+    );
   });
 
   test("reversed", () {
@@ -777,7 +940,11 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.setAll(1, [const Student("Bob")]).iter, [james, const Student("Bob"), lucy]);
+    expect(students.setAll(1, [const Student("Bob")]).iter, [
+      james,
+      const Student("Bob"),
+      lucy,
+    ]);
   });
 
   test("setRange", () {
@@ -786,8 +953,13 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.setRange(1, 3, [const Student("Bob"), const Student("John")]).iter,
-        [james, const Student("Bob"), const Student("John")]);
+    expect(
+      students.setRange(1, 3, [
+        const Student("Bob"),
+        const Student("John"),
+      ]).iter,
+      [james, const Student("Bob"), const Student("John")],
+    );
   });
 
   test("shuffle", () {
@@ -827,8 +999,12 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.sort((Student? a, Student? b) => a!.name.compareTo(b!.name)).iter,
-        [james, lucy, sara]);
+    expect(
+      students
+          .sort((Student? a, Student? b) => a!.name.compareTo(b!.name))
+          .iter,
+      [james, lucy, sara],
+    );
   });
 
   test("sublist", () {
@@ -847,7 +1023,12 @@ void main() {
     final Students students = Students([james, sara, lucy]);
 
     expect(students.toggle(const Student("Sara")).iter, [james, lucy]);
-    expect(students.toggle(const Student("Bob")).iter, [james, sara, lucy, const Student("Bob")]);
+    expect(students.toggle(const Student("Bob")).iter, [
+      james,
+      sara,
+      lucy,
+      const Student("Bob"),
+    ]);
   });
 
   test("unlock", () {
@@ -865,8 +1046,13 @@ void main() {
     const Student lucy = Student("Lucy");
     final Students students = Students([james, sara, lucy]);
 
-    expect(students.unlockView,
-        allOf(isA<List<Student>>(), isA<UnmodifiableListFromIList<Student>>()));
+    expect(
+      students.unlockView,
+      allOf(
+        isA<List<Student>>(),
+        isA<UnmodifiableFromImmutableList<Student>>(),
+      ),
+    );
   });
 
   test("toString", () {
@@ -877,31 +1063,35 @@ void main() {
 
     // 1) Global configuration prettyPrint == false
     ImmutableCollection.prettyPrint = false;
-    expect(students.toString(), "Students[Student: James, Student: Sara, Student: Lucy]");
+    expect(
+      students.toString(),
+      "Students[Student: James, Student: Sara, Student: Lucy]",
+    );
 
     // 2) Global configuration prettyPrint == true
     ImmutableCollection.prettyPrint = true;
     expect(
-        students.toString(),
-        "Students[\n"
-        "   Student: James,\n"
-        "   Student: Sara,\n"
-        "   Student: Lucy\n"
-        "]");
+      students.toString(),
+      "Students[\n"
+      "   Student: James,\n"
+      "   Student: Sara,\n"
+      "   Student: Lucy\n"
+      "]",
+    );
   });
 }
 
 @immutable
-class Students with FromIListMixin<Student, Students> {
-  final IList<Student> _students;
+class Students with FromImmutableListMixin<Student, Students> {
+  final ImmutableList<Student> _students;
 
-  Students([Iterable<Student>? students]) : _students = IList(students);
-
-  @override
-  Students newInstance(IList<Student>? ilist) => Students(ilist);
+  Students([Iterable<Student>? students]) : _students = ImmutableList(students);
 
   @override
-  IList<Student> get iter => _students;
+  Students newInstance(ImmutableList<Student>? ilist) => Students(ilist);
+
+  @override
+  ImmutableList<Student> get iter => _students;
 }
 
 @immutable
@@ -921,7 +1111,9 @@ class Student extends ProtoStudent implements Comparable<Student> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Student && runtimeType == other.runtimeType && name == other.name;
+      other is Student &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
 
   @override
   int get hashCode => name.hashCode;

@@ -2,10 +2,10 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "dart:collection";
+import 'dart:collection';
 
-import "package:collection/collection.dart";
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
+import 'package:collection/collection.dart';
+import 'package:fic/src/fic.dart';
 
 /// Combines iterables [a] and [b] into one, by applying the [combine] function.
 /// If [allowDifferentSizes] is true, it will stop as soon as one of the
@@ -14,7 +14,8 @@ import "package:fast_immutable_collections/fast_immutable_collections.dart";
 ///
 /// See also: [IterableZip]
 ///
-Iterable<R> combineIterables<A, B, R>(
+Iterable<R>
+combineIterables<A extends Object?, B extends Object?, R extends Object?>(
   Iterable<A> a,
   Iterable<B> b,
   R Function(A, B) combine, {
@@ -25,20 +26,22 @@ Iterable<R> combineIterables<A, B, R>(
 
   while (iterA.moveNext()) {
     if (!iterB.moveNext()) {
-      if (allowDifferentSizes)
+      if (allowDifferentSizes) {
         return;
-      else
+      } else {
         throw StateError("Can't combine iterables of different sizes (a > b).");
+      }
     }
     yield combine(iterA.current, iterB.current);
   }
 
-  if (iterB.moveNext() && !allowDifferentSizes)
+  if (iterB.moveNext() && !allowDifferentSizes) {
     throw StateError("Can't combine iterables of different sizes (a < b).");
+  }
 }
 
 /// See also: [FicListExtension], [FicSetExtension]
-extension FicIterableExtensionTypeNullable<T> on Iterable<T?> {
+extension FicIterableExtensionTypeNullable<T extends Object> on Iterable<T?> {
   //
   /// Similar to [map], but MAY return a non-nullable type.
   ///
@@ -55,15 +58,16 @@ extension FicIterableExtensionTypeNullable<T> on Iterable<T?> {
 }
 
 /// See also: [FicListExtension], [FicSetExtension]
-extension FicIterableExtension<T> on Iterable<T> {
+extension FicIterableExtension<T extends Object?> on Iterable<T> {
   //
 
-  /// Creates an *immutable* set ([ISet]) from the iterable.
-  ISet<T> toISet([ConfigSet? config]) => ISet<T>.withConfig(this, config ?? ISet.defaultConfig);
+  /// Creates an *immutable* set ([ImmutableSet]) from the iterable.
+  ImmutableSet<T> toISet([ImmutableSetConfig? config]) =>
+      .withConfig(this, config ?? ImmutableSet.defaultConfig);
 
-  /// Creates an *immutable* list ([IList]) from the iterable.
-  IList<T> toIList([ConfigList? config]) =>
-      IList<T>.withConfig(this, config ?? IList.defaultConfig);
+  /// Creates an *immutable* list ([ImmutableList]) from the iterable.
+  ImmutableList<T> toIList({ImmutableListConfig? config}) =>
+      .withConfig(this, config ?? ImmutableList.defaultConfig);
 
   /// Returns a [List] containing the elements of this iterable.
   /// If the Iterable is already a [List], return the same instance (nothing new is created).
@@ -93,38 +97,57 @@ extension FicIterableExtension<T> on Iterable<T> {
   /// using [operator ==]. Return true if they are all the same,
   /// in the same order.
   ///
-  bool deepEquals(Iterable? other, {bool ignoreOrder = false}) {
+  bool deepEquals(Iterable<dynamic>? other, {bool ignoreOrder = false}) {
     if (identical(this, other)) return true;
     if (other == null) return false;
 
     // Assumes `EfficientLengthIterable` for these:
-    if ((this is List) ||
-        (this is Set) ||
-        (this is Queue) ||
-        (this is ImmutableCollection)) if (length != other.length) return false;
+    if (this is List ||
+        this is Set ||
+        this is Queue ||
+        this is ImmutableCollection) {
+      if (length != other.length) {
+        return false;
+      }
+    }
 
     return ignoreOrder
-        ? const UnorderedIterableEquality<dynamic>(DefaultEquality<dynamic>()).equals(this, other)
-        : const IterableEquality<dynamic>(DefaultEquality<dynamic>()).equals(this, other);
+        ? const UnorderedIterableEquality<dynamic>(
+            DefaultEquality<dynamic>(),
+          ).equals(this, other)
+        : const IterableEquality<dynamic>(
+            DefaultEquality<dynamic>(),
+          ).equals(this, other);
   }
 
   /// Return true if they are all the same, in the same order.
   /// Compare all items, in order or not, according to [ignoreOrder],
   /// using [identical]. Return true if they are all the same,
   /// in the same order.
-  bool deepEqualsByIdentity(Iterable? other, {bool ignoreOrder = false}) {
+  bool deepEqualsByIdentity(
+    Iterable<dynamic>? other, {
+    bool ignoreOrder = false,
+  }) {
     if (identical(this, other)) return true;
     if (other == null) return false;
 
     /// Assumes EfficientLengthIterable for these:
-    if ((this is List) ||
-        (this is Set) ||
-        (this is Queue) ||
-        (this is ImmutableCollection)) if (length != other.length) return false;
+    if (this is List ||
+        this is Set ||
+        this is Queue ||
+        this is ImmutableCollection) {
+      if (length != other.length) {
+        return false;
+      }
+    }
 
     return ignoreOrder
-        ? const UnorderedIterableEquality<dynamic>(IdentityEquality<dynamic>()).equals(this, other)
-        : const IterableEquality<dynamic>(IdentityEquality<dynamic>()).equals(this, other);
+        ? const UnorderedIterableEquality<dynamic>(
+            IdentityEquality<dynamic>(),
+          ).equals(this, other)
+        : const IterableEquality<dynamic>(
+            IdentityEquality<dynamic>(),
+          ).equals(this, other);
   }
 
   /// The sum of the values returned by the [mapper] function.
@@ -151,7 +174,7 @@ extension FicIterableExtension<T> on Iterable<T> {
     return result as N;
   }
 
-  /// Returns a zero of type [N]. 
+  /// Returns a zero of type [N].
   N _zeroOf<N extends num>() {
     // num is a sealed class with only two subclasses: int and double
     // therefore this function should never throw
@@ -172,7 +195,7 @@ extension FicIterableExtension<T> on Iterable<T> {
   /// expect(['a', 'ab', 'abc', 'abcd', 'abcde'].sumBy((e) => e.length), 3.0);
   /// ```
   double averageBy<N extends num>(N Function(T element) mapper) {
-    double result = 0.0;
+    var result = 0.0;
     var count = 0;
     for (final value in this) {
       count += 1;
@@ -192,14 +215,15 @@ extension FicIterableExtension<T> on Iterable<T> {
   /// primes.restrict(7, orElse: -1); // Returns 7.
   /// ```
   ///
-  T restrict(T? item, {required T orElse}) => contains(item) ? item as T : orElse;
+  T restrict(T? item, {required T orElse}) =>
+      contains(item) ? item as T : orElse;
 
   /// Finds duplicates and then returns a [Set] with the duplicated elements.
   /// If there are no duplicates, an empty [Set] is returned.
   Set<T> findDuplicates() {
-    final Set<T> duplicates = <T>{};
+    final duplicates = <T>{};
     final Set<T> auxSet = HashSet<T>();
-    for (final T element in this) {
+    for (final element in this) {
       if (!auxSet.add(element)) duplicates.add(element);
     }
     return duplicates;
@@ -260,7 +284,8 @@ extension FicIterableExtension<T> on Iterable<T> {
   ///
   /// See also: [sorted] (from 'package:collection/collection.dart').
   ///
-  List<T> sortedReversed([Comparator<T>? compare]) => [...this]..sortReversed(compare);
+  List<T> sortedReversed([Comparator<T>? compare]) =>
+      [...this]..sortReversed(compare);
 
   /// Returns a list, sorted according to the order specified by the [ordering] iterable.
   /// Items which don't appear in [ordering] will be included in the end, in their original order.
@@ -270,13 +295,14 @@ extension FicIterableExtension<T> on Iterable<T> {
     final Set<T> thisSet = Set.of(this);
     final Set<dynamic> otherSet = Set<dynamic>.of(ordering);
 
-    final DiffAndIntersectResult<T, dynamic> result = thisSet.diffAndIntersect<dynamic>(
-      otherSet,
-      diffThisMinusOther: true,
-      diffOtherMinusThis: false,
-      intersectThisWithOther: false,
-      intersectOtherWithThis: true,
-    );
+    final DiffAndIntersectResult<T, dynamic> result = thisSet
+        .diffAndIntersect<dynamic>(
+          otherSet,
+          diffThisMinusOther: true,
+          diffOtherMinusThis: false,
+          intersectThisWithOther: false,
+          intersectOtherWithThis: true,
+        );
 
     final List<T> intersectOtherWithThis = result.intersectOtherWithThis ?? [];
     final List<T> diffThisMinusOther = result.diffThisMinusOther ?? [];
@@ -295,13 +321,12 @@ extension FicIterableExtension<T> on Iterable<T> {
   /// one item with the same [id], the last one will be used, and the
   /// previous discarded.
   ///
-  List<T> updateById(
-    Iterable<T> newItems,
-    dynamic Function(T item) id,
-  ) {
+  List<T> updateById(Iterable<T> newItems, dynamic Function(T item) id) {
     final List<T> newList = [];
 
-    final Map<dynamic, T> idsPerNewItem = <dynamic, T>{for (final T item in newItems) id(item): item};
+    final Map<dynamic, T> idsPerNewItem = <dynamic, T>{
+      for (final T item in newItems) id(item): item,
+    };
 
     // Replace those with the same id.
     for (final T item in this) {
@@ -310,8 +335,9 @@ extension FicIterableExtension<T> on Iterable<T> {
         final T newItem = idsPerNewItem[itemId] as T;
         newList.add(newItem);
         idsPerNewItem.remove(itemId);
-      } else
+      } else {
         newList.add(item);
+      }
     }
 
     // Add the new ones at the end.
@@ -377,7 +403,9 @@ extension FicIterableExtension<T> on Iterable<T> {
 
   /// Maps each element and its index to a new value.
   /// This is similar to [mapIndexed] but also tells you which item is the last.
-  Iterable<R> mapIndexedAndLast<R>(R Function(int index, T item, bool isLast) convert) sync* {
+  Iterable<R> mapIndexedAndLast<R>(
+    R Function(int index, T item, bool isLast) convert,
+  ) sync* {
     var index = 0;
     final int _length = length; // In case length is not efficient.
     for (final item in this) {
@@ -387,14 +415,15 @@ extension FicIterableExtension<T> on Iterable<T> {
 
   /// Returns true if this [Iterable] has any items in common with the [other] Iterable.
   /// This method is as performant as possible, but it will be faster if any of the Iterables
-  /// is a [Set] or an [ISet].
+  /// is a [Set] or an [ImmutableSet].
   bool intersectsWith(Iterable<T> other) {
     //
     // Note: We could convert them to Sets, and check if Set.intersect is empty.
     // But that's not performant.
 
     // If both are Set/ISet we'll iterate the smaller one, because that's faster.
-    if ((this is Set || this is ISet) && (other is Set || other is ISet)) {
+    if ((this is Set || this is ImmutableSet) &&
+        (other is Set || other is ImmutableSet)) {
       if (length > other.length) {
         for (final T item in other) {
           if (contains(item)) return true;
@@ -416,18 +445,19 @@ extension FicIterableExtension<T> on Iterable<T> {
     Iterable<T> iterable;
 
     // If none of them is a Set/ISet, convert one of them to a Set.
-    if ((this is! Set<T> && this is! ISet<T>) && (other is! Set<T> && other is! ISet<T>)) {
+    if ((this is! Set<T> && this is! ImmutableSet<T>) &&
+        (other is! Set<T> && other is! ImmutableSet<T>)) {
       set = other.toSet();
       iterable = this;
     }
     //
     // If one of them is a Set/ISet, find it.
     else {
-      if (this is Set<T> || this is ISet<T>) {
+      if (this is Set<T> || this is ImmutableSet<T>) {
         set = this;
         iterable = other;
       } else {
-        assert(other is Set<T> || other is ISet<T>);
+        assert(other is Set<T> || other is ImmutableSet<T>);
         set = other;
         iterable = this;
       }

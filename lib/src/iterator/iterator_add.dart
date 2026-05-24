@@ -2,20 +2,21 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-class IteratorAdd<T> implements Iterator<T> {
+class IteratorAdd<T extends Object?> implements Iterator<T> {
   Iterator<T> iterator;
   T item;
   late T _current;
   bool extraMove, _pre, _hasCurrent;
 
   IteratorAdd(this.iterator, this.item)
-      : _pre = true,
-        _hasCurrent = true,
-        extraMove = false;
+    : _pre = true,
+      _hasCurrent = true,
+      extraMove = false;
 
   @override
   T get current {
-    if (_pre) throw StateError("No current value available. Call moveNext() first.");
+    if (_pre)
+      throw StateError("No current value available. Call moveNext() first.");
     if (!_hasCurrent) throw StateError("No move values available.");
     return _current;
   }

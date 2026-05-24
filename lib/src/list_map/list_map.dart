@@ -2,10 +2,10 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
-import "dart:collection";
-import "dart:math";
+import 'dart:collection';
+import 'dart:math';
 
-import "package:fast_immutable_collections/fast_immutable_collections.dart";
+import 'package:fic/src/fic.dart';
 
 /// A [ListMap] is a mutable, fixed-sized, and ordered map.
 ///
@@ -21,9 +21,7 @@ class ListMap<K, V> implements Map<K, V> {
   Map<K, V> _map;
   List<K> _list;
 
-  ListMap.empty()
-      : _map = HashMap(),
-        _list = List.empty(growable: false);
+  ListMap.empty() : _map = HashMap(), _list = List.empty(growable: false);
 
   /// Create a [ListMap] from the [map].
   ///
@@ -35,9 +33,9 @@ class ListMap<K, V> implements Map<K, V> {
     Map<K, V> map, {
     bool sort = false,
     int Function(K a, K b)? compare,
-  })  : assert(compare == null || sort == true),
-        _map = HashMap.from(map),
-        _list = List.of(map.keys, growable: false) {
+  }) : assert(compare == null || sort == true),
+       _map = HashMap.from(map),
+       _list = List.of(map.keys, growable: false) {
     if (sort) _list.sort(compare ?? compareObject);
   }
 
@@ -101,8 +99,11 @@ class ListMap<K, V> implements Map<K, V> {
     bool sort = false,
     int Function(K a, K b)? compare,
   }) {
-    final Iterable<MapEntry<K, V>> combined =
-        combineIterables(keys, values, (K key, V value) => MapEntry(key, value));
+    final Iterable<MapEntry<K, V>> combined = combineIterables(
+      keys,
+      values,
+      (K key, V value) => MapEntry(key, value),
+    );
 
     return ListMap.fromEntries(combined, sort: sort, compare: compare);
   }
@@ -123,8 +124,8 @@ class ListMap<K, V> implements Map<K, V> {
     this._map, {
     bool sort = false,
     int Function(K a, K b)? compare,
-  })  : assert(compare == null || sort == true),
-        _list = List.of(_map.keys, growable: false) {
+  }) : assert(compare == null || sort == true),
+       _list = List.of(_map.keys, growable: false) {
     if (sort) _list.sort(compare ?? compareObject);
   }
 
@@ -139,13 +140,13 @@ class ListMap<K, V> implements Map<K, V> {
   /// 3) The [list] items are the [map] keys (but the order of the map items is
   /// irrelevant).
   ///
-  ListMap.unsafeFrom({
-    required Map<K, V> map,
-    required List<K> list,
-  })  : _map = map,
-        _list = list {
+  ListMap.unsafeFrom({required Map<K, V> map, required List<K> list})
+    : _map = map,
+      _list = list {
     if (map.length != list.length)
-      throw AssertionError('Map has ${map.length} but list has ${list.length} items.');
+      throw AssertionError(
+        'Map has ${map.length} but list has ${list.length} items.',
+      );
   }
 
   /// The value for the given [key], or `null` if [key] is not in the map.
@@ -194,7 +195,9 @@ class ListMap<K, V> implements Map<K, V> {
   @override
   void addAll(Map<K, V> other) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   /// Inserts [key]/[value] at position [index].
@@ -209,17 +212,22 @@ class ListMap<K, V> implements Map<K, V> {
   ///
   void insert(int index, K key, V value) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries) {
     // TODO: Implement
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   @override
-  ListMap<RK, RV> cast<RK, RV>() => ListMap<RK, RV>._(_map.cast<RK, RV>(), _list.cast<RK>());
+  ListMap<RK, RV> cast<RK, RV>() =>
+      ListMap<RK, RV>._(_map.cast<RK, RV>(), _list.cast<RK>());
 
   // TODO: Implement
   @override
@@ -232,7 +240,8 @@ class ListMap<K, V> implements Map<K, V> {
   bool containsValue(Object? value) => _map.containsValue(value);
 
   @override
-  void forEach(void Function(K key, V value) f) => _list.forEach((key) => f(key, _map[key] as V));
+  void forEach(void Function(K key, V value) f) =>
+      _list.forEach((key) => f(key, _map[key] as V));
 
   @override
   bool get isEmpty => _list.isEmpty;
@@ -247,12 +256,14 @@ class ListMap<K, V> implements Map<K, V> {
   Iterable<V> get values => _list.map((key) => _map[key] as V);
 
   /// Return the key/value entry for the given [key], or throws if [key] is not in the map.
-  MapEntry<K, V> entry(K key) => _map.containsKey(key) //
+  MapEntry<K, V> entry(K key) =>
+      _map.containsKey(key) //
       ? MapEntry(key, _map[key] as V)
       : throw StateError("Key not found.");
 
   /// Return the key/value entry for the given [key], or `null` if [key] is not in the map.
-  MapEntry<K, V>? entryOrNull(K key) => _map.containsKey(key) //
+  MapEntry<K, V>? entryOrNull(K key) =>
+      _map.containsKey(key) //
       ? MapEntry(key, _map[key] as V)
       : null;
 
@@ -267,7 +278,8 @@ class ListMap<K, V> implements Map<K, V> {
   int get length => _list.length;
 
   @override
-  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) f) => _map.map(f);
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> Function(K key, V value) f) =>
+      _map.map(f);
 
   @override
   V putIfAbsent(K key, V Function() ifAbsent) {
@@ -287,13 +299,17 @@ class ListMap<K, V> implements Map<K, V> {
   // TODO: Implement
   @override
   V update(K key, V Function(V value) update, {V Function()? ifAbsent}) {
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   // TODO: Implement
   @override
   void updateAll(V Function(K key, V value) update) {
-    throw UnsupportedError("This is not yet supported, but will be in the future.");
+    throw UnsupportedError(
+      "This is not yet supported, but will be in the future.",
+    );
   }
 
   /// Shuffles the keys of this map randomly.
