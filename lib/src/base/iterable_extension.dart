@@ -40,7 +40,7 @@ combineIterables<A extends Object?, B extends Object?, R extends Object?>(
   }
 }
 
-/// See also: [FicListExtension], [FicSetExtension]
+/// See also: [MutableListExtension], [FicSetExtension]
 extension FicIterableExtensionTypeNullable<T extends Object> on Iterable<T?> {
   //
   /// Similar to [map], but MAY return a non-nullable type.
@@ -57,7 +57,7 @@ extension FicIterableExtensionTypeNullable<T extends Object> on Iterable<T?> {
   Iterable<E> mapNotNull<E>(E? Function(T? e) f) => map(f).cast();
 }
 
-/// See also: [FicListExtension], [FicSetExtension]
+/// See also: [MutableListExtension], [FicSetExtension]
 extension FicIterableExtension<T extends Object?> on Iterable<T> {
   //
 
@@ -253,7 +253,7 @@ extension FicIterableExtension<T extends Object?> on Iterable<T> {
   /// // This will process a million items:
   /// var newList = list.distinct().sublist(0, 5);
   ///
-  /// See also: `distinct` and `removeDuplicates` in [FicListExtension].
+  /// See also: `distinct` and `removeDuplicates` in [MutableListExtension].
   ///
   Iterable<T> whereNoDuplicates({
     Object? Function(T item)? by,

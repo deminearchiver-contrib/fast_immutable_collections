@@ -21,7 +21,7 @@ abstract class ImmutableSetDelegate<T extends Object?> implements Iterable<T> {
   }
 
   /// Returns a Dart [Set] (*mutable, ordered, of type [LinkedHashSet]*).
-  Set<T> get unlock => LinkedHashSet.of(this);
+  Set<T> unlock() => LinkedHashSet.of(this);
 
   /// Returns a new [Iterator] that allows iterating the items of the [ImmutableSet].
   @override
@@ -60,7 +60,7 @@ abstract class ImmutableSetDelegate<T extends Object?> implements Iterable<T> {
   // TODO: Still need to implement efficiently.
   ImmutableSetDelegate<T> remove(T element) => !contains(element)
       ? this
-      : ImmutableSetFlatDelegate<T>.unsafe(unlock..remove(element));
+      : ImmutableSetFlatDelegate<T>.unsafe(unlock()..remove(element));
 
   @override
   bool any(bool Function(T element) test) => iter.any(test);

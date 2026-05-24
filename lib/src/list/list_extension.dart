@@ -2,13 +2,14 @@
 // and Philippe Fanaro https://github.com/psygo
 // For more info, see: https://pub.dartlang.org/packages/fast_immutable_collections
 
+// ignore_for_file: use_to_and_as_if_applicable
+
 import 'package:collection/collection.dart';
 import 'package:fic/src/fic.dart';
 
-extension FicListExtension<T> on List<T> {
-  //
+extension MutableListExtension<T extends Object?> on List<T> {
   /// Locks the list, returning an *immutable* list ([ImmutableList]).
-  ImmutableList<T> get lock => ImmutableList<T>(this);
+  ImmutableList<T> lock() => ImmutableList<T>(this);
 
   /// Locks the list, returning an *immutable* list ([ImmutableList]).
   ///
@@ -24,7 +25,7 @@ extension FicListExtension<T> on List<T> {
   /// preventing further configuration changes by calling `ImmutableCollection.lockConfig()`).
   ///
   /// See also: [ImmutableCollection]
-  ImmutableList<T> get lockUnsafe =>
+  ImmutableList<T> lockUnsafe() =>
       ImmutableList<T>.unsafe(this, config: ImmutableList.defaultConfig);
 
   /// Returns the [index]th element.
@@ -67,7 +68,7 @@ extension FicListExtension<T> on List<T> {
   /// Items which don't appear in [ordering] will be included in the end, in their original order.
   /// Items of [ordering] which are not found in the original list are ignored.
   ///
-  void sortLike(Iterable ordering) {
+  void sortLike(Iterable<Object?> ordering) {
     final List<T> result = sortedLike(ordering);
     clear();
     addAll(result);
@@ -77,9 +78,9 @@ extension FicListExtension<T> on List<T> {
   ///
   void sortReversed([int Function(T a, T b)? compare]) {
     if (compare != null) {
-      sort((T a, T b) => compare(b, a));
+      sort((a, b) => compare(b, a));
     } else {
-      sort((T a, T b) => compareObject(b, a));
+      sort((a, b) => compareObject(b, a));
     }
   }
 
@@ -282,13 +283,13 @@ extension FicListExtension<T> on List<T> {
     final List<G> keys = [];
 
     int? firstMatch;
-    for (int i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
       final T item = this[i];
 
       if (test(item)) {
         indexes.add(i);
-        final _key = (key == null) ? (item as G) : key(item);
-        keys.add(_key);
+        final key_ = (key == null) ? (item as G) : key(item);
+        keys.add(key_);
 
         if (!includeFirstItems) firstMatch ??= i;
       }
@@ -299,7 +300,7 @@ extension FicListExtension<T> on List<T> {
     if (indexes.isEmpty) {
       return {};
     } else {
-      for (int i = 0; i < indexes.length; i++) {
+      for (var i = 0; i < indexes.length; i++) {
         final ini = i == 0 ? firstMatch : indexes[i];
         final fim = i == indexes.length - 1 ? length - 1 : indexes[i + 1] - 1;
         final repeating = result[keys[i]];
@@ -329,10 +330,11 @@ extension FicListExtension<T> on List<T> {
     if (length <= 1) {
       return toList();
     } else {
-      final List<T> newItems = <T>[];
-      for (int i = 0; i < length - 1; i++) {
-        newItems.add(this[i]);
-        newItems.add(separator);
+      final newItems = <T>[];
+      for (var i = 0; i < length - 1; i++) {
+        newItems
+          ..add(this[i])
+          ..add(separator);
       }
       newItems.add(this[length - 1]);
       return newItems;
@@ -359,7 +361,7 @@ extension FicListExtension<T> on List<T> {
     List<T>? list4,
     List<T>? list5,
   ]) {
-    final List<T> list1 = this;
+    final list1 = this;
     list2 ??= const [];
     list3 ??= const [];
     list4 ??= const [];
@@ -400,7 +402,7 @@ extension FicListExtension<T> on List<T> {
   /// Cut the original list into one or more lists with at most [length] items.
   List<List<T>> splitByLength(int length) {
     assert(length > 0);
-    final List<List<T>> chunks = <List<T>>[];
+    final chunks = <List<T>>[];
     for (var i = 0; i < this.length; i += length) {
       final end = (i + length < this.length) ? i + length : this.length;
       chunks.add(sublist(i, end));
@@ -481,7 +483,7 @@ extension FicListExtension<T> on List<T> {
   List<T> get reversedView => ReversedListView<T>(this);
 }
 
-extension FicListExtensionNullable<T> on List<T?> {
+extension MutableListExtensionNullable<T extends Object> on List<T?> {
   //
   /// Returns a new [List] with all `null`s removed.
   /// This may return a list with a non-nullable type.
@@ -497,13 +499,5 @@ extension FicListExtensionNullable<T> on List<T?> {
   /// List<String> myNewList = myList.withNullsRemoved();
   /// ```
   ///
-  List<T> withNullsRemoved() {
-    Iterable<T> _whereNotNull() sync* {
-      for (final element in this) {
-        if (element != null) yield element;
-      }
-    }
-
-    return _whereNotNull().toList();
-  }
+  List<T> withNullsRemoved() => nonNulls.toList();
 }

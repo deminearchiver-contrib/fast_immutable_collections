@@ -326,11 +326,10 @@ abstract class ImmutableList<T extends Object?>
         l[i] = acc;
         i += 1;
       }
-
-      return l.lock;
+      return l.lock();
     }
 
-    return count > 0 ? iterations() : <U>[].lock;
+    return count > 0 ? iterations() : <U>[].lock();
   }
 
   /// Apply Op on previous state of base while predicate pass then return all results
@@ -347,7 +346,7 @@ abstract class ImmutableList<T extends Object?>
       acc = op(l.last);
       l.add(acc);
     }
-    return l.lock;
+    return l.lock();
   }
 
   static Iterable<U> tabulate<U>(int count, U Function(int at) generator) =>
@@ -506,7 +505,7 @@ abstract class ImmutableList<T extends Object?>
 
   /// Unlocks the list, returning a regular (mutable, growable) [List]. This
   /// list is "safe", in the sense that is independent from the original [ImmutableList].
-  List<T> get unlock => _delegate.unlock;
+  List<T> unlock() => _delegate.unlock();
 
   /// Unlocks the list, returning a **safe**, unmodifiable (immutable) [List] view.
   /// The word "view" means the list is backed by the original [ImmutableList].
@@ -516,7 +515,7 @@ abstract class ImmutableList<T extends Object?>
   /// It is also very fast to lock this list back into an [ImmutableList].
   ///
   /// See also: [UnmodifiableFromImmutableList]
-  List<T> get unlockView => UnmodifiableFromImmutableList(this);
+  List<T> unlockView() => UnmodifiableFromImmutableList(this);
 
   /// Unlocks the list, returning a **safe**, modifiable (mutable) [List].
   /// Using this is very fast at first, since it makes no copies of the [ImmutableList]
@@ -528,7 +527,7 @@ abstract class ImmutableList<T extends Object?>
   /// back into an [ImmutableList].
   ///
   /// See also: [ModifiableFromImmutableList]
-  List<T> get unlockLazy => ModifiableFromImmutableList(this);
+  List<T> unlockLazy() => ModifiableFromImmutableList(this);
 
   /// Returns a new `Iterator` that allows iterating the elements of this [ImmutableList].
   @override
@@ -1079,7 +1078,7 @@ abstract class ImmutableList<T extends Object?>
         config: config,
       );
     } else {
-      List<T> toBeRemovedFromEnd = unlock..sort(priority);
+      List<T> toBeRemovedFromEnd = unlock()..sort(priority);
       toBeRemovedFromEnd = toBeRemovedFromEnd.sublist(maxLength);
       final result = <T>[];
       for (int i = originalLength - 1; i >= 0; i--) {
@@ -1981,7 +1980,7 @@ class ImmutableListImplementation<T extends Object?> extends ImmutableList<T> {
     if (!isFlushed) {
       // Flushes the original _l because maybe it's used elsewhere.
       // Or maybe it was flushed already, and we can use it as is.
-      _delegate = ImmutableListFlatDelegate<T>.unsafe(_delegate.getFlushed);
+      _delegate = ImmutableListFlatDelegate<T>.unsafe(_delegate.flushed);
       _counter = 0;
     }
     return this;

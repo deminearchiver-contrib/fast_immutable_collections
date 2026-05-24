@@ -62,5 +62,5 @@ class UnmodifiableMapFromIMap<K, V>
   @override
   Iterable<K> get keys => _iMap?.keys ?? _map!.keys;
 
-  ImmutableMap<K, V> get lock => _iMap ?? _map!.lock;
+  ImmutableMap<K, V> lock() => _iMap ?? _map!.lock();
 }

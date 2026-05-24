@@ -37,7 +37,7 @@ class ModifiableFromImmutableList<T extends Object?>
   @override
   void operator []=(int index, T value) {
     if (_list == null) {
-      _list = _iList!.unlock;
+      _list = _iList!.unlock();
       _iList = null; // To allow for garbage-collection.
     }
     _list![index] = value;
@@ -54,7 +54,7 @@ class ModifiableFromImmutableList<T extends Object?>
   @override
   set length(int newLength) {
     if (_list == null) {
-      _list = _iList!.unlock;
+      _list = _iList!.unlock();
       _iList = null; // To allow for garbage-collection.
     }
 
@@ -62,24 +62,24 @@ class ModifiableFromImmutableList<T extends Object?>
   }
 
   @override
-  void add(T value) {
+  void add(T element) {
     if (_list == null) {
-      _list = _iList!.unlock;
+      _list = _iList!.unlock();
       _iList = null; // To allow for garbage-collection.
     }
-    _list!.add(value);
+    _list!.add(element);
   }
 
   @override
-  void addAll(Iterable<T> values) {
+  void addAll(Iterable<T> iterable) {
     if (_list == null) {
-      _list = _iList!.unlock;
+      _list = _iList!.unlock();
       _iList = null; // To allow for garbage-collection.
     }
-    _list!.addAll(values);
+    _list!.addAll(iterable);
   }
 
   /// Locks the list, returning an *immutable* list ([ImmutableList]).
-  ImmutableList<T> get lock =>
+  ImmutableList<T> lock() =>
       (_list != null) ? ImmutableList<T>(_list) : _iList!;
 }

@@ -9,7 +9,7 @@ import 'immutable_set.dart';
 /// See also: [FicListExtension]
 extension FicSetExtension<T extends Object?> on Set<T> {
   /// Locks the set, returning an *immutable* set ([ImmutableSet]).
-  ImmutableSet<T> get lock => ImmutableSet<T>(this);
+  ImmutableSet<T> lock() => ImmutableSet<T>(this);
 
   /// Locks the set, returning an *immutable* set ([ImmutableSet]).
   ///
@@ -25,7 +25,7 @@ extension FicSetExtension<T extends Object?> on Set<T> {
   /// preventing further configuration changes by calling `lockConfig()`).
   ///
   /// See also: [ImmutableCollection]
-  ImmutableSet<T> get lockUnsafe =>
+  ImmutableSet<T> lockUnsafe() =>
       ImmutableSet<T>.unsafe(this, config: ImmutableSet.defaultConfig);
 
   /// If the item doesn't exist in the set, add it and return `true`.

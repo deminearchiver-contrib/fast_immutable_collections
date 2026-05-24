@@ -21,7 +21,7 @@ abstract class ImmutableMapDelegate<K extends Object?, V extends Object?> {
   }
 
   /// Returns a regular Dart (*mutable*) Map.
-  Map<K, V> get unlock => <K, V>{}..addEntries(entries);
+  Map<K, V> unlock() => <K, V>{}..addEntries(entries);
 
   Iterable<MapEntry<K, V>> get entries;
 
@@ -121,14 +121,14 @@ abstract class ImmutableMapDelegate<K extends Object?, V extends Object?> {
   ImmutableMapDelegate<K, V> remove(K key) {
     return !containsKey(key)
         ? this
-        : ImmutableMapFlatDelegate<K, V>.unsafe(unlock..remove(key));
+        : ImmutableMapFlatDelegate<K, V>.unsafe(unlock()..remove(key));
   }
 
   /// Removes all entries of this map that satisfy the given [predicate].
   ImmutableMapDelegate<K, V> removeWhere(
     bool Function(K key, V value) predicate,
   ) {
-    final Map<K, V> oldMap = unlock;
+    final Map<K, V> oldMap = unlock();
     final int oldLength = oldMap.length;
     final Map<K, V> newMap = oldMap..removeWhere(predicate);
     return (newMap.length == oldLength)

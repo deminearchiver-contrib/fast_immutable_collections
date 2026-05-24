@@ -358,11 +358,11 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
         (key, value) =>
             MapEntry(fromJsonK(_safeKeyFromJson<K>(key)), fromJsonV(value)),
       )
-      .lockUnsafe;
+      .lockUnsafe();
 
   /// Converts to JSon. Json serialization support for json_serializable with @JsonSerializable.
   Object toJson(Object? Function(K) toJsonK, Object? Function(V) toJsonV) =>
-      unlock.map(
+      unlock().map(
         (key, value) => MapEntry(_safeKeyToJson(toJsonK(key)), toJsonV(value)),
       );
 
@@ -672,12 +672,12 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// Unlocks the map, returning a regular (mutable, ordered) [Map] of type
   /// [LinkedHashMap]. This map is "safe", in the sense that is independent from
   /// the original [ImmutableMap].
-  Map<K, V> get unlock => _delegate.unlock;
+  Map<K, V> unlock() => _delegate.unlock();
 
   /// Unlocks the map, returning a regular, *mutable, ordered, sorted*, [Map]
   /// of type [LinkedHashMap]. This map is "safe", in the sense that is
   /// independent from the original [ImmutableMap].
-  Map<K, V> get unlockSorted => <K, V>{}..addEntries(entriesToImmutableList());
+  Map<K, V> unlockSorted() => <K, V>{}..addEntries(entriesToImmutableList());
 
   /// Unlocks the map, returning a safe, unmodifiable (immutable) [Map] view.
   /// The word "view" means the set is backed by the original [ImmutableMap].
@@ -688,7 +688,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// It is also very fast to lock this map back into an [ImmutableMap].
   ///
   /// See also: [UnmodifiableMapFromIMap]
-  Map<K, V> get unlockView => UnmodifiableMapFromIMap(this);
+  Map<K, V> unlockView() => UnmodifiableMapFromIMap(this);
 
   /// Unlocks the map, returning a safe, modifiable (mutable) [Map].
   ///
@@ -701,7 +701,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
   /// back into an [ImmutableMap].
   ///
   /// See also: [ModifiableMapFromIMap]
-  Map<K, V> get unlockLazy => ModifiableMapFromIMap(this);
+  Map<K, V> unlockLazy() => ModifiableMapFromIMap(this);
 
   /// Returns `true` if there are no elements in this collection.
   @override
@@ -1197,7 +1197,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
     V Function()? ifAbsent,
   }) {
     if (containsKey(key)) {
-      final map = unlock;
+      final map = unlock();
       final originalValue = map[key] as V;
       final updatedValue = update(originalValue);
       if (ifRemove != null && ifRemove(key, updatedValue)) {
@@ -1238,7 +1238,7 @@ abstract class ImmutableMap<K extends Object?, V extends Object?>
     V Function(K key, V value) update, {
     bool Function(K key, V value)? ifRemove,
   }) {
-    final map = unlock..updateAll(update);
+    final map = unlock()..updateAll(update);
     if (ifRemove != null) map.removeWhere(ifRemove);
     return ImmutableMap._unsafeFromMap(map, config: config);
   }

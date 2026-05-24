@@ -12,13 +12,13 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
 
   /// Returns the flushed list (flushes it only once).
   /// **It is an error to use the flushed list outside of the [ImmutableListDelegate] class**.
-  List<T> get getFlushed {
-    _flushed ??= unlock;
+  List<T> get flushed {
+    _flushed ??= unlock();
     return _flushed!;
   }
 
   /// Returns a regular Dart (*mutable*, `growable`) List.
-  List<T> get unlock => List<T>.of(this, growable: true);
+  List<T> unlock() => List<T>.of(this, growable: true);
 
   /// Returns a new `Iterator` that allows iterating the items of the [ImmutableList].
   @override
@@ -46,13 +46,13 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
   /// Removes the first occurrence of [element] from this list.
   ImmutableListDelegate<T> remove(T element) => !contains(element)
       ? this
-      : ImmutableListFlatDelegate<T>.unsafe(unlock..remove(element));
+      : ImmutableListFlatDelegate<T>.unsafe(unlock()..remove(element));
 
   ImmutableListDelegate<T> removeAll(Iterable<T?> elements) {
-    var list = unlock;
+    var list = unlock();
     final originalLength = list.length;
     final set = HashSet.of(elements);
-    list = unlock..removeWhere(set.contains);
+    list = unlock()..removeWhere(set.contains);
     if (list.length == originalLength) return this;
     return ImmutableListFlatDelegate<T>.unsafe(list);
   }
@@ -61,7 +61,7 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
   ImmutableListDelegate<T> removeMany(T element) => !contains(element)
       ? this
       : ImmutableListFlatDelegate<T>.unsafe(
-          unlock..removeWhere((e) => e == element),
+          unlock()..removeWhere((e) => e == element),
         );
 
   // TODO: Still need to implement efficiently.
@@ -72,7 +72,7 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
       ? throw ArgumentError(maxLength)
       : length <= maxLength
       ? this
-      : ImmutableListFlatDelegate<T>.unsafe(unlock..length = maxLength);
+      : ImmutableListFlatDelegate<T>.unsafe(unlock()..length = maxLength);
 
   /// Sorts this list according to the order specified by the [compare] function.
   /// If [compare] is not provided, it will use the natural ordering of the type [T].
@@ -83,7 +83,7 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
     }
 
     return ImmutableListFlatDelegate<T>.unsafe(
-      unlock..sort(compare ?? compareObject),
+      unlock()..sort(compare ?? compareObject),
     );
   }
 
@@ -94,7 +94,7 @@ abstract class ImmutableListDelegate<T extends Object?> implements Iterable<T> {
     }
 
     return ImmutableListFlatDelegate<T>.unsafe(
-      unlock..sortOrdered(compare ?? compareObject),
+      unlock()..sortOrdered(compare ?? compareObject),
     );
   }
 
@@ -330,7 +330,7 @@ class ImmutableListFlatDelegate<T extends Object?>
   ImmutableListFlatDelegate.unsafe(this._list);
 
   @override
-  List<T> get getFlushed => _list;
+  List<T> get flushed => _list;
 
   @override
   Iterator<T> get iterator => IteratorFlat(_list.iterator);

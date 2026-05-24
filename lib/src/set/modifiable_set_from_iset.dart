@@ -38,7 +38,7 @@ class ModifiableSetFromISet<T extends Object?>
 
   void _switchToMutableSetIfNecessary() {
     if (_set == null) {
-      _set = _iSet!.unlock;
+      _set = _iSet!.unlock();
       _iSet = null;
     }
   }
@@ -83,5 +83,5 @@ class ModifiableSetFromISet<T extends Object?>
   @override
   int get length => _iSet?.length ?? _set!.length;
 
-  ImmutableSet<T?> get lock => _iSet ?? ImmutableSet<T?>(_set);
+  ImmutableSet<T?> lock() => _iSet ?? ImmutableSet<T?>(_set);
 }

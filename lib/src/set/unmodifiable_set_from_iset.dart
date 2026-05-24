@@ -72,5 +72,5 @@ class UnmodifiableSetFromISet<T extends Object?>
   @override
   int get length => _iSet?.length ?? _set!.length;
 
-  ImmutableSet<T> get lock => _iSet ?? _set!.lock;
+  ImmutableSet<T> lock() => _iSet ?? _set!.lock();
 }

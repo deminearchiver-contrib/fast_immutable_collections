@@ -265,10 +265,10 @@ class IMapOfSets<K extends Object?, V extends Object?>
   /// Unlocks the map, returning a regular (mutable, ordered) `Map<K, Set<V>` of type
   /// [LinkedHashMap]. This map is "safe", in the sense that is independent from
   /// the original [ImmutableMap].
-  Map<K, Set<V>> get unlock {
+  Map<K, Set<V>> unlock() {
     final Map<K, Set<V>> result = {};
     for (final MapEntry<K, ImmutableSet<V>> entry in _mapOfSets.entries) {
-      result[entry.key] = entry.value.unlock;
+      result[entry.key] = entry.value.unlock();
     }
     return result;
   }
@@ -479,7 +479,7 @@ class IMapOfSets<K extends Object?, V extends Object?>
     }
 
     return (
-      countRemoved == 0 ? this : IMapOfSets<K, V>._unsafe(map.lock, config),
+      countRemoved == 0 ? this : IMapOfSets<K, V>._unsafe(map.lock(), config),
       countRemoved,
     );
   }
@@ -537,7 +537,7 @@ class IMapOfSets<K extends Object?, V extends Object?>
     }
 
     return (
-      countRemoved == 0 ? this : IMapOfSets<K, V>._unsafe(map.lock, config),
+      countRemoved == 0 ? this : IMapOfSets<K, V>._unsafe(map.lock(), config),
       countRemoved,
     );
   }

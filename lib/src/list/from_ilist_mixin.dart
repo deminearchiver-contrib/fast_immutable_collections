@@ -276,9 +276,9 @@ mixin FromImmutableListMixin<
 
   I toggle(T element) => newInstance(iter.toggle(element));
 
-  List<T> get unlock => iter.unlock;
+  List<T> unlock() => iter.unlock();
 
-  List<T> get unlockView => iter.unlockView;
+  List<T> unlockView() => iter.unlockView();
 
   @override
   String toString() => "$runtimeType$iter";

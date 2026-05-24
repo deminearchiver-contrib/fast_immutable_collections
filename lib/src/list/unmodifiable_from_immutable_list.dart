@@ -73,5 +73,5 @@ class UnmodifiableFromImmutableList<T extends Object?>
       throw UnsupportedError("List in unmodifiable.");
 
   /// Locks the list, returning an *immutable* list ([ImmutableList]).
-  ImmutableList<T?>? get lock => (_iList != null) ? _iList : _list!.lock;
+  ImmutableList<T?>? lock() => (_iList != null) ? _iList : _list!.lock();
 }

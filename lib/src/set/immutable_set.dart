@@ -357,7 +357,7 @@ abstract class ImmutableSet<T extends Object?>
   /// Unlocks the set, returning a regular (*mutable, ordered*) [Set]
   /// of type [LinkedHashSet]. This set is "safe", in the sense that is independent
   /// from the original [ImmutableSet].
-  Set<T> get unlock => _delegate.unlock;
+  Set<T> unlock() => _delegate.unlock();
 
   /// Unlocks the set, returning a safe, unmodifiable (immutable) [Set] view.
   /// The word "view" means the set is backed by the original [ImmutableSet].
@@ -367,7 +367,7 @@ abstract class ImmutableSet<T extends Object?>
   /// It is also very fast to lock this set back into an [ImmutableSet].
   ///
   /// See also: [UnmodifiableSetFromISet]
-  Set<T> get unlockView => UnmodifiableSetFromISet(this);
+  Set<T> unlockView() => UnmodifiableSetFromISet(this);
 
   /// Unlocks the set, returning a safe, modifiable (mutable) [Set].
   /// Using this is very fast at first, since it makes no copies of the [ImmutableSet]
@@ -379,7 +379,7 @@ abstract class ImmutableSet<T extends Object?>
   /// back into an [ImmutableSet].
   ///
   /// See also: [ModifiableSetFromISet]
-  Set<T> get unlockLazy => ModifiableSetFromISet(this);
+  Set<T> unlockLazy() => ModifiableSetFromISet(this);
 
   /// 1. If the set's [config] has [ImmutableSetConfig.sort] `true`, it will iterate in
   /// the natural order of items. In other words, if the items are [Comparable],
@@ -866,7 +866,7 @@ abstract class ImmutableSet<T extends Object?>
     if (other is Set<T>) {
       otherSet = other;
     } else if (other is ImmutableSet<T>) {
-      otherSet = other.unlockView;
+      otherSet = other.unlockView();
     } else {
       otherSet = Set.of(other);
     }
@@ -928,7 +928,7 @@ abstract class ImmutableSet<T extends Object?>
   @useResult
   ImmutableSet<T> removeAll(Iterable<Object?> elements) {
     return ImmutableSet._unsafeFromSet(
-      unlock..removeAll(elements),
+      unlock()..removeAll(elements),
       config: config,
     );
   }
@@ -937,7 +937,7 @@ abstract class ImmutableSet<T extends Object?>
   @useResult
   ImmutableSet<T> removeWhere(bool Function(T element) test) {
     return ImmutableSet._unsafeFromSet(
-      unlock..removeWhere(test),
+      unlock()..removeWhere(test),
       config: config,
     );
   }
@@ -951,7 +951,7 @@ abstract class ImmutableSet<T extends Object?>
   @useResult
   ImmutableSet<T> retainAll(Iterable<Object?> elements) {
     return ImmutableSet._unsafeFromSet(
-      unlock..retainAll(elements),
+      unlock()..retainAll(elements),
       config: config,
     );
   }
@@ -960,7 +960,7 @@ abstract class ImmutableSet<T extends Object?>
   @useResult
   ImmutableSet<T> retainWhere(bool Function(T element) test) {
     return ImmutableSet._unsafeFromSet(
-      unlock..retainWhere(test),
+      unlock()..retainWhere(test),
       config: config,
     );
   }

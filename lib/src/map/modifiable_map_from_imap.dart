@@ -42,7 +42,7 @@ class ModifiableMapFromIMap<K, V>
 
   void _switchToMutableMapIfNecessary() {
     if (_map == null) {
-      _map = _iMap!.unlock;
+      _map = _iMap!.unlock();
       _iMap = null;
     }
   }
@@ -93,5 +93,5 @@ class ModifiableMapFromIMap<K, V>
   @override
   Iterable<K> get keys => _iMap?.keys ?? _map!.keys;
 
-  ImmutableMap<K, V> get lock => _iMap ?? _map!.lock;
+  ImmutableMap<K, V> lock() => _iMap ?? _map!.lock();
 }

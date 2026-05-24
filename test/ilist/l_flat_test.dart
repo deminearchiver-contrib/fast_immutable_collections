@@ -14,8 +14,8 @@ void main() {
       original,
     );
 
-    expect(lFlat.getFlushed, [1, 2, 3]);
-    expect(identical(original, lFlat.getFlushed), isFalse);
+    expect(lFlat.flushed, [1, 2, 3]);
+    expect(identical(original, lFlat.flushed), isFalse);
   });
 
   test("Runtime Type", () {
